@@ -187,9 +187,9 @@
   .disclaimer-overlay.hidden { display:none; }
   .hidden { display:none !important; }
   .disclaimer-panel { background:#fff; border-radius:20px; padding:24px 22px 24px; max-width:520px; width:100%; box-shadow:0 8px 40px rgba(0,0,0,0.5); animation:slideUp .35s ease; }
-  .disclaimer-inner { display:flex; gap:18px; align-items:flex-start; }
-  .disclaimer-img { width:90px; flex-shrink:0; border-radius:50%; }
-  .disclaimer-content { flex:1; min-width:0; }
+  .disclaimer-inner { display:flex; flex-direction:column; align-items:center; gap:14px; }
+  .disclaimer-img { width:110px; border-radius:50%; box-shadow:0 4px 16px rgba(139,26,26,0.25); }
+  .disclaimer-content { width:100%; }
   .disclaimer-panel h2 { font-family:'Playfair Display',serif; font-size:1.25rem; color:var(--wine); margin-bottom:14px; text-align:center; }
   .disclaimer-panel p { font-size:.87rem; color:var(--text); line-height:1.65; margin-bottom:10px; }
   .disclaimer-panel .warn-line { background:#fff3cd; border-left:4px solid #e67e22; border-radius:0 8px 8px 0; padding:10px 12px; font-size:.83rem; font-weight:700; color:#7a4000; margin:14px 0; }
@@ -197,6 +197,19 @@
   .btn-disclaimer:hover { background:#6e1414; transform:translateY(-1px); }
 
 
+  /* RISQUES BARI OVERLAY */
+  .risques-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(20,5,5,0.90); z-index:300; align-items:center; justify-content:center; padding:20px; }
+  .risques-overlay.open { display:flex; }
+  .risques-panel { background:#fff; border-radius:20px; padding:22px 20px 24px; max-width:480px; width:100%; box-shadow:0 8px 40px rgba(0,0,0,0.5); animation:slideUp .35s ease; max-height:85vh; overflow-y:auto; }
+  .risques-panel h2 { font-family:'Playfair Display',serif; font-size:1.2rem; color:#7a0000; margin-bottom:14px; text-align:center; }
+  .risques-content-inner { font-size:.83rem; color:var(--text); line-height:1.6; }
+  .risques-content-inner li { margin-bottom:8px; }
+  .risques-content-inner strong { color:#7a0000; }
+  .risques-actions { display:flex; flex-direction:column; gap:10px; margin-top:16px; }
+  .btn-risques-ok { width:100%; padding:13px; background:var(--wine); color:#fff; border:none; border-radius:12px; font-family:'Nunito',sans-serif; font-size:.95rem; font-weight:800; cursor:pointer; transition:all .2s; }
+  .btn-risques-ok:hover { background:#6e1414; }
+  .btn-risques-aide { width:100%; padding:10px; background:rgba(139,26,26,0.08); color:var(--wine); border:1.5px solid var(--wine); border-radius:12px; font-family:'Nunito',sans-serif; font-size:.85rem; font-weight:700; cursor:pointer; transition:all .2s; }
+  .btn-risques-aide:hover { background:rgba(139,26,26,0.15); }
   .guide-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(26,10,10,0.75); z-index:100; align-items:flex-end; justify-content:center; }
   .guide-overlay.open { display:flex; }
   .guide-panel { background:#fff; border-radius:20px 20px 0 0; padding:24px 20px 40px; max-width:480px; width:100%; max-height:85vh; overflow-y:auto; animation:slideUp .3s ease; position:relative; }
@@ -238,7 +251,7 @@
     </div>
     <div class="form-row">
       <label class="form-label">Temps écoulé depuis la consommation (en heures)</label>
-      <input type="number" id="duree" class="form-input" value="0" min="0" max="24" step="0.5" oninput="calcul()">
+      <input type="number" id="duree" class="form-input" value="0.5" min="0" max="24" step="0.5" oninput="calcul()">
     </div>
     <div class="form-row" style="flex-direction:column;align-items:stretch;gap:6px;">
       <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -268,8 +281,8 @@
     <div class="form-row" style="flex-direction:column;align-items:stretch;gap:8px;">
       <label class="form-label">Type de chirurgie</label>
       <div class="chirurgie-group">
-        <button class="chir-btn active" id="btn-bypass" onclick="setChir('bypass')">Bypass en Y de Roux</button>
-        <button class="chir-btn" id="btn-sleeve" onclick="setChir('sleeve')">Sleeve Gastrectomie</button>
+        <button class="chir-btn" id="btn-bypass" onclick="setChir('bypass')">Bypass en Y de Roux</button>
+        <button class="chir-btn active" id="btn-sleeve" onclick="setChir('sleeve')">Sleeve Gastrectomie</button>
       </div>
     </div>
   </div>
@@ -304,10 +317,10 @@
       <label class="form-label">Volume (mL)</label>
       <div style="width:140px;">
         <div class="slider-header">
-          <span class="slider-val" id="volLabel">150</span>
+          <span class="slider-val" id="volLabel">120</span>
           <span class="slider-unit">mL</span>
         </div>
-        <input type="range" id="volume" min="10" max="750" value="150" step="5" oninput="updateVol(); calcul()">
+        <input type="range" id="volume" min="10" max="750" value="120" step="5" oninput="updateVol(); calcul()">
       </div>
     </div>
 
@@ -330,6 +343,38 @@
     <div class="result-unit">g/L de sang</div>
     <div class="result-msg" id="resultMsg">✅ En dessous du seuil légal</div>
     <div class="result-time" id="resultTime">⏱ Retour à 0.00 g/L dans : 0h 00min</div>
+  </div>
+
+  <!-- LÉGALITÉ PAR PAYS -->
+  <div class="card" style="margin-top:16px;">
+    <div class="section-title">🚗 Légalité conduite par pays</div>
+    <p style="font-size:.75rem;color:var(--muted);font-weight:600;margin-bottom:10px;">Les seuils varient selon votre pays et votre profil de conducteur :</p>
+    <div class="pays-btn-row" id="paysBtnRow">
+      <button class="pays-btn" onclick="filterPays('be-std')">🇧🇪 Belgique — standard</button>
+      <button class="pays-btn" onclick="filterPays('be-rec')">🇧🇪 Belgique — récidive</button>
+      <button class="pays-btn" onclick="filterPays('ca-gen')">🇨🇦 Canada — général</button>
+      <button class="pays-btn" onclick="filterPays('ca-warn')">🇨🇦 Canada — avertissement</button>
+      <button class="pays-btn" onclick="filterPays('ca-qc')">🇨🇦 Québec — jeunes &lt;22 ans</button>
+      <button class="pays-btn" onclick="filterPays('fr-exp')">🇫🇷 France — expérimenté</button>
+      <button class="pays-btn" onclick="filterPays('fr-young')">🇫🇷 France — jeune permis</button>
+      <button class="pays-btn" onclick="filterPays('ch-std')">🇨🇭 Suisse — standard</button>
+      <button class="pays-btn" onclick="filterPays('ch-pro')">🇨🇭 Suisse — récidive / pro</button>
+    </div>
+    <div id="paysVide" style="font-size:.8rem;color:var(--muted);text-align:center;padding:12px 0;">
+      👆 Sélectionnez votre situation pour voir votre statut légal
+    </div>
+    <table class="pays-table">
+      <thead>
+        <tr>
+          <th>Pays / Profil</th>
+          <th>Seuil (g/L)</th>
+          <th>Statut</th>
+        </tr>
+      </thead>
+      <tbody id="paysTableBody"></tbody>
+    </table>
+    <div id="peinesText" style="margin-top:12px; font-size:.72rem; color:var(--muted); font-weight:600; line-height:1.5;">
+    </div>
   </div>
 
   <!-- GRAPHIQUE -->
@@ -362,44 +407,33 @@
     </div>
   </div>
 
-  <!-- LÉGALITÉ PAR PAYS -->
-  <div class="card" style="margin-top:16px;">
-    <div class="section-title">🚗 Légalité conduite par pays</div>
-    <div class="pays-btn-row" id="paysBtnRow">
-      <button class="pays-btn" onclick="filterPays('be-std')">🇧🇪 Belgique — standard</button>
-      <button class="pays-btn" onclick="filterPays('be-rec')">🇧🇪 Belgique — récidive</button>
-      <button class="pays-btn" onclick="filterPays('ca-gen')">🇨🇦 Canada — général</button>
-      <button class="pays-btn" onclick="filterPays('ca-warn')">🇨🇦 Canada — avertissement</button>
-      <button class="pays-btn" onclick="filterPays('ca-qc')">🇨🇦 Québec — jeunes &lt;22 ans</button>
-      <button class="pays-btn" onclick="filterPays('fr-exp')">🇫🇷 France — expérimenté</button>
-      <button class="pays-btn" onclick="filterPays('fr-young')">🇫🇷 France — jeune permis</button>
-      <button class="pays-btn" onclick="filterPays('ch-std')">🇨🇭 Suisse — standard</button>
-      <button class="pays-btn" onclick="filterPays('ch-pro')">🇨🇭 Suisse — récidive / pro</button>
-    </div>
-    <div id="paysVide" style="font-size:.8rem;color:var(--muted);text-align:center;padding:12px 0;">
-      👆 Sélectionnez votre situation pour voir votre statut légal
-    </div>
-    <table class="pays-table">
-      <thead>
-        <tr>
-          <th>Pays / Profil</th>
-          <th>Seuil (g/L)</th>
-          <th>Statut</th>
-        </tr>
-      </thead>
-      <tbody id="paysTableBody"></tbody>
-    </table>
-    <div id="peinesText" style="margin-top:12px; font-size:.72rem; color:var(--muted); font-weight:600; line-height:1.5;">
-    </div>
-  </div>
-
   <!-- DISCLAIMER -->
   <div class="disclaimer">
     ⚠️ Ce calculateur est basé sur la formule de Widmark. Les résultats sont <strong>indicatifs</strong> et varient fortement selon les individus. En cas de doute, suivez toujours les recommandations de votre équipe de santé. <strong>Ne prenez jamais le volant si vous avez consommé de l'alcool.</strong>
   </div>
 </div>
 
+<!-- RISQUES BARIATRIQUES OVERLAY -->
+<div class="risques-overlay" id="risquesOverlay">
+  <div class="risques-panel">
+    <h2>🚨 Risques spécifiques post-bariatrique</h2>
+    <div class="risques-content-inner">
+      <ul>
+        <li><strong>Absorption ultra-rapide :</strong> le taux maximal est atteint en 15–30 min après un bypass, 30–45 min après une sleeve (vs 45–60 min avant l'opération). Vous pouvez être en danger avant de vous sentir ivre.</li>
+        <li><strong>Estomac vide :</strong> si vous n'avez pas mangé dans les 2 heures précédentes, l'absorption est encore plus rapide. Rappel post-op : ne buvez pas pendant les repas (règle des 30 min) — l'alcool ne fait pas exception.</li>
+        <li><strong>Tolérance faussée :</strong> beaucoup d'opérés se sentent "à peine ivres" alors que leur taux est déjà dangereux. Cette application vous montre votre taux réel — faites-lui confiance, pas à vos sensations.</li>
+        <li><strong>Transfert d'addiction :</strong> reconnu par la SOFFCO comme l'un des risques majeurs post-bypass. Si vous ressentez une attirance croissante pour l'alcool, consultez votre équipe sans attendre.</li>
+      </ul>
+    </div>
+    <div class="risques-actions">
+      <button class="btn-risques-ok" onclick="closeRisques()">J'ai compris — continuer</button>
+      <button class="btn-risques-aide" onclick="closeRisques(); toggleGuide()">📖 Retrouver ces informations dans l'aide</button>
+    </div>
+  </div>
+</div>
+
 <!-- DISCLAIMER OVERLAY (affiché au chargement) -->
+
 <div class="disclaimer-overlay" id="disclaimerOverlay">
   <div class="disclaimer-panel">
     <h2>⚠️ Avant de continuer</h2>
@@ -556,7 +590,7 @@ function filterPays(key) {
   calcul();
 }
 
-let genre = 'femme', chir = 'bypass', boissonIdx = 1, nbVerres = 1, chart = null;
+let genre = 'femme', chir = 'sleeve', boissonIdx = 1, nbVerres = 1, chart = null;
 let panelOpen = false;
 
 // BUILD INLINE DRINK PANEL
@@ -711,6 +745,9 @@ function calcul() {
   document.getElementById('dCoeff').textContent  = coeffAjuste.toFixed(3);
   document.getElementById('dElim').textContent   = elim;
 
+  // Show risques overlay on first threshold crossing
+  showRisquesIfNeeded(taux0, seuilBari);
+
   const tbody = document.getElementById('paysTableBody');
   tbody.innerHTML = '';
   const videEl = document.getElementById('paysVide');
@@ -813,8 +850,26 @@ function closeDisclaimer() {
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
+// Risques overlay logic
+let risquesShownThisSession = false;
+
+function showRisquesIfNeeded(taux, seuilBari) {
+  // Show if taux > seuilBari AND we haven't shown it this session
+  if (taux > seuilBari && !risquesShownThisSession) {
+    risquesShownThisSession = true;
+    document.getElementById('risquesOverlay').classList.add('open');
+  }
+}
+
+function closeRisques() {
+  document.getElementById('risquesOverlay').classList.remove('open');
+}
+
 updateMuscle();
 updateAlerte();
+// Set correct initial button states
+document.getElementById('btn-sleeve').classList.add('active');
+document.getElementById('btn-bypass').classList.remove('active');
 calcul();
 </script>
 </body>
