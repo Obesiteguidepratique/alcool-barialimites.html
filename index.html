@@ -484,6 +484,7 @@
     <div class="risques-actions">
       <button class="btn-risques-ok" onclick="closeRisques()">J'ai compris — continuer</button>
       <button class="btn-risques-aide" onclick="closeRisques(); toggleGuide()">📖 Retrouver ces informations dans l'aide</button>
+
     </div>
   </div>
 </div>
@@ -574,8 +575,16 @@ Vos valeurs s'affichent ici lors du calcul :<br>
         </div>
         <p style="font-size:.75rem;color:var(--muted);margin-top:8px;">Les valeurs réelles s'affichent dans le panneau <strong>Votre consommation</strong> après chaque calcul.</p>
       </div>
-      <div style="text-align:center;padding:18px 0 4px;color:var(--muted);font-size:.72rem;font-weight:600;">🐛 Vous avez trouvé une erreur dans les calculs ? <a href="mailto:otyrbasbaria@sfr.fr?subject=Alcool%20Barialimites" style="color:var(--wine);text-decoration:none;font-weight:800;">Contactez-nous</a></div>
-      <div style="text-align:center;padding:2px 0 8px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 1.1 — Build 15 — MàJ 24/05/2026</div>
+      <div class="guide-step" style="background:var(--cream);">
+        <h4>💡 Améliorations</h4>
+        <p style="font-size:.83rem;color:var(--text);line-height:1.6;margin-bottom:8px;">Vous avez des idées à nous proposer ?</p>
+        <p style="font-size:.83rem;color:var(--text);line-height:1.6;margin-bottom:6px;">🐛 Vous avez trouvé une erreur dans les calculs ?</p>
+        <a href="mailto:otyrbasbaria@sfr.fr?subject=Alcool%20Barialimites" style="display:inline-block;color:var(--wine);font-weight:800;font-size:.85rem;text-decoration:none;">→ Contactez-nous</a>
+      </div>
+      <div style="padding:16px 0 8px;">
+        <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
+      </div>
+      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 1.1 — Build 16 — MàJ 24/05/2026</div>
     </div>
     <!-- Onglet Risques -->
     <div class="guide-tab-content" id="content-risques">
@@ -604,6 +613,10 @@ Vos valeurs s'affichent ici lors du calcul :<br>
         Un muscle moins important = volume de distribution réduit = <strong>taux plus élevé</strong>.<br>
         Utilisez une valeur basse (Faible) en post-op récent.</p>
       </div>
+      <div style="padding:16px 0 8px;">
+        <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
+      </div>
+
     </div>
   </div>
 </div>
