@@ -72,9 +72,9 @@
   /* INLINE DRINK PANEL */
   .drink-panel { display:none; margin-top:10px; border:1.5px solid var(--border); border-radius:14px; overflow:hidden; background:#fff; }
   .drink-panel.open { display:block; }
-  .drink-panel-inner { max-height:340px; overflow-y:auto; padding:10px 10px 14px; }
+  .drink-panel-inner { max-height:520px; overflow-y:auto; padding:8px 10px 12px; }
 
-  .modal-cat-label { font-size:.62rem; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin:12px 0 7px 2px; display:flex; align-items:center; gap:6px; }
+  .modal-cat-label { font-size:.60rem; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin:9px 0 5px 2px; display:flex; align-items:center; gap:6px; }
   .modal-cat-label:first-child { margin-top:4px; }
   /* Cat color coding */
   .modal-cat-label.cat-petillant { color:#1565c0; }
@@ -84,8 +84,8 @@
 
   .drink-list { display:flex; flex-wrap:wrap; gap:6px; }
   /* Base chip — léger (vins, sangria, martini, porto) */
-  .drink-item { padding:7px 12px; border-radius:20px; border:1.5px solid; cursor:pointer; font-size:.8rem; font-weight:700; transition:all .18s; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; }
-  .drink-item .drink-deg { font-size:.7rem; font-weight:600; opacity:.75; }
+  .drink-item { padding:5px 10px; border-radius:16px; border:1.5px solid; cursor:pointer; font-size:.75rem; font-weight:700; transition:all .18s; display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
+  .drink-item .drink-deg { font-size:.68rem; font-weight:600; opacity:.75; }
 
   /* Léger : vert doux – comme l'image jaune-vert */
   .drink-item.type-leger   { background:#f1f8e9; border-color:#a5d6a7; color:#2e7d32; }
@@ -195,6 +195,7 @@
   .disclaimer-panel .warn-line { background:#fff3cd; border-left:4px solid #e67e22; border-radius:0 8px 8px 0; padding:10px 12px; font-size:.83rem; font-weight:700; color:#7a4000; margin:14px 0; }
   .btn-disclaimer { width:100%; margin-top:16px; padding:14px; background:var(--wine); color:#fff; border:none; border-radius:12px; font-family:'Nunito',sans-serif; font-size:1rem; font-weight:800; cursor:pointer; transition:all .2s; box-shadow:0 3px 10px rgba(139,26,26,0.35); }
   .btn-disclaimer:hover { background:#6e1414; transform:translateY(-1px); }
+  .btn-risques-link { width:100%; margin-top:8px; padding:10px; background:rgba(139,26,26,0.08); color:var(--wine); border:1.5px solid var(--wine); border-radius:12px; font-family:'Nunito',sans-serif; font-size:.85rem; font-weight:700; cursor:pointer; transition:all .2s; }
 
 
   /* RISQUES BARI OVERLAY */
@@ -212,7 +213,13 @@
   .btn-risques-aide:hover { background:rgba(139,26,26,0.15); }
   .guide-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(26,10,10,0.75); z-index:100; align-items:flex-end; justify-content:center; }
   .guide-overlay.open { display:flex; }
-  .guide-panel { background:#fff; border-radius:20px 20px 0 0; padding:24px 20px 40px; max-width:480px; width:100%; max-height:85vh; overflow-y:auto; animation:slideUp .3s ease; position:relative; }
+  .guide-panel { background:#fff; border-radius:20px 20px 0 0; padding:0 0 40px; max-width:480px; width:100%; max-height:85vh; overflow-y:auto; animation:slideUp .3s ease; position:relative; }
+  .guide-tabs { display:flex; border-bottom:2px solid var(--border); position:sticky; top:0; background:#fff; z-index:1; border-radius:20px 20px 0 0; overflow:hidden; }
+  .guide-tab { flex:1; padding:14px 8px; font-family:'Nunito',sans-serif; font-size:.72rem; font-weight:800; border:none; background:var(--cream); color:var(--muted); cursor:pointer; text-align:center; transition:all .2s; line-height:1.3; }
+  .guide-tab.active { background:#fff; color:var(--wine); border-bottom:2px solid var(--wine); margin-bottom:-2px; }
+  .guide-tab-content { display:none; padding:18px 20px; }
+  .guide-tab-content.active { display:block; }
+  .guide-close2 { position:absolute; top:10px; right:14px; background:none; border:none; font-size:1.4rem; color:var(--muted); cursor:pointer; z-index:2; }
   @keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
   .guide-close { position:absolute; top:14px; right:16px; background:none; border:none; font-size:1.4rem; color:var(--muted); cursor:pointer; }
   .guide-title { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--wine); margin-bottom:18px; }
@@ -240,18 +247,18 @@
     <div class="section-title">👤 Vos paramètres</div>
     <div class="form-row">
       <label class="form-label">Poids (kg)</label>
-      <input type="number" id="poids" class="form-input" value="120" min="30" max="250" oninput="calcul()">
+      <input type="number" id="poids" class="form-input" placeholder="—" min="30" max="250" oninput="onParamChange(); savePrefs();">
     </div>
     <div class="form-row">
       <label class="form-label">Genre</label>
       <div class="toggle-group">
         <button class="toggle-btn" id="btn-homme" onclick="setGenre('homme')">♂ Homme</button>
-        <button class="toggle-btn active" id="btn-femme" onclick="setGenre('femme')">♀ Femme</button>
+        <button class="toggle-btn" id="btn-femme" onclick="setGenre('femme')">♀ Femme</button>
       </div>
     </div>
     <div class="form-row">
       <label class="form-label">Temps écoulé depuis la consommation (en heures)</label>
-      <input type="number" id="duree" class="form-input" value="0.5" min="0" max="24" step="0.5" oninput="calcul()">
+      <input type="number" id="duree" class="form-input" value="0" min="0" max="24" step="0.5" oninput="calcul()">
     </div>
     <div class="form-row" style="flex-direction:column;align-items:stretch;gap:6px;">
       <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -259,13 +266,13 @@
         <span style="font-size:1rem;font-weight:900;color:var(--wine);" id="muscleVal">25</span>
       </div>
       <div id="muscleInfoBox" class="hidden" style="font-size:.75rem;color:var(--muted);font-weight:600;line-height:1.5;padding:7px 10px;background:var(--cream);border-radius:8px;border-left:3px solid var(--gold);margin-bottom:4px;">
-        En l'absence de mesure, utilisez la valeur <strong>« Moyenne »</strong>.<br>
+        En l'absence de mesure, utilisez la valeur entre <strong>« Faible à Moyenne en post-op »</strong>.<br>
         Mesure précise : DEXA musculaire ou impédancemétrie médicale.<br>
         Cf l'aide pour une estimation à 6 mois et 12 mois.
       </div>
       </div>
       <!-- Slider masse musculaire -->
-      <input type="range" id="muscle" min="10" max="55" value="25" step="0.5"
+      <input type="range" id="muscle" min="10" max="55" value="18" step="0.5"
              oninput="updateMuscle(); calcul()" style="margin:2px 0;">
       <!-- Barre de zones colorées -->
       <div id="muscleZoneBar" style="position:relative;height:18px;border-radius:6px;overflow:hidden;display:flex;font-size:.6rem;font-weight:800;">
@@ -278,22 +285,33 @@
       <!-- Label de profil dynamique -->
       <div id="muscleProfileLabel" style="text-align:center;font-size:.75rem;font-weight:700;padding:4px 8px;border-radius:8px;background:var(--cream);color:var(--muted);transition:all .2s;"></div>
     </div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:10px 0 14px;">
+    <div class="section-title" style="font-size:.62rem;margin-bottom:10px;">🏥 Chirurgie bariatrique</div>
     <div class="form-row" style="flex-direction:column;align-items:stretch;gap:8px;">
       <label class="form-label">Type de chirurgie</label>
       <div class="chirurgie-group">
         <button class="chir-btn" id="btn-bypass" onclick="setChir('bypass')">Bypass en Y de Roux</button>
-        <button class="chir-btn active" id="btn-sleeve" onclick="setChir('sleeve')">Sleeve Gastrectomie</button>
+        <button class="chir-btn" id="btn-sleeve" onclick="setChir('sleeve')">Sleeve Gastrectomie</button>
       </div>
     </div>
+    <div class="form-row" style="flex-direction:column;align-items:stretch;gap:6px;margin-top:10px;">
+      <label class="form-label" style="font-size:.78rem;">Temps depuis l'opération</label>
+      <div class="chirurgie-group">
+        <button class="chir-btn" id="btn-postop-recent" onclick="setPostOp('recent')">&lt; 6 mois</button>
+        <button class="chir-btn" id="btn-postop-mid" onclick="setPostOp('mid')">6–18 mois</button>
+        <button class="chir-btn" id="btn-postop-stable" onclick="setPostOp('stable')">&gt; 18 mois</button>
+      </div>
+    </div>
+    <div id="postopWarning" style="display:none;margin-top:8px;padding:9px 12px;border-radius:10px;font-size:.78rem;font-weight:700;line-height:1.5;"></div>
   </div>
 
   <!-- BOISSON -->
   <div class="card">
     <div class="section-title">🍹 Votre boisson</div>
 
-    <button class="btn-boisson" id="btnBoissonOpen" onclick="toggleDrinkPanel()">
+    <button class="btn-boisson" id="btnBoissonOpen" onclick="tryOpenDrink()">
       <span>🍹 Choisir une boisson</span>
-      <span class="selected-name" id="selectedName">🍷 Vin 12°</span>
+      <span class="selected-name" id="selectedName">Choisir une boisson</span>
       <span class="arrow" id="drinkArrow">▼</span>
     </button>
 
@@ -311,16 +329,33 @@
     </div>
 
     <!-- ALERTE BOISSON -->
+    <!-- Saisie degré "Autre" -->
+    <div id="degreInputWrap" style="display:none;margin-top:10px;padding:12px;background:#fff9f0;border:1.5px solid #e67e22;border-radius:10px;">
+      <label style="font-size:.8rem;font-weight:700;color:#8a3800;display:block;margin-bottom:6px;">Quel est le dosage en alcool ? (° / %)</label>
+      <input type="number" id="degreCustom" min="0.1" max="70" step="0.5" placeholder="ex: 12.5"
+        oninput="degreCustomVal=parseFloat(this.value)||null; calcul();"
+        style="font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;color:#8B1A1A;background:#fff;border:1.5px solid #e67e22;border-radius:8px;padding:6px 12px;width:110px;">
+    </div>
     <div class="alerte-boisson" id="alerteBoisson"></div>
 
-    <div class="form-row" style="margin-top:14px;">
-      <label class="form-label">Volume (mL)</label>
+    <div style="margin-top:14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
+      <label class="form-label">Contexte alimentaire</label>
+      <div style="display:flex;gap:6px;">
+        <button id="btn-alim-repas" onclick="setAlimentaire('repas')" style="padding:7px 10px;border-radius:10px;border:1.5px solid #28a745;background:#d4edda;color:#155724;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;">🍽 Repas (&lt;2h)</button>
+        <button id="btn-alim-jeun"  onclick="setAlimentaire('jeun')"  style="padding:7px 10px;border-radius:10px;border:1.5px solid var(--border);background:var(--cream);color:var(--muted);font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;">💧 À jeun</button>
+      </div>
+    </div>
+    <div id="alimWarning" style="display:none;margin-bottom:10px;padding:9px 12px;border-radius:10px;font-size:.78rem;font-weight:700;line-height:1.5;background:#fff0e0;border-left:4px solid #e67e22;color:#8a3800;">
+      ⚠️ <strong>À jeun :</strong> absorption plus rapide.<br>NB : Ne buvez pas pendant les repas (règle des 30 min à maintenir à vie).
+    </div>
+    <div class="form-row" style="margin-top:0;">
+      <label class="form-label">Volume du verre (mL)</label>
       <div style="width:140px;">
         <div class="slider-header">
           <span class="slider-val" id="volLabel">120</span>
           <span class="slider-unit">mL</span>
         </div>
-        <input type="range" id="volume" min="10" max="750" value="120" step="5" oninput="updateVol(); calcul()">
+        <input type="range" id="volume" min="10" max="300" value="120" step="5" oninput="updateVol(); calcul()">
       </div>
     </div>
 
@@ -337,7 +372,7 @@
   </div>
 
   <!-- RÉSULTAT -->
-  <div class="result-box safe" id="resultBox">
+  <div class="result-box" id="resultBox" style="display:none;">
     <div class="result-label">Taux d'alcoolémie estimé</div>
     <div class="result-value" id="resultVal">0.00</div>
     <div class="result-unit">g/L de sang</div>
@@ -345,7 +380,25 @@
     <div class="result-time" id="resultTime">⏱ Retour à 0.00 g/L dans : 0h 00min</div>
   </div>
 
-  <!-- LÉGALITÉ PAR PAYS -->
+  <!-- VOTRE CONSOMMATION -->
+  <div class="card" id="consoCard" style="display:none;">
+    <div class="section-title">📋 Votre consommation</div>
+    <div id="debugVars" style="background:#1a0a0a;color:#a0c080;border-radius:8px;padding:10px;font-family:monospace;font-size:.72rem;line-height:1.8;"></div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
+      <button onclick="saveToJournal()" style="width:100%;padding:11px;background:var(--wine);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;cursor:pointer;">📓 Collecter dans le journal de bord</button>
+      <div style="font-size:.72rem;color:var(--muted);font-weight:600;line-height:1.6;padding:6px 2px 8px;text-align:center;">
+        📤 <strong>Partager le journal :</strong> choisissez selon la taille de votre journal.<br>
+        Peu d'entrées → le mail suffit. Au-delà d'une vingtaine → préférez le fichier CSV.
+      </div>
+      <button onclick="exportByMail()" style="width:100%;padding:11px;background:rgba(139,26,26,0.08);color:var(--wine);border:1.5px solid var(--wine);border-radius:10px;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;">📧 Envoyer le journal à votre équipe de soins</button>
+      <button onclick="exportCsv()" style="width:100%;padding:9px;background:none;color:var(--muted);border:1px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;">💾 Télécharger le fichier CSV (journaux longs)</button>
+      <button onclick="clearJournal()" style="width:100%;padding:9px;background:none;color:var(--muted);border:1px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;">🗑 Vider le journal de bord</button>
+    </div>
+    <div id="journalCount" style="text-align:center;font-size:.72rem;color:var(--muted);font-weight:600;margin-top:8px;"></div>
+  </div>
+
+
+    <!-- LÉGALITÉ PAR PAYS -->
   <div class="card" style="margin-top:16px;">
     <div class="section-title">🚗 Légalité conduite par pays</div>
     <p style="font-size:.75rem;color:var(--muted);font-weight:600;margin-bottom:10px;">Les seuils varient selon votre pays et votre profil de conducteur :</p>
@@ -376,6 +429,7 @@
     <div id="peinesText" style="margin-top:12px; font-size:.72rem; color:var(--muted); font-weight:600; line-height:1.5;">
     </div>
   </div>
+
 
   <!-- GRAPHIQUE -->
   <div class="chart-wrap">
@@ -422,7 +476,9 @@
         <li><strong>Absorption ultra-rapide :</strong> le taux maximal est atteint en 15–30 min après un bypass, 30–45 min après une sleeve (vs 45–60 min avant l'opération). Vous pouvez être en danger avant de vous sentir ivre.</li>
         <li><strong>Estomac vide :</strong> si vous n'avez pas mangé dans les 2 heures précédentes, l'absorption est encore plus rapide. Rappel post-op : ne buvez pas pendant les repas (règle des 30 min) — l'alcool ne fait pas exception.</li>
         <li><strong>Tolérance faussée :</strong> beaucoup d'opérés se sentent "à peine ivres" alors que leur taux est déjà dangereux. Cette application vous montre votre taux réel — faites-lui confiance, pas à vos sensations.</li>
-        <li><strong>Transfert d'addiction :</strong> reconnu par la SOFFCO comme l'un des risques majeurs post-bypass. Si vous ressentez une attirance croissante pour l'alcool, consultez votre équipe sans attendre.</li>
+        <li><strong>Transfert d'addiction :</strong> reconnu par les experts comme l'un des risques majeurs post-bypass. Si vous ressentez une attirance croissante pour l'alcool, consultez votre équipe sans attendre.</li>
+        <li><strong>Interactions médicamenteuses :</strong> l'alcool peut amplifier l'effet de vos médicaments de façon imprévisible.</li>
+        <li><strong>Carences :</strong> les carences (B1, B12, fer…) altèrent la métabolisation de l'alcool.</li>
       </ul>
     </div>
     <div class="risques-actions">
@@ -446,79 +502,108 @@
         <p>En cas de doute, consultez toujours votre équipe médicale.</p>
       </div>
     </div>
-    <button class="btn-disclaimer" onclick="closeDisclaimer()">J'ai lu et compris le risque</button>
+    <button class="btn-disclaimer" onclick="closeDisclaimer()">J'ai lu et compris — continuer</button>
+    <p style="text-align:center;font-size:.78rem;color:#8a6565;font-weight:600;margin-top:10px;">📖 Consultez l'aide (bouton ❓) pour les risques spécifiques post-bariatrique.</p>
   </div>
 </div>
 
 <!-- GUIDE OVERLAY -->
 <div class="guide-overlay" id="guideOverlay" onclick="closeGuideIfBg(event)">
   <div class="guide-panel">
-    <button class="guide-close" onclick="toggleGuide()">✕</button>
-    <div class="guide-title">📖 Guide d'utilisation</div>
-    <div class="guide-step">
-      <h4>Étape 1 — Vos paramètres</h4>
-      <ul>
-        <li>Renseignez votre poids actuel en kg</li>
-        <li>Sélectionnez votre genre (Homme / Femme)</li>
-        <li>Indiquez le temps écoulé depuis la consommation (en heures)</li>
-        <li>Entrez votre masse musculaire (en kg) — voir ci-dessous</li>
-        <li>Choisissez votre type de chirurgie bariatrique</li>
-      </ul>
+    <button class="guide-close2" onclick="toggleGuide()">✕</button>
+    <div class="guide-tabs">
+      <button class="guide-tab active" id="tab-guide" onclick="switchGuideTab('guide')">📖 Guide d'utilisation</button>
+      <button class="guide-tab" id="tab-risques" onclick="switchGuideTab('risques')">🚨 Risques</button>
     </div>
-    <div class="guide-step">
-      <h4>Étape 2 — Votre boisson</h4>
-      <ul>
-        <li>Appuyez sur le bouton "Choisir une boisson"</li>
-        <li>Sélectionnez votre boisson dans la liste</li>
-        <li>Ajustez le volume en mL via le curseur</li>
-        <li>Indiquez le nombre de verres</li>
-      </ul>
-    </div>
-    <div class="guide-step">
-      <h4>Étape 3 — Lisez les résultats</h4>
-      <ul>
-        <li>Le taux s'affiche en g/L de sang</li>
-        <li>La courbe montre l'élimination dans le temps</li>
-        <li>Le tableau indique votre statut légal par pays</li>
-      </ul>
-    </div>
-    <div class="guide-step">
-      <h4>🧮 Formule de Widmark</h4>
-      <div class="guide-formula">
-Taux (g/L) = [Alcool pur (g) / (Poids × Coeff. ajusté)]<br>
-             − [Élimination × Temps écoulé(h)]<br><br>
-Alcool pur (g) = Volume(mL) × Nb verres × Degré(%) × 0.789<br><br>
-Coeff. ajusté = Coeff. Widmark × (1 + 0.3 × Masse musc.(kg) / Poids(kg))<br>
-Coeff. Widmark : Homme = 0.68 / Femme = 0.55<br>
-Élim. : Homme = 0.12 g/L/h / Femme = 0.10 g/L/h
+    <!-- Onglet Guide -->
+    <div class="guide-tab-content active" id="content-guide">
+      <div class="guide-step">
+        <h4>Étape 1 — Vos paramètres</h4>
+        <ul>
+          <li>Renseignez votre poids actuel en kg</li>
+          <li>Sélectionnez votre genre (Homme / Femme)</li>
+          <li>Indiquez le temps écoulé depuis la consommation (en heures)</li>
+          <li>Entrez votre masse musculaire (en kg)</li>
+          <li>Choisissez votre type de chirurgie et le temps depuis l'opération</li>
+        </ul>
       </div>
+      <div class="guide-step">
+        <h4>Étape 2 — Votre boisson</h4>
+        <ul>
+          <li>Appuyez sur le bouton "Choisir une boisson"</li>
+          <li>Sélectionnez votre boisson dans la liste</li>
+          <li>Indiquez le contexte alimentaire (repas ou à jeun)</li>
+          <li>Ajustez le volume en mL via le curseur</li>
+          <li>Indiquez le nombre de verres</li>
+        </ul>
+      </div>
+      <div class="guide-step">
+        <h4>Étape 3 — Lisez les résultats</h4>
+        <ul>
+          <li>Le taux s'affiche en g/L de sang</li>
+          <li>Le tableau indique votre statut légal par pays</li>
+          <li>La courbe montre l'élimination dans le temps</li>
+        </ul>
+      </div>
+      <div class="guide-step" style="background:#f0f7f0;border-left:3px solid #28a745;">
+        <h4 style="color:#155724;">🔒 Confidentialité</h4>
+        <p style="font-size:.83rem;color:#155724;line-height:1.6;">Vos données restent sur votre appareil. Aucune information (poids, genre, historique) n'est envoyée à un serveur. Nous ne collectons rien.</p>
+      </div>
+      <div class="guide-step">
+        <h4>🧮 Formule de Widmark</h4>
+        <div class="guide-formula">
+<span style="opacity:.6;">── Résultat ──────────────────────────</span><br>
+Taux (g/L) = [Alcool pur (g) / (Poids × Coeff. ajusté × 1000)] × 1000<br>
+             − [Élimination × Temps écoulé (h)]<br>
+Taux affiché = max(0, Taux)<br><br>
+<span style="opacity:.6;">── Alcool pur ────────────────────────</span><br>
+Alcool pur (g) = Volume (mL) × Nb verres × (Degré / 100) × 0.789 × Facteur alim.<br>
+Facteur alimentaire : À jeun = ×1.15 / Avec repas = ×1.00<br><br>
+<span style="opacity:.6;">── Coeff. Widmark ajusté ─────────────</span><br>
+Coeff. ajusté = Coeff. Widmark × (1 + 0.3 × Masse musc. / Poids)<br>
+Coeff. Widmark : Homme = 0.68 / Femme = 0.55<br><br>
+<span style="opacity:.6;">── Élimination ───────────────────────</span><br>
+Élim. : Homme = 0.12 g/L/h / Femme = 0.10 g/L/h<br><br>
+<span style="opacity:.6;">── Seuil bariatrique ─────────────────</span><br>
+Seuil base : Bypass = 0.10 g/L / Sleeve = 0.20 g/L<br>
+Si &lt; 6 mois post-op : seuil × 0.5<br><br>
+<span style="opacity:.6;">── Variables utilisées ───────────────</span><br>
+Vos valeurs s'affichent ici lors du calcul :<br>
+→ Poids · Genre · Masse musc. · Degré · Vol. · Nb verres<br>
+→ Temps écoulé · Contexte alim. · Chirurgie · Temps post-op
+        </div>
+        <p style="font-size:.75rem;color:var(--muted);margin-top:8px;">Les valeurs réelles s'affichent dans le panneau <strong>Votre consommation</strong> après chaque calcul.</p>
+      </div>
+      <div style="text-align:center;padding:18px 0 4px;color:var(--muted);font-size:.72rem;font-weight:600;">🐛 Vous avez trouvé une erreur dans les calculs ? <a href="mailto:otyrbasbaria@sfr.fr?subject=Alcool%20Barialimites" style="color:var(--wine);text-decoration:none;font-weight:800;">Contactez-nous</a></div>
+      <div style="text-align:center;padding:2px 0 8px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 1.1 — Build 15 — MàJ 24/05/2026</div>
     </div>
-    <div class="guide-step" style="background:#fff3e0;">
-      <h4>💪 Perte musculaire après chirurgie bariatrique</h4>
-      <p>La chirurgie bariatrique entraîne fréquemment une perte de masse musculaire :</p>
-      <ul style="margin-top:8px;">
-        <li>Dans les <strong>6 premiers mois</strong> : perte de 3 à 8 kg de masse maigre (sleeve &amp; bypass)</li>
-        <li>À <strong>12 mois</strong> : perte totale pouvant atteindre 5–12 kg selon l'activité physique</li>
-        <li><strong>Bypass en Y de Roux</strong> : perte souvent plus marquée que la sleeve gastrectomie</li>
-        <li><strong>Facteurs aggravants</strong> : apports protéiques insuffisants, sédentarité, âge &gt; 50 ans</li>
-      </ul>
-      <p style="margin-top:10px;padding:8px 10px;background:rgba(139,26,26,0.07);border-radius:8px;"><strong>→ Conséquence pour ce calculateur :</strong><br>
-      Si votre masse musculaire a diminué depuis l'opération, entrez une valeur basse.<br>
-      Un muscle moins important = volume de distribution réduit = <strong>taux plus élevé</strong>.<br>
-      Cela rend le calcul plus prudent et plus fidèle à votre réalité post-op.</p>
-    </div>
-    <div class="guide-step" style="background:#ffe5e5; border-left:4px solid #c0392b;">
-      <h4 style="color:#7a0000;">🚨 Risques spécifiques post-bariatrique à connaître</h4>
-      <ul>
-        <li><strong>Absorption ultra-rapide :</strong> le taux maximal est atteint en 15–30 min après un bypass (vs 45–60 min avant). Vous pouvez être en danger avant de vous sentir ivre.</li>
-        <li><strong>Estomac vide :</strong> si vous n'avez pas mangé dans les 2 heures précédentes, l'absorption est encore plus rapide. Rappel post-op : ne buvez pas pendant les repas (règle des 30 min) — l'alcool ne fait pas exception.</li>
-        <li><strong>Tolérance faussée :</strong> beaucoup d'opérés se sentent "à peine ivres" alors que leur taux est déjà dangereux. Cette application vous montre votre taux réel — faites-lui confiance, pas à vos sensations.</li>
-        <li><strong>Transfert d'addiction :</strong> reconnu par la SOFFCO comme l'un des risques majeurs post-bypass. Si vous ressentez une attirance croissante pour l'alcool, consultez votre équipe sans attendre.</li>
-      </ul>
-    </div>
-    <div class="guide-step" style="background:#fff3cd;">
-      <h4>⚠️ Avertissement chirurgie bariatrique</h4>
-      <p>Après un bypass, l'alcool est absorbé <strong>2 à 3× plus vite</strong>. Le seuil d'alerte est abaissé à <strong>0.10 g/L</strong> pour le bypass (vs 0.20 g/L pour la sleeve).</p>
+    <!-- Onglet Risques -->
+    <div class="guide-tab-content" id="content-risques">
+      <div class="guide-step" style="background:#ffe5e5; border-left:4px solid #c0392b;">
+        <h4 style="color:#7a0000;">🚨 Risques spécifiques post-bariatrique à connaître</h4>
+        <ul>
+          <li><strong>Absorption ultra-rapide :</strong> le taux maximal est atteint en 15–30 min après un bypass, 30–45 min après une sleeve (vs 45–60 min avant l'opération). Vous pouvez être en danger avant de vous sentir ivre.</li>
+          <li><strong>Estomac vide :</strong> si vous n'avez pas mangé dans les 2 heures précédentes, l'absorption est encore plus rapide. Règle des 30 min à maintenir à vie — l'alcool ne fait pas exception.</li>
+          <li><strong>Tolérance faussée :</strong> beaucoup d'opérés se sentent "à peine ivres" alors que leur taux est déjà dangereux. Faites confiance au calculateur, pas à vos sensations.</li>
+          <li><strong>Transfert d'addiction :</strong> reconnu par les experts comme l'un des risques majeurs. Si vous ressentez une attirance croissante pour l'alcool, consultez votre équipe sans attendre.</li>
+          <li><strong>Interactions médicamenteuses :</strong> l'alcool peut amplifier l'effet de vos médicaments de façon imprévisible.</li>
+          <li><strong>Médicaments post-bariatrique :</strong> certains sont incompatibles avec la consommation d'alcool. Une validation avec votre équipe soignante est nécessaire.</li>
+          <li><strong>Carences :</strong> les carences (B1, B12, fer…) altèrent la métabolisation de l'alcool.</li>
+        </ul>
+      </div>
+      <div class="guide-step" style="background:#fff3e0;">
+        <h4>💪 Perte musculaire après chirurgie bariatrique</h4>
+        <p>La chirurgie bariatrique entraîne fréquemment une perte de masse musculaire :</p>
+        <ul style="margin-top:8px;">
+          <li>Dans les <strong>6 premiers mois</strong> : perte de 3 à 8 kg de masse maigre (sleeve &amp; bypass)</li>
+          <li>À <strong>12 mois</strong> : perte totale pouvant atteindre 5–12 kg selon l'activité physique</li>
+          <li><strong>Bypass en Y de Roux</strong> : perte souvent plus marquée que la sleeve</li>
+          <li><strong>Facteurs aggravants</strong> : apports protéiques insuffisants, sédentarité, âge &gt; 50 ans</li>
+        </ul>
+        <p style="margin-top:10px;padding:8px 10px;background:rgba(139,26,26,0.07);border-radius:8px;"><strong>→ Conséquence pour ce calculateur :</strong><br>
+        Un muscle moins important = volume de distribution réduit = <strong>taux plus élevé</strong>.<br>
+        Utilisez une valeur basse (Faible) en post-op récent.</p>
+      </div>
     </div>
   </div>
 </div>
@@ -527,16 +612,15 @@ Coeff. Widmark : Homme = 0.68 / Femme = 0.55<br>
 <script>
 const boissons = [
   // type: 'leger' | 'petillant' | 'fort' | 'cocktail'
-  // Vins — fusionnés par degré (sans distinction rouge/blanc/rosé)
   { nom:'🍷 Vin 11°',             degre:11,  vol:150, cat:'Vins',             type:'leger' },
   { nom:'🍷 Vin 12°',             degre:12,  vol:150, cat:'Vins',             type:'leger' },
   { nom:'🍷 Vin 13°',             degre:13,  vol:150, cat:'Vins',             type:'leger' },
-  { nom:'🍷 Vin 13.5°',           degre:13.5,vol:150, cat:'Vins',             type:'leger' },
   { nom:'🍷 Vin 14°',             degre:14,  vol:150, cat:'Vins',             type:'leger' },
   { nom:'🍷 Vin 15°',             degre:15,  vol:150, cat:'Vins',             type:'leger' },
-  { nom:'🥂 Champagne 12°',       degre:12,  vol:125, cat:'Vins',             type:'petillant' },
-  { nom:'🥂 Prosecco 11°',        degre:11,  vol:125, cat:'Vins',             type:'petillant' },
   { nom:'🍷 Porto 20°',           degre:20,  vol:80,  cat:'Vins',             type:'leger' },
+  // Vins pétillants
+  { nom:'🥂 Champagne 12°',       degre:12,  vol:125, cat:'Vins pétillants',  type:'petillant' },
+  { nom:'🥂 Prosecco 11°',        degre:11,  vol:125, cat:'Vins pétillants',  type:'petillant' },
   // Bières & Cidres
   { nom:'🍺 Bière légère 3°',    degre:3,   vol:330, cat:'Bières & Cidres',  type:'petillant' },
   { nom:'🍺 Bière 5°',            degre:5,   vol:330, cat:'Bières & Cidres',  type:'petillant' },
@@ -556,6 +640,11 @@ const boissons = [
   { nom:'🍹 Spritz (estimé)',      degre:8,   vol:200, cat:'Cocktails',        type:'petillant' },
   { nom:'🍹 Sangria (estimée)',    degre:10,  vol:250, cat:'Cocktails',        type:'cocktail' },
   { nom:'🍸 Martini 18°',         degre:18,  vol:80,  cat:'Cocktails',        type:'cocktail' },
+  { nom:'❓ Autre type de vin',         degre:null, vol:150, cat:'Vins',            type:'leger',    autre:true },
+  { nom:'❓ Autre vin pétillant',       degre:null, vol:125, cat:'Vins pétillants', type:'petillant',autre:true },
+  { nom:'❓ Autre Bière ou Cidre',      degre:null, vol:330, cat:'Bières & Cidres', type:'petillant',autre:true },
+  { nom:'❓ Autre Spiritueux',          degre:null, vol:40,  cat:'Spiritueux',      type:'fort',     autre:true },
+  { nom:'❓ Autre type de Cocktail',    degre:null, vol:200, cat:'Cocktails',       type:'cocktail', autre:true },
 ];
 
 const catColors = {
@@ -583,14 +672,92 @@ let currentPaysFilter = null; // null = rien sélectionné par défaut
 
 function filterPays(key) {
   currentPaysFilter = key;
-  // Mettre à jour les boutons actifs
   document.querySelectorAll('.pays-btn').forEach(b => {
     b.classList.toggle('active', b.getAttribute('onclick').includes("'" + key + "'"));
   });
-  calcul();
+  // Mise à jour directe du tableau si taux disponible
+  const tauxEl = document.getElementById('resultVal');
+  const taux = tauxEl ? parseFloat(tauxEl.textContent) || 0 : 0;
+  updatePaysDisplay(taux);
+  // Recalcul complet si boisson sélectionnée
+  if (boissonIdx !== null && boissonIdx !== undefined) calcul();
 }
 
-let genre = 'femme', chir = 'sleeve', boissonIdx = 1, nbVerres = 1, chart = null;
+function updatePaysDisplay(taux) {
+  const tbody = document.getElementById('paysTableBody');
+  const videEl = document.getElementById('paysVide');
+  const peinesEl = document.getElementById('peinesText');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  if (!currentPaysFilter) {
+    if (videEl) videEl.style.display = 'block';
+    if (peinesEl) peinesEl.innerHTML = '';
+    return;
+  }
+  if (videEl) videEl.style.display = 'none';
+  const p = pays[currentPaysFilter];
+  if (!p) return;
+  if (peinesEl) peinesEl.innerHTML = '<strong>Peine :</strong> ' + p.peine;
+  const legal = taux <= p.seuil;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${p.nom}<br><span class="peine">${p.peine}</span></td>
+    <td>${p.seuil.toFixed(1)}</td>
+    <td><span class="badge ${legal?'legal':'illegal'}">${legal?'✅ LÉGAL':'⛔ INTERDIT'}</span></td>`;
+  tbody.appendChild(tr);
+}
+
+let genre = null, chir = null, postOp = null, alimentaire = 'repas';
+let boissonIdx = null, nbVerres = 1, chart = null;
+let degreCustomVal = null;
+let miniPopupShown = false, spiritueuxPopupShown = false;
+// --- Persistance localStorage ---
+const LS_PREFS = 'bari_prefs';
+const LS_USAGE = 'bari_usage';
+
+function savePrefs() {
+  try {
+    const prefs = {
+      poids: document.getElementById('poids').value,
+      genre: genre,
+      chir: chir,
+      muscle: document.getElementById('muscle').value
+    };
+    localStorage.setItem(LS_PREFS, JSON.stringify(prefs));
+  } catch(e) {}
+}
+
+function loadPrefs() {
+  try {
+    const raw = localStorage.getItem(LS_PREFS);
+    if (!raw) return;
+    const p = JSON.parse(raw);
+    if (p.poids) {
+      document.getElementById('poids').value = p.poids;
+      document.getElementById('poids').classList.remove('empty');
+    }
+    if (p.muscle) {
+      document.getElementById('muscle').value = p.muscle;
+    }
+    if (p.genre) setGenre(p.genre, true);
+    if (p.chir)  setChir(p.chir, true);
+    updateMuscle();
+  } catch(e) {}
+}
+
+// Tracking addiction
+let sessionOpenCount = 1, firstSeen = Date.now();
+try {
+  const raw = localStorage.getItem(LS_USAGE);
+  const usage = raw ? JSON.parse(raw) : { first: Date.now(), sessions: [] };
+  if (!usage.first) usage.first = Date.now();
+  firstSeen = usage.first;
+  const now = Date.now();
+  const cutoff = now - 14 * 24 * 60 * 60 * 1000;
+  usage.sessions = (usage.sessions || []).filter(t => t >= cutoff);
+  usage.sessions.push(now);
+  sessionOpenCount = usage.sessions.length;
+  localStorage.setItem(LS_USAGE, JSON.stringify(usage));
+} catch(e) {}
 let panelOpen = false;
 
 // BUILD INLINE DRINK PANEL
@@ -604,7 +771,7 @@ function buildDrinkPanel() {
     boissons.forEach((b, i) => {
       if (b.cat !== cat) return;
       html += `<div class="drink-item type-${b.type}${i===boissonIdx?' active':''}" onclick="selectBoisson(${i})">
-        <span>${b.nom}</span><span class="drink-deg">${b.vol}mL·${b.degre}°</span>
+        <span>${b.nom}</span><span class="drink-deg">${b.autre ? '' : b.vol+'mL·'+b.degre+'°'}</span>
       </div>`;
     });
     html += '</div>';
@@ -628,15 +795,56 @@ function toggleDrinkPanel() {
 
 function selectBoisson(i) {
   boissonIdx = i;
-  document.getElementById('selectedName').textContent = boissons[i].nom;
-  document.getElementById('volume').value = boissons[i].vol;
+  const b = boissons[i];
+  document.getElementById('selectedName').textContent = b.nom;
+  document.getElementById('volume').value = b.vol || 150;
   updateVol();
+  // Autre: show degre input
+  const wrap = document.getElementById('degreInputWrap');
+  if (b.autre) {
+    wrap.style.display = 'block';
+    degreCustomVal = null;
+    document.getElementById('degreCustom').value = '';
+  } else {
+    wrap.style.display = 'none';
+    degreCustomVal = null;
+  }
+  // Mini-popups
+  if (postOp === 'recent' && !miniPopupShown && b.type === 'fort') {
+    miniPopupShown = true;
+    showMiniPopupWithRisques('⚠️ Votre réaction à l\'alcool a changé', 'Moins de 6 mois après l\'opération, votre corps absorbe l\'alcool très différemment. Les spiritueux sont particulièrement risqués à ce stade.');
+  } else if (b.type === 'fort' && !spiritueuxPopupShown) {
+    spiritueuxPopupShown = true;
+    showMiniPopupWithRisques('🚨 Alcool fort', 'Les spiritueux présentent un risque d\'addiction élevé après chirurgie bariatrique. Consultez votre équipe soignante.');
+  }
   // close panel
   panelOpen = false;
   document.getElementById('drinkPanel').classList.remove('open');
   document.getElementById('btnBoissonOpen').classList.remove('open');
   updateAlerte();
   calcul();
+}
+
+function showMiniPopup(title, body) {
+  document.getElementById('miniPopupTitle').textContent = title;
+  document.getElementById('miniPopupBody').textContent = body;
+  document.getElementById('miniPopupOverlay').style.display = 'flex';
+}
+
+function showMiniPopupWithRisques(title, body) {
+  // Affiche la mini-popup, puis ouvre l'onglet Risques du guide à la fermeture
+  document.getElementById('miniPopupTitle').textContent = title;
+  document.getElementById('miniPopupBody').textContent = body;
+  // Bouton fermer → ouvre risques
+  const closeBtn = document.querySelector('#miniPopupOverlay button');
+  if (closeBtn) {
+    closeBtn.onclick = function() {
+      document.getElementById('miniPopupOverlay').style.display = 'none';
+      document.getElementById('guideOverlay').classList.add('open');
+      switchGuideTab('risques');
+    };
+  }
+  document.getElementById('miniPopupOverlay').style.display = 'flex';
 }
 
 function updateAlerte() {
@@ -660,44 +868,142 @@ function updateVol() {
 function changeVerres(d) {
   nbVerres = Math.max(0.5, Math.min(10, nbVerres + d));
   document.getElementById('verresLabel').textContent = nbVerres % 1 === 0 ? nbVerres : nbVerres.toFixed(1);
+  if (postOp === 'recent' && nbVerres > 1 && !miniPopupShown) {
+    miniPopupShown = true;
+    showMiniPopupWithRisques('⚠️ Attention à la quantité', 'Votre réaction à l\'alcool a changé depuis l\'opération. Plus d\'un verre peut être très imprévisible en post-op récent.');
+  }
   calcul();
 }
-function setGenre(g) {
+function setGenre(g, silent) {
   genre = g;
   document.getElementById('btn-homme').classList.toggle('active', g==='homme');
   document.getElementById('btn-femme').classList.toggle('active', g==='femme');
   updateMuscle();
-  calcul();
+  if (!silent) { savePrefs(); onParamChange(); } else onParamChange();
 }
-function setChir(c) {
+function setChir(c, silent) {
   chir = c;
   document.getElementById('btn-bypass').classList.toggle('active', c==='bypass');
   document.getElementById('btn-sleeve').classList.toggle('active', c==='sleeve');
+  if (!silent) savePrefs();
+  onParamChange();
+}
+
+function setPostOp(p) {
+  postOp = p;
+  ['recent','mid','stable'].forEach(v => {
+    document.getElementById('btn-postop-' + v).classList.toggle('active', v === p);
+  });
+  const warn = document.getElementById('postopWarning');
+  if (p === 'recent') {
+    warn.style.cssText = 'display:block;margin-top:8px;padding:9px 12px;border-radius:10px;font-size:.78rem;font-weight:700;line-height:1.5;background:#ffe5e5;border-left:4px solid #c0392b;color:#7a0000;';
+    warn.innerHTML = '🚨 <strong>Moins de 6 mois post-op :</strong> absorption imprévisible, muqueuse en cicatrisation. La consommation d\'alcool est fortement déconseillée.';
+  } else if (p === 'mid') {
+    warn.style.cssText = 'display:block;margin-top:8px;padding:9px 12px;border-radius:10px;font-size:.78rem;font-weight:700;line-height:1.5;background:#fff0e0;border-left:4px solid #e67e22;color:#8a3800;';
+    warn.innerHTML = '⚠️ <strong>6–18 mois post-op :</strong> métabolisme en stabilisation. Restez très vigilant.';
+  } else {
+    warn.style.cssText = 'display:block;margin-top:8px;padding:9px 12px;border-radius:10px;font-size:.78rem;font-weight:700;line-height:1.5;background:#f0f4ff;border-left:4px solid #5577bb;color:#223366;';
+    warn.innerHTML = 'ℹ️ <strong>Plus de 18 mois post-op :</strong> profil plus stable, mais les risques bariatriques restent permanents.';
+  }
+  onParamChange();
+}
+
+function setAlimentaire(a) {
+  alimentaire = a;
+  const rEl = document.getElementById('btn-alim-repas');
+  const jEl = document.getElementById('btn-alim-jeun');
+  if (a === 'repas') {
+    rEl.style.cssText = 'flex:1;padding:7px 10px;border-radius:10px;border:1.5px solid #28a745;background:#d4edda;color:#155724;font-family:\'Nunito\',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;';
+    jEl.style.cssText = 'flex:1;padding:7px 10px;border-radius:10px;border:1.5px solid var(--border);background:var(--cream);color:var(--muted);font-family:\'Nunito\',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;';
+  } else {
+    rEl.style.cssText = 'flex:1;padding:7px 10px;border-radius:10px;border:1.5px solid var(--border);background:var(--cream);color:var(--muted);font-family:\'Nunito\',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;';
+    jEl.style.cssText = 'flex:1;padding:7px 10px;border-radius:10px;border:1.5px solid #e67e22;background:#fff0e0;color:#8a3800;font-family:\'Nunito\',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;';
+  }
+  document.getElementById('alimWarning').style.display = a === 'jeun' ? 'block' : 'none';
   calcul();
 }
 
+function paramsComplete() {
+  const poids = parseFloat(document.getElementById('poids').value);
+  return !!(genre && chir && postOp && poids >= 30);
+}
+
+function onParamChange() {
+  const btn = document.getElementById('btnBoissonOpen');
+  if (paramsComplete()) {
+    btn.classList.remove('disabled');
+    btn.style.background = '';
+    btn.style.cursor = '';
+  } else {
+    btn.classList.add('disabled');
+    btn.style.background = '#b0a0a0';
+    btn.style.cursor = 'not-allowed';
+  }
+  calcul();
+}
+
+function tryOpenDrink() {
+  if (!paramsComplete()) {
+    const t = document.getElementById('incompletToast');
+    t.style.display = 'block';
+    setTimeout(() => { t.style.display = 'none'; }, 3000);
+    return;
+  }
+  toggleDrinkPanel();
+}
+
 function calcul() {
+  if (boissonIdx === null || boissonIdx === undefined) return;
   const poids = parseFloat(document.getElementById('poids').value) || 80;
   const duree = parseFloat(document.getElementById('duree').value) || 0;
   const vol   = parseFloat(document.getElementById('volume').value) || 0;
-  const muscle = parseFloat(document.getElementById('muscle').value) || 25;
+  const muscle = parseFloat(document.getElementById('muscle').value) || 18;
   const b     = boissons[boissonIdx];
   const coeff = genre==='homme' ? 0.68 : 0.55;
   const elim  = genre==='homme' ? 0.12 : 0.10;
   // Formule de Widmark adaptée : facteur masse musculaire
   // Le muscle (~75% eau) augmente le volume de distribution → taux plus bas
   const coeffAjuste = coeff * (1 + 0.3 * (muscle / poids));
-  const alcoolPur = vol * nbVerres * (b.degre/100) * 0.789;
+  const degreFinal = b.autre ? (degreCustomVal || 0) : b.degre;
+  const alimentFactor = alimentaire === 'jeun' ? 1.15 : 1.0;
+  const alcoolPur = vol * nbVerres * (degreFinal/100) * 0.789 * alimentFactor;
   const taux0 = alcoolPur / (poids * coeffAjuste * 1000) * 1000;
   const taux  = Math.max(0, taux0 - elim * duree);
   const mgL   = taux * 0.5;
   const tempsRetour = taux0 / elim;
   const h = Math.floor(taux / elim);
   const m = Math.round(((taux/elim) - h) * 60);
-  const seuilBari = chir==='bypass' ? 0.10 : 0.20;
+  const seuilBariBase = chir==='bypass' ? 0.10 : 0.20;
+  const seuilBari = postOp === 'recent' ? seuilBariBase * 0.5 : seuilBariBase;
 
   const box = document.getElementById('resultBox');
+  document.getElementById('resultBox').style.display = 'block';
+  document.getElementById('consoCard').style.display = 'block';
   document.getElementById('resultVal').textContent = taux.toFixed(2);
+
+  // Mise à jour des variables de debug dans l'aide
+  const dbg = document.getElementById('debugVars');
+  if (dbg) {
+    const b = boissons[boissonIdx];
+    const degreFinalDbg = b.autre ? (degreCustomVal || 0) : b.degre;
+    dbg.style.display = 'block';
+    dbg.innerHTML =
+      `Poids          : ${poids} kg<br>` +
+      `Genre          : ${genre}<br>` +
+      `Masse musc.    : ${muscle} kg<br>` +
+      `Degré          : ${degreFinalDbg}°<br>` +
+      `Volume         : ${vol} mL × ${nbVerres} verre(s)<br>` +
+      `Alcool pur     : ${alcoolPur.toFixed(2)} g<br>` +
+      `Alim.          : ${alimentaire} (×${alimentaire==='jeun'?'1.15':'1.00'})<br>` +
+      `Temps écoulé   : ${duree} h<br>` +
+      `Chirurgie      : ${chir || '—'}<br>` +
+      `Post-op        : ${postOp || '—'}<br>` +
+      `Coeff. ajusté  : ${coeffAjuste.toFixed(4)}<br>` +
+      `Élimination    : ${elim} g/L/h<br>` +
+      `Seuil bari.    : ${seuilBari} g/L<br>` +
+      `Taux pic (t=0) : ${taux0.toFixed(3)} g/L<br>` +
+      `Taux actuel    : ${taux.toFixed(3)} g/L`;
+  }
   document.getElementById('resultTime').textContent = taux > 0
     ? `⏱ Retour à 0.00 g/L dans : ${h}h ${m.toString().padStart(2,'0')}min`
     : '✅ Taux nul à ce stade';
@@ -733,12 +1039,15 @@ function calcul() {
   }
 
   const seuilEl = document.getElementById('seuilInfo');
+  const postOpLabel = postOp==='recent' ? ' — <span style="color:#a00;font-weight:800;">⚠️ seuil abaissé (&lt;6 mois)</span>' : postOp==='mid' ? ' — stabilisation' : '';
   if (chir === 'bypass') {
-    seuilEl.innerHTML = `Seuil d'alerte bariatrique : ${seuilBari} g/L (Bypass)<br>
-      <span style="font-size:.72rem;font-weight:600;color:#a00;">⏱ Fenêtre de vulnérabilité : absorption maximale en 15–30 min (vs 45–60 min avant l'opération)</span>`;
+    seuilEl.innerHTML = `Seuil d'alerte : ${seuilBari} g/L (Bypass)${postOpLabel}<br>
+      <span style="font-size:.72rem;font-weight:600;color:#a00;">⏱ Absorption maximale en 15–30 min (vs 45–60 min avant l'op.) — après un bypass, l'alcool est absorbé 2 à 3× plus vite.</span><br>
+      <span style="font-size:.68rem;color:var(--muted);font-weight:600;">Recommandation des professionnels de santé — (0,10 g/L bypass / 0,20 g/L sleeve : au-delà, effets amplifiés et imprévisibles)</span>`;
   } else {
-    seuilEl.innerHTML = `Seuil d'alerte bariatrique : ${seuilBari} g/L (Sleeve)<br>
-      <span style="font-size:.72rem;font-weight:600;color:#a00;">⏱ Fenêtre de vulnérabilité : absorption maximale en 30–45 min (vs 45–60 min avant l'opération)</span>`;
+    seuilEl.innerHTML = `Seuil d'alerte : ${seuilBari} g/L (Sleeve)${postOpLabel}<br>
+      <span style="font-size:.72rem;font-weight:600;color:#a00;">⏱ Absorption maximale en 30–45 min (vs 45–60 min avant l'op.)</span><br>
+      <span style="font-size:.68rem;color:var(--muted);font-weight:600;">Recommandation des professionnels de santé — (0,10 g/L bypass / 0,20 g/L sleeve : au-delà, effets amplifiés et imprévisibles)</span>`;
   }
   document.getElementById('dAlcool').textContent = alcoolPur.toFixed(1);
   document.getElementById('dMgL').textContent    = mgL.toFixed(3);
@@ -752,6 +1061,9 @@ function calcul() {
   tbody.innerHTML = '';
   const videEl = document.getElementById('paysVide');
   const peinesEl = document.getElementById('peinesText');
+
+  // Toujours mettre à jour la courbe
+  updateChart(taux0, elim, tempsRetour, seuilBari);
 
   // Rien sélectionné : afficher le message d'invite
   if (!currentPaysFilter) {
@@ -811,7 +1123,16 @@ function updateChart(taux0, elim, tempsRetour, seuilBari) {
   });
 }
 
-function toggleGuide() { document.getElementById('guideOverlay').classList.toggle('open'); }
+function toggleGuide(tab) {
+  document.getElementById('guideOverlay').classList.toggle('open');
+  if (tab) switchGuideTab(tab);
+}
+function switchGuideTab(tab) {
+  ['guide','risques'].forEach(t => {
+    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+    document.getElementById('content-'+t).classList.toggle('active', t===tab);
+  });
+}
 function closeGuideIfBg(e) { if(e.target===document.getElementById('guideOverlay')) toggleGuide(); }
 
 // ── Seuils masse musculaire par genre ────────────────────────────────────
@@ -854,23 +1175,204 @@ function closeDisclaimer() {
 let risquesShownThisSession = false;
 
 function showRisquesIfNeeded(taux, seuilBari) {
-  // Show if taux > seuilBari AND we haven't shown it this session
   if (taux > seuilBari && !risquesShownThisSession) {
     risquesShownThisSession = true;
-    document.getElementById('risquesOverlay').classList.add('open');
+    document.getElementById('guideOverlay').classList.add('open');
+    switchGuideTab('risques');
   }
+}
+
+function openRisques() {
+  const isBypass = chir === 'bypass';
+  let html = '<ul style="padding-left:16px;font-size:.83rem;line-height:1.7;">' +
+    '<li><strong>Absorption ultra-rapide :</strong> taux maximal en ' + (isBypass ? '15–30 min' : '30–45 min') + ' vs 45–60 min avant l\'opération.</li>' +
+    '<li><strong>Tolérance faussée :</strong> vous pouvez être en danger avant de vous sentir ivre.</li>' +
+    '<li><strong>Transfert d\'addiction :</strong> risque reconnu — consultez votre équipe si l\'alcool vous attire de plus en plus.</li>' +
+    '<li><strong>Interactions médicamenteuses :</strong> l\'alcool peut amplifier l\'effet de vos médicaments de façon imprévisible.</li>' +
+    '<li><strong>Carences :</strong> les carences (B1, B12, fer…) altèrent la métabolisation de l\'alcool.</li>';
+  if (isBypass) {
+    html += '<li><strong>Spécifique bypass :</strong> risque de dumping alcoolisé plus marqué, et transfert d\'addiction statistiquement plus fréquent.</li>';
+  }
+  html += '</ul>';
+  const el = document.getElementById('risquesContent');
+  if (el) el.innerHTML = html;
+  document.getElementById('risquesOverlay').classList.add('open');
 }
 
 function closeRisques() {
   document.getElementById('risquesOverlay').classList.remove('open');
 }
 
+loadPrefs();
+
+// ── Journal de bord ──────────────────────────
+const LS_JOURNAL = 'bari_journal';
+
+function getJournal() {
+  try { return JSON.parse(localStorage.getItem(LS_JOURNAL) || '[]'); } catch(e) { return []; }
+}
+
+function saveToJournal() {
+  const b = boissons[boissonIdx];
+  if (!b) return;
+  const degreFinal = b.autre ? (degreCustomVal || 0) : b.degre;
+  const poids  = parseFloat(document.getElementById('poids').value)  || 0;
+  const muscle = parseFloat(document.getElementById('muscle').value) || 18;
+  const vol    = parseFloat(document.getElementById('volume').value) || 0;
+  const duree  = parseFloat(document.getElementById('duree').value)  || 0;
+  const taux   = parseFloat(document.getElementById('resultVal').textContent) || 0;
+
+  // Recalcul des variables intermédiaires pour tout stocker
+  const coeff = genre === 'homme' ? 0.68 : 0.55;
+  const elim  = genre === 'homme' ? 0.12 : 0.10;
+  const coeffAjuste = coeff * (1 + 0.3 * (muscle / poids));
+  const alimentFactor = alimentaire === 'jeun' ? 1.15 : 1.0;
+  const alcoolPur = vol * nbVerres * (degreFinal / 100) * 0.789 * alimentFactor;
+  const taux0 = alcoolPur / (poids * coeffAjuste * 1000) * 1000;
+  const seuilBariBase = chir === 'bypass' ? 0.10 : 0.20;
+  const seuilBari = postOp === 'recent' ? seuilBariBase * 0.5 : seuilBariBase;
+  const tempsRetour = taux0 / elim;
+  const mgL = taux * 0.5;
+
+  const entry = {
+    date:            new Date().toLocaleString('fr-FR'),
+    // Boisson
+    boisson:         b.nom,
+    categorie:       b.cat,
+    degre:           degreFinal,
+    volume_mL:       vol,
+    nb_verres:       nbVerres,
+    // Contexte
+    alimentaire:     alimentaire,
+    facteur_alim:    alimentFactor,
+    // Paramètres patient
+    poids_kg:        poids,
+    genre:           genre,
+    masse_musc_kg:   muscle,
+    // Chirurgie
+    chirurgie:       chir || '—',
+    temps_postop:    postOp || '—',
+    temps_ecoule_h:  duree,
+    // Calculs intermédiaires
+    alcool_pur_g:    alcoolPur.toFixed(2),
+    coeff_widmark:   coeff,
+    coeff_ajuste:    coeffAjuste.toFixed(4),
+    elimination:     elim,
+    // Résultats
+    taux_pic_gL:     taux0.toFixed(3),
+    taux_actuel_gL:  taux.toFixed(3),
+    taux_mgL:        mgL.toFixed(3),
+    seuil_bari_gL:   seuilBari,
+    temps_retour_h:  tempsRetour.toFixed(2),
+    depasse_seuil:   taux >= seuilBari ? 'OUI' : 'NON'
+  };
+
+  const journal = getJournal();
+  journal.push(entry);
+  localStorage.setItem(LS_JOURNAL, JSON.stringify(journal));
+  updateJournalCount();
+
+  const btn = event.target;
+  btn.textContent = '✅ Enregistré !';
+  btn.style.background = '#28a745';
+  setTimeout(() => {
+    btn.textContent = '📓 Collecter dans le journal de bord';
+    btn.style.background = 'var(--wine)';
+  }, 2000);
+}
+
+function buildCsv(journal) {
+  const headers = [
+    'Date','Boisson','Catégorie','Degré (°)','Volume (mL)','Nb verres',
+    'Alimentaire','Facteur alim.','Poids (kg)','Genre','Masse musc. (kg)',
+    'Chirurgie','Temps post-op','Temps écoulé (h)',
+    'Alcool pur (g)','Coeff. Widmark','Coeff. ajusté','Élimination (g/L/h)',
+    'Taux pic (g/L)','Taux actuel (g/L)','Taux (mg/L expiré)',
+    'Seuil bari. (g/L)','Retour 0 (h)','Dépassement seuil'
+  ];
+  const rows = journal.map(e => [
+    e.date, e.boisson, e.categorie, e.degre, e.volume_mL, e.nb_verres,
+    e.alimentaire, e.facteur_alim, e.poids_kg, e.genre, e.masse_musc_kg,
+    e.chirurgie, e.temps_postop, e.temps_ecoule_h,
+    e.alcool_pur_g, e.coeff_widmark, e.coeff_ajuste, e.elimination,
+    e.taux_pic_gL, e.taux_actuel_gL, e.taux_mgL,
+    e.seuil_bari_gL, e.temps_retour_h, e.depasse_seuil
+  ]);
+  return [headers, ...rows]
+    .map(r => r.map(v => '"' + String(v === undefined || v === null ? '' : v).replace(/"/g, '""') + '"').join(','))
+    .join('\n');
+}
+
+function exportByMail() {
+  const journal = getJournal();
+  if (!journal.length) {
+    alert('Le journal est vide. Enregistrez au moins une consommation avant d\'envoyer.');
+    return;
+  }
+  if (journal.length > 20) {
+    if (!confirm('Votre journal contient ' + journal.length + ' entrées.\n\nLes journaux longs peuvent être tronqués par votre client mail.\n\nPrivilégiez le téléchargement CSV pour les envoyer en pièce jointe.\n\nContinuer quand même par mail ?')) return;
+  }
+  const csv = buildCsv(journal);
+  const subject = encodeURIComponent('Alcool Barialimites — Journal de bord');
+  const body = encodeURIComponent(
+    'Bonjour,\n\nVeuillez trouver ci-dessous mon journal de bord Alcool Barialimites (' + journal.length + ' entrée' + (journal.length > 1 ? 's' : '') + ').\n\n' +
+    '=== DONNÉES CSV ===\n' + csv + '\n\n' +
+    'Exporté le ' + new Date().toLocaleString('fr-FR') + '\n' +
+    'Application : Alcool Barialimites v1.1'
+  );
+  window.location.href = 'mailto:otyrbasbaria@sfr.fr?subject=' + subject + '&body=' + body;
+}
+
+function exportCsv() {
+  const journal = getJournal();
+  if (!journal.length) {
+    alert('Le journal est vide. Enregistrez au moins une consommation avant de télécharger.');
+    return;
+  }
+  const csv = buildCsv(journal);
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'barialimites_journal_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function clearJournal() {
+  if (!confirm('Souhaitez-vous vider votre journal de bord ?\n\nCette action est irréversible.')) return;
+  localStorage.removeItem(LS_JOURNAL);
+  updateJournalCount();
+}
+
+function updateJournalCount() {
+  const j = getJournal();
+  const el = document.getElementById('journalCount');
+  if (el) el.textContent = j.length === 0 ? 'Journal vide' : j.length + ' entrée' + (j.length > 1 ? 's' : '') + ' enregistrée' + (j.length > 1 ? 's' : '');
+}
+
 updateMuscle();
 updateAlerte();
-// Set correct initial button states
-document.getElementById('btn-sleeve').classList.add('active');
-document.getElementById('btn-bypass').classList.remove('active');
+// No default chirurgie selection
 calcul();
+// Transfert d'addiction : après J+7, si ≥ 3 sessions
+setTimeout(function() {
+  const daysSinceFirst = (Date.now() - firstSeen) / (1000 * 60 * 60 * 24);
+  if (daysSinceFirst >= 7 && sessionOpenCount >= 3) {
+    const adEl = document.getElementById('addictionOverlay');
+    if (adEl) adEl.style.display = 'flex';
+  }
+}, 2500);
 </script>
+<!-- MINI POPUP -->
+<div id="miniPopupOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(20,5,5,0.75);z-index:400;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:16px;padding:22px 20px;max-width:420px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.5);">
+    <h3 id="miniPopupTitle" style="font-family:'Playfair Display',serif;font-size:1.1rem;color:#7a0000;margin-bottom:10px;"></h3>
+    <p id="miniPopupBody" style="font-size:.86rem;color:#3d1c1c;line-height:1.6;margin-bottom:16px;"></p>
+    <button onclick="document.getElementById('miniPopupOverlay').style.display='none';"
+      style="width:100%;padding:12px;background:#8B1A1A;color:#fff;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;">J'ai compris</button>
+  </div>
+</div>
+<div id="incompletToast" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#2d1515;color:#fff;padding:12px 20px;border-radius:12px;font-size:.85rem;font-weight:700;z-index:500;box-shadow:0 4px 16px rgba(0,0,0,.4);max-width:90%;text-align:center;">⚠️ Compléter vos paramètres SVP (poids, genre, chirurgie, temps post-op)</div>
 </body>
 </html>
