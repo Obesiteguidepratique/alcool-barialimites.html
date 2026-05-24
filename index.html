@@ -270,7 +270,7 @@
     </div>
     <div class="form-row" style="flex-direction:column;align-items:stretch;gap:6px;">
       <div style="display:flex;justify-content:space-between;align-items:center;">
-        <label class="form-label">Masse musculaire (kg) <span id="muscleInfoBtn" onclick="document.getElementById('muscleInfoBox').classList.toggle('hidden')" style="cursor:pointer;font-size:.85rem;" title="En savoir plus">ℹ️</span></label>
+        <label class="form-label">Masse musculaire (<span id="muscleUnit">kg</span>) <span id="muscleInfoBtn" onclick="document.getElementById('muscleInfoBox').classList.toggle('hidden')" style="cursor:pointer;font-size:.85rem;" title="En savoir plus">ℹ️</span></label>
         <span style="font-size:1rem;font-weight:900;color:var(--wine);" id="muscleVal">25</span>
       </div>
       <div id="muscleInfoBox" class="hidden" style="font-size:.75rem;color:var(--muted);font-weight:600;line-height:1.5;padding:7px 10px;background:var(--cream);border-radius:8px;border-left:3px solid var(--gold);margin-bottom:4px;">
@@ -592,7 +592,7 @@ Vos valeurs s'affichent ici lors du calcul :<br>
       <div style="padding:16px 0 8px;">
         <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
       </div>
-      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 1.2 — Build 18 — MàJ 24/05/2026</div>
+      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 1.2 — Build 19 — MàJ 24/05/2026</div>
     </div>
     <!-- Onglet Risques -->
     <div class="guide-tab-content" id="content-risques">
@@ -924,6 +924,7 @@ function toggleUnit() {
   if (unitMode === 'kg') {
     unitMode = 'lb';
     label.textContent = 'lb';
+    document.getElementById('muscleUnit').textContent = 'lb';
     label.title = 'Cliquez sur 🔄 pour revenir en kg';
     if (pVal) poidsEl.value  = (pVal  * 2.20462).toFixed(1);
     if (mVal) {
@@ -934,6 +935,7 @@ function toggleUnit() {
   } else {
     unitMode = 'kg';
     label.textContent = 'kg';
+    document.getElementById('muscleUnit').textContent = 'kg';
     label.title = '';
     if (pVal) poidsEl.value  = (pVal  / 2.20462).toFixed(1);
     if (mVal) {
