@@ -246,8 +246,11 @@
   <div class="card">
     <div class="section-title">👤 Vos paramètres</div>
     <div class="form-row">
-      <label class="form-label">Poids (kg)</label>
-      <input type="number" id="poids" class="form-input" placeholder="—" min="30" max="250" oninput="onParamChange(); savePrefs();">
+      <div style="display:flex;align-items:center;gap:6px;flex:1;">
+        <label class="form-label" style="margin:0;">Poids <span id="poidsUnit" style="color:var(--muted);font-size:.78rem;">kg</span></label>
+        <button id="btnUnitToggle" onclick="toggleUnit()" title="Basculer kg / lb" style="background:none;border:none;cursor:pointer;font-size:1rem;padding:0 2px;line-height:1;opacity:.7;" aria-label="Convertir kg/lb">🔄</button>
+      </div>
+      <input type="number" id="poids" class="form-input" placeholder="—" min="1" max="600" step="0.5" oninput="onParamChange(); savePrefs();">
     </div>
     <div class="form-row">
       <label class="form-label">Genre</label>
@@ -257,8 +260,13 @@
       </div>
     </div>
     <div class="form-row">
-      <label class="form-label">Temps écoulé depuis la consommation (en heures)</label>
-      <input type="number" id="duree" class="form-input" value="0" min="0" max="24" step="0.5" oninput="calcul()">
+      <label class="form-label">Temps écoulé depuis la consommation</label>
+      <div style="display:flex;align-items:center;gap:4px;width:140px;">
+        <input type="number" id="dureeH" class="form-input" value="0" min="0" max="24" step="1" oninput="calcul()" style="width:52px;padding:8px 6px;text-align:center;" placeholder="0">
+        <span style="font-size:.75rem;font-weight:700;color:var(--muted);white-space:nowrap;">h</span>
+        <input type="number" id="dureeMin" class="form-input" value="0" min="0" max="59" step="5" oninput="calcul()" style="width:52px;padding:8px 6px;text-align:center;" placeholder="0">
+        <span style="font-size:.75rem;font-weight:700;color:var(--muted);white-space:nowrap;">min</span>
+      </div>
     </div>
     <div class="form-row" style="flex-direction:column;align-items:stretch;gap:6px;">
       <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -584,7 +592,7 @@ Vos valeurs s'affichent ici lors du calcul :<br>
       <div style="padding:16px 0 8px;">
         <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
       </div>
-      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 1.1 — Build 16 — MàJ 24/05/2026</div>
+      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 1.2 — Build 18 — MàJ 24/05/2026</div>
     </div>
     <!-- Onglet Risques -->
     <div class="guide-tab-content" id="content-risques">
@@ -720,6 +728,7 @@ function updatePaysDisplay(taux) {
 }
 
 let genre = null, chir = null, postOp = null, alimentaire = 'repas';
+let unitMode = 'kg'; // 'kg' ou 'lb'
 let boissonIdx = null, nbVerres = 1, chart = null;
 let degreCustomVal = null;
 let miniPopupShown = false, spiritueuxPopupShown = false;
@@ -731,6 +740,7 @@ function savePrefs() {
   try {
     const prefs = {
       poids: document.getElementById('poids').value,
+      unitMode: unitMode,
       genre: genre,
       chir: chir,
       muscle: document.getElementById('muscle').value
@@ -744,6 +754,7 @@ function loadPrefs() {
     const raw = localStorage.getItem(LS_PREFS);
     if (!raw) return;
     const p = JSON.parse(raw);
+    if (p.unitMode && p.unitMode === 'lb') toggleUnit(); // bascule avant de charger la valeur
     if (p.poids) {
       document.getElementById('poids').value = p.poids;
       document.getElementById('poids').classList.remove('empty');
@@ -902,6 +913,51 @@ function setChir(c, silent) {
   onParamChange();
 }
 
+function toggleUnit() {
+  const poidsEl  = document.getElementById('poids');
+  const muscleEl = document.getElementById('muscle');
+  const label    = document.getElementById('poidsUnit');
+  const pVal  = parseFloat(poidsEl.value)  || 0;
+  const mVal  = parseFloat(muscleEl.value) || 0;
+  const mValDisplay = document.getElementById('muscleVal');
+
+  if (unitMode === 'kg') {
+    unitMode = 'lb';
+    label.textContent = 'lb';
+    label.title = 'Cliquez sur 🔄 pour revenir en kg';
+    if (pVal) poidsEl.value  = (pVal  * 2.20462).toFixed(1);
+    if (mVal) {
+      muscleEl.value = (mVal * 2.20462).toFixed(1);
+      muscleEl.min = 22; muscleEl.max = 121;
+    }
+    poidsEl.min = 66; poidsEl.max = 1320;
+  } else {
+    unitMode = 'kg';
+    label.textContent = 'kg';
+    label.title = '';
+    if (pVal) poidsEl.value  = (pVal  / 2.20462).toFixed(1);
+    if (mVal) {
+      muscleEl.value = (mVal / 2.20462).toFixed(1);
+      muscleEl.min = 10; muscleEl.max = 55;
+    }
+    poidsEl.min = 30; poidsEl.max = 600;
+  }
+  updateMuscle();
+  onParamChange();
+  savePrefs();
+}
+
+function getPoidsKg() {
+  const val = parseFloat(document.getElementById('poids').value) || 0;
+  return unitMode === 'lb' ? val / 2.20462 : val;
+}
+
+function getDureeH() {
+  const h   = parseFloat(document.getElementById('dureeH').value)   || 0;
+  const min = parseFloat(document.getElementById('dureeMin').value) || 0;
+  return h + min / 60;
+}
+
 function setPostOp(p) {
   postOp = p;
   ['recent','mid','stable'].forEach(v => {
@@ -937,7 +993,7 @@ function setAlimentaire(a) {
 }
 
 function paramsComplete() {
-  const poids = parseFloat(document.getElementById('poids').value);
+  const poids = getPoidsKg();
   return !!(genre && chir && postOp && poids >= 30);
 }
 
@@ -967,8 +1023,8 @@ function tryOpenDrink() {
 
 function calcul() {
   if (boissonIdx === null || boissonIdx === undefined) return;
-  const poids = parseFloat(document.getElementById('poids').value) || 80;
-  const duree = parseFloat(document.getElementById('duree').value) || 0;
+  const poids = getPoidsKg() || 80;
+  const duree = getDureeH();
   const vol   = parseFloat(document.getElementById('volume').value) || 0;
   const muscle = parseFloat(document.getElementById('muscle').value) || 18;
   const b     = boissons[boissonIdx];
@@ -1001,14 +1057,14 @@ function calcul() {
     const degreFinalDbg = b.autre ? (degreCustomVal || 0) : b.degre;
     dbg.style.display = 'block';
     dbg.innerHTML =
-      `Poids          : ${poids} kg<br>` +
+      `Poids          : ${poids.toFixed(1)} kg${unitMode==='lb' ? ' (' + (poids*2.20462).toFixed(1) + ' lb)' : ''}<br>` +
       `Genre          : ${genre}<br>` +
-      `Masse musc.    : ${muscle} kg<br>` +
+      `Masse musc.    : ${muscle.toFixed(1)} kg${unitMode==='lb' ? ' (' + (muscle*2.20462).toFixed(1) + ' lb)' : ''}<br>` +
       `Degré          : ${degreFinalDbg}°<br>` +
       `Volume         : ${vol} mL × ${nbVerres} verre(s)<br>` +
       `Alcool pur     : ${alcoolPur.toFixed(2)} g<br>` +
       `Alim.          : ${alimentaire} (×${alimentaire==='jeun'?'1.15':'1.00'})<br>` +
-      `Temps écoulé   : ${duree} h<br>` +
+      `Temps écoulé   : ${Math.floor(duree)}h ${Math.round((duree%1)*60)}min<br>` +
       `Chirurgie      : ${chir || '—'}<br>` +
       `Post-op        : ${postOp || '—'}<br>` +
       `Coeff. ajusté  : ${coeffAjuste.toFixed(4)}<br>` +
@@ -1169,14 +1225,18 @@ const muscleProfiles = {
 function updateMuscle() {
   const val = parseFloat(document.getElementById('muscle').value);
   document.getElementById('muscleVal').textContent = val % 1 === 0 ? val : val.toFixed(1);
+  // Toujours comparer en kg pour les zones, quelle que soit l'unité affichée
+  const valKg = unitMode === 'lb' ? val / 2.20462 : val;
   const profiles = muscleProfiles[genre] || muscleProfiles['femme'];
-  const profile = profiles.find(p => val <= p.max) || profiles[profiles.length - 1];
+  const profile = profiles.find(p => valKg <= p.max) || profiles[profiles.length - 1];
   const lbl = document.getElementById('muscleProfileLabel');
   lbl.textContent = profile.label;
   lbl.style.background = profile.color;
   lbl.style.color = profile.text;
-  // Ajuster min/max du slider selon le genre
-  const sliderMax = genre === 'homme' ? 55 : 45;
+  // Ajuster min/max du slider selon le genre et l'unité
+  const sliderMax = unitMode === 'lb'
+    ? (genre === 'homme' ? 121 : 99)
+    : (genre === 'homme' ? 55 : 45);
   document.getElementById('muscle').max = sliderMax;
 }
 
@@ -1229,10 +1289,10 @@ function saveToJournal() {
   const b = boissons[boissonIdx];
   if (!b) return;
   const degreFinal = b.autre ? (degreCustomVal || 0) : b.degre;
-  const poids  = parseFloat(document.getElementById('poids').value)  || 0;
+  const poids  = getPoidsKg() || 0;
   const muscle = parseFloat(document.getElementById('muscle').value) || 18;
   const vol    = parseFloat(document.getElementById('volume').value) || 0;
-  const duree  = parseFloat(document.getElementById('duree').value)  || 0;
+  const duree  = getDureeH();
   const taux   = parseFloat(document.getElementById('resultVal').textContent) || 0;
 
   // Recalcul des variables intermédiaires pour tout stocker
