@@ -260,12 +260,13 @@
       </div>
     </div>
     <div class="form-row">
-      <label class="form-label">Temps écoulé depuis la consommation</label>
-      <div style="display:flex;align-items:center;gap:4px;width:140px;">
-        <input type="number" id="dureeH" class="form-input" value="0" min="0" max="24" step="1" oninput="calcul()" style="width:52px;padding:8px 6px;text-align:center;" placeholder="0">
-        <span style="font-size:.75rem;font-weight:700;color:var(--muted);white-space:nowrap;">h</span>
-        <input type="number" id="dureeMin" class="form-input" value="0" min="0" max="59" step="5" oninput="calcul()" style="width:52px;padding:8px 6px;text-align:center;" placeholder="0">
-        <span style="font-size:.75rem;font-weight:700;color:var(--muted);white-space:nowrap;">min</span>
+      <label class="form-label">Heure de consommation</label>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;width:140px;">
+        <div style="display:flex;align-items:center;gap:5px;width:140px;">
+          <input type="time" id="heureConso" class="form-input" oninput="onHeureChange()" style="flex:1;padding:7px 8px;font-size:.9rem;">
+          <button onclick="setHeureNow()" title="Heure actuelle" style="background:none;border:none;cursor:pointer;font-size:1.2rem;padding:0 2px;line-height:1;" aria-label="Injecter l'heure actuelle">⏱</button>
+        </div>
+        <span id="dureeCalculee" style="font-size:.72rem;font-weight:700;color:var(--muted);text-align:right;"></span>
       </div>
     </div>
     <div class="form-row" style="flex-direction:column;align-items:stretch;gap:6px;">
@@ -360,10 +361,10 @@
       <label class="form-label">Volume du verre (mL)</label>
       <div style="width:140px;">
         <div class="slider-header">
-          <span class="slider-val" id="volLabel">120</span>
+          <span class="slider-val" id="volLabel">—</span>
           <span class="slider-unit">mL</span>
         </div>
-        <input type="range" id="volume" min="10" max="300" value="120" step="5" oninput="updateVol(); calcul()">
+        <input type="range" id="volume" min="10" max="300" value="" step="5" oninput="updateVol(); calcul()">
       </div>
     </div>
 
@@ -393,6 +394,11 @@
     <div class="section-title">📋 Votre consommation</div>
     <div id="debugVars" style="background:#1a0a0a;color:#a0c080;border-radius:8px;padding:10px;font-family:monospace;font-size:.72rem;line-height:1.8;"></div>
     <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
+      <div style="margin-bottom:6px;">
+        <label style="font-size:.75rem;font-weight:700;color:var(--muted);display:block;margin-bottom:4px;text-align:center;">📝 Note personnelle (optionnel)</label>
+        <input type="text" id="noteJournal" placeholder="ex: anniversaire, restaurant…" maxlength="80"
+          style="width:100%;padding:8px 12px;border-radius:8px;border:1.5px solid var(--border);font-family:'Nunito',sans-serif;font-size:.82rem;background:var(--cream);color:var(--text);">
+      </div>
       <button onclick="saveToJournal()" style="width:100%;padding:11px;background:var(--wine);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;cursor:pointer;">📓 Collecter dans le journal de bord</button>
       <div style="font-size:.72rem;color:var(--muted);font-weight:600;line-height:1.6;padding:6px 2px 8px;text-align:center;">
         📤 <strong>Partager le journal :</strong> choisissez selon la taille de votre journal.<br>
@@ -531,7 +537,7 @@
         <ul>
           <li>Renseignez votre poids actuel en kg</li>
           <li>Sélectionnez votre genre (Homme / Femme)</li>
-          <li>Indiquez le temps écoulé depuis la consommation (en heures)</li>
+          <li>Indiquez l'heure de consommation — appuyez sur ⏱ pour injecter l'heure actuelle</li>
           <li>Entrez votre masse musculaire (en kg)</li>
           <li>Choisissez votre type de chirurgie et le temps depuis l'opération</li>
         </ul>
@@ -552,6 +558,15 @@
           <li>Le taux s'affiche en g/L de sang</li>
           <li>Le tableau indique votre statut légal par pays</li>
           <li>La courbe montre l'élimination dans le temps</li>
+        </ul>
+      </div>
+      <div class="guide-step">
+        <h4>Étape 4 — 📋 Votre consommation</h4>
+        <p style="font-size:.83rem;color:var(--text);line-height:1.6;">Vous pouvez sauver vos résultats <strong>(optionnel)</strong> pour une analyse avec votre équipe de soins de votre consommation.</p>
+        <ul>
+          <li>Ajoutez une note personnelle pour contextualiser (repas, occasion…)</li>
+          <li>Cliquez sur <strong>📓 Collecter dans le journal de bord</strong></li>
+          <li>Envoyez le journal à votre équipe par mail ou téléchargez-le en CSV</li>
         </ul>
       </div>
       <div class="guide-step" style="background:#f0f7f0;border-left:3px solid #28a745;">
@@ -592,7 +607,7 @@ Vos valeurs s'affichent ici lors du calcul :<br>
       <div style="padding:16px 0 8px;">
         <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
       </div>
-      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 1.2 — Build 19 — MàJ 24/05/2026</div>
+      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 1.3 — Build 23 — MàJ 25/05/2026</div>
     </div>
     <!-- Onglet Risques -->
     <div class="guide-tab-content" id="content-risques">
@@ -955,9 +970,40 @@ function getPoidsKg() {
 }
 
 function getDureeH() {
-  const h   = parseFloat(document.getElementById('dureeH').value)   || 0;
-  const min = parseFloat(document.getElementById('dureeMin').value) || 0;
-  return h + min / 60;
+  const heure = document.getElementById('heureConso').value;
+  if (!heure) return 0;
+  const [hh, mm] = heure.split(':').map(Number);
+  const now = new Date();
+  const conso = new Date();
+  conso.setHours(hh, mm, 0, 0);
+  // Si l'heure est dans le futur, on suppose que c'était hier
+  if (conso > now) conso.setDate(conso.getDate() - 1);
+  const diffMin = (now - conso) / (1000 * 60);
+  return Math.max(0, diffMin / 60);
+}
+
+function setHeureNow() {
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('heureConso').value = hh + ':' + mm;
+  onHeureChange();
+}
+
+function onHeureChange() {
+  const duree = getDureeH();
+  const h = Math.floor(duree);
+  const m = Math.round((duree - h) * 60);
+  const el = document.getElementById('dureeCalculee');
+  if (el) {
+    if (duree > 0) {
+      el.textContent = '⏱ Il y a ' + h + 'h ' + String(m).padStart(2,'0') + 'min';
+      el.style.color = 'var(--wine)';
+    } else {
+      el.textContent = '';
+    }
+  }
+  calcul();
 }
 
 function setPostOp(p) {
@@ -1066,7 +1112,7 @@ function calcul() {
       `Volume         : ${vol} mL × ${nbVerres} verre(s)<br>` +
       `Alcool pur     : ${alcoolPur.toFixed(2)} g<br>` +
       `Alim.          : ${alimentaire} (×${alimentaire==='jeun'?'1.15':'1.00'})<br>` +
-      `Temps écoulé   : ${Math.floor(duree)}h ${Math.round((duree%1)*60)}min<br>` +
+      `Temps écoulé   : ${Math.floor(duree)}h ${String(Math.round((duree%1)*60)).padStart(2,'0')}min<br>` +
       `Chirurgie      : ${chir || '—'}<br>` +
       `Post-op        : ${postOp || '—'}<br>` +
       `Coeff. ajusté  : ${coeffAjuste.toFixed(4)}<br>` +
@@ -1075,9 +1121,23 @@ function calcul() {
       `Taux pic (t=0) : ${taux0.toFixed(3)} g/L<br>` +
       `Taux actuel    : ${taux.toFixed(3)} g/L`;
   }
-  document.getElementById('resultTime').textContent = taux > 0
-    ? `⏱ Retour à 0.00 g/L dans : ${h}h ${m.toString().padStart(2,'0')}min`
-    : '✅ Taux nul à ce stade';
+  const timeEl = document.getElementById('resultTime');
+  if (taux > 0) {
+    const tempsZero = taux / elim;
+    const hZero = Math.floor(tempsZero);
+    const mZero = Math.round((tempsZero - hZero) * 60);
+    let html = '';
+    if (taux > seuilBari) {
+      const tempsSeuil = (taux - seuilBari) / elim;
+      const hSeuil = Math.floor(tempsSeuil);
+      const mSeuil = Math.round((tempsSeuil - hSeuil) * 60);
+      html += `⏱ Retour sous le seuil ${seuilBari} g/L dans : ${hSeuil}h ${String(mSeuil).padStart(2,'0')}min<br>`;
+    }
+    html += `⏱ Retour à 0.00 g/L dans : ${hZero}h ${String(mZero).padStart(2,'0')}min`;
+    timeEl.innerHTML = html;
+  } else {
+    timeEl.innerHTML = '✅ Taux nul à ce stade';
+  }
 
   const msg = document.getElementById('resultMsg');
   if (taux === 0 && taux0 === 0) {
@@ -1339,8 +1399,10 @@ function saveToJournal() {
     taux_mgL:        mgL.toFixed(3),
     seuil_bari_gL:   seuilBari,
     temps_retour_h:  tempsRetour.toFixed(2),
-    depasse_seuil:   taux >= seuilBari ? 'OUI' : 'NON'
+    depasse_seuil:   taux >= seuilBari ? 'OUI' : 'NON',
+    note:            (document.getElementById('noteJournal').value || '').trim()
   };
+  document.getElementById('noteJournal').value = ''; // vider après sauvegarde
 
   const journal = getJournal();
   journal.push(entry);
@@ -1358,7 +1420,7 @@ function saveToJournal() {
 
 function buildCsv(journal) {
   const headers = [
-    'Date','Boisson','Catégorie','Degré (°)','Volume (mL)','Nb verres',
+    'Date','Note','Boisson','Catégorie','Degré (°)','Volume (mL)','Nb verres',
     'Alimentaire','Facteur alim.','Poids (kg)','Genre','Masse musc. (kg)',
     'Chirurgie','Temps post-op','Temps écoulé (h)',
     'Alcool pur (g)','Coeff. Widmark','Coeff. ajusté','Élimination (g/L/h)',
@@ -1366,7 +1428,7 @@ function buildCsv(journal) {
     'Seuil bari. (g/L)','Retour 0 (h)','Dépassement seuil'
   ];
   const rows = journal.map(e => [
-    e.date, e.boisson, e.categorie, e.degre, e.volume_mL, e.nb_verres,
+    e.date, e.note||'', e.boisson, e.categorie, e.degre, e.volume_mL, e.nb_verres,
     e.alimentaire, e.facteur_alim, e.poids_kg, e.genre, e.masse_musc_kg,
     e.chirurgie, e.temps_postop, e.temps_ecoule_h,
     e.alcool_pur_g, e.coeff_widmark, e.coeff_ajuste, e.elimination,
@@ -1430,6 +1492,7 @@ updateMuscle();
 updateAlerte();
 // No default chirurgie selection
 calcul();
+// Liste boissons construite au premier clic
 // Transfert d'addiction : après J+7, si ≥ 3 sessions
 setTimeout(function() {
   const daysSinceFirst = (Date.now() - firstSeen) / (1000 * 60 * 60 * 24);
