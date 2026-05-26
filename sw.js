@@ -3,11 +3,11 @@
 const CACHE_NAME = 'barialimites-v1';
 
 const ASSETS = [
-  '/index.html',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
-  '/icons/apple-touch-icon.png'
+  './index.html',
+  './manifest.json',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/apple-touch-icon.png'
 ];
 
 // Installation : mise en cache de tous les assets
@@ -44,7 +44,7 @@ self.addEventListener('fetch', event => {
         return response;
       }).catch(() => {
         // Hors ligne et ressource non cachée : renvoie la page principale
-        return caches.match('/index.html');
+        return caches.match('./index.html');
       });
     })
   );
