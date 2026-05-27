@@ -221,6 +221,14 @@
   .disclaimer-panel h2 { font-family:'Playfair Display',serif; font-size:1.25rem; color:var(--wine); margin-bottom:14px; text-align:center; }
   .disclaimer-panel p { font-size:.87rem; color:var(--text); line-height:1.65; margin-bottom:10px; }
   .disclaimer-panel .warn-line { background:#fff3cd; border-left:4px solid #e67e22; border-radius:0 8px 8px 0; padding:10px 12px; font-size:.83rem; font-weight:700; color:#7a4000; margin:14px 0; }
+  /* Dark mode — disclaimer */
+  body.dark-mode .disclaimer-panel { background:var(--card-bg); }
+  body.dark-mode .disclaimer-panel h2 { color:var(--wine); }
+  body.dark-mode .disclaimer-panel p { color:var(--text); }
+  body.dark-mode .disclaimer-panel .warn-line { background:var(--warn-bari); border-left-color:var(--warn-bari-border); color:var(--warn-bari-text); }
+  body.dark-mode #disclaimerCheckWrap { background:var(--input-bg); }
+  body.dark-mode #disclaimerCheckWrap label { color:var(--text); }
+  body.dark-mode .disclaimer-panel > p:last-of-type { color:var(--muted); }
   .btn-disclaimer { width:100%; margin-top:16px; padding:14px; background:var(--wine); color:#fff; border:none; border-radius:12px; font-family:'Nunito',sans-serif; font-size:1rem; font-weight:800; cursor:pointer; transition:all .2s; box-shadow:0 3px 10px rgba(139,26,26,0.35); }
   .btn-disclaimer:hover { background:#6e1414; transform:translateY(-1px); }
   .btn-risques-link { width:100%; margin-top:8px; padding:10px; background:rgba(139,26,26,0.08); color:var(--wine); border:1.5px solid var(--wine); border-radius:12px; font-family:'Nunito',sans-serif; font-size:.85rem; font-weight:700; cursor:pointer; transition:all .2s; }
@@ -651,7 +659,7 @@ Vos valeurs s'affichent ici lors du calcul :<br>
       <div style="padding:16px 0 8px;">
         <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
       </div>
-      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 1.4 — Build 37 — MàJ 27/05/2026</div>
+      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 1.4 — Build 38 — MàJ 27/05/2026</div>
     </div>
     <!-- Onglet Risques -->
     <div class="guide-tab-content" id="content-risques">
@@ -1516,13 +1524,13 @@ function onDisclaimerCheck() {
 function closeDisclaimer() {
   const checked = document.getElementById('disclaimerCheck').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b37', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b38', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b37') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b38') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
