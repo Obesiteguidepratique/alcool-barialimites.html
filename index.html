@@ -467,7 +467,7 @@
       <button class="pays-btn" onclick="filterPays('be-std')">🇧🇪 Belgique — standard</button>
       <button class="pays-btn" onclick="filterPays('be-rec')">🇧🇪 Belgique — récidive</button>
       <button class="pays-btn" onclick="filterPays('ca-gen')">🇨🇦 Canada — général</button>
-      <button class="pays-btn" onclick="filterPays('ca-warn')">🇨🇦 Canada — avertissement</button>
+      <button class="pays-btn" onclick="filterPays('ca-warn')">🇨🇦 Canada — Infraction</button>
       <button class="pays-btn" onclick="filterPays('ca-qc')">🇨🇦 Québec — jeunes &lt;22 ans</button>
       <button class="pays-btn" onclick="filterPays('fr-exp')">🇫🇷 France — expérimenté</button>
       <button class="pays-btn" onclick="filterPays('fr-young')">🇫🇷 France — jeune permis</button>
@@ -659,7 +659,7 @@ Vos valeurs s'affichent ici lors du calcul :<br>
       <div style="padding:16px 0 8px;">
         <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
       </div>
-      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 1.4 — Build 38 — MàJ 27/05/2026</div>
+      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 1.4 — Build 39 — MàJ 27/05/2026</div>
     </div>
     <!-- Onglet Risques -->
     <div class="guide-tab-content" id="content-risques">
@@ -746,7 +746,7 @@ const pays = {
   "be-std":   { nom:"🇧🇪 Belgique — conducteur standard",      seuil:0.5, peine:"Retrait permis / amende jusqu'à 16 000 €" },
   "be-rec":   { nom:"🇧🇪 Belgique — récidive",                 seuil:0.2, peine:"Retrait permis / amende renforcée" },
   "ca-gen":   { nom:"🇨🇦 Canada — règle générale",             seuil:0.8, peine:"Amende min. 1 000 $ / emprisonnement" },
-  "ca-warn":  { nom:"🇨🇦 Canada — avertissement",              seuil:0.5, peine:"Suspension du permis 3 jours" },
+  "ca-warn":  { nom:"🇨🇦 Canada — Infraction",              seuil:0.5, peine:"Suspension du permis 3 jours" },
   "ca-qc":    { nom:"🇨🇦 Québec — jeunes < 22 ans",            seuil:0.0, peine:"Suspension immédiate du permis" },
   "fr-exp":   { nom:"🇫🇷 France — conducteur expérimenté",     seuil:0.5, peine:"Jusqu'à 2 ans prison / 4 500 €" },
   "fr-young": { nom:"🇫🇷 France — jeune permis (< 2 ans)",     seuil:0.2, peine:"Invalidation du permis probatoire" },
@@ -1524,13 +1524,13 @@ function onDisclaimerCheck() {
 function closeDisclaimer() {
   const checked = document.getElementById('disclaimerCheck').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b38', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b39', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b38') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b39') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
