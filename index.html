@@ -286,15 +286,7 @@
   <!-- PARAMÈTRES -->
   <div class="card">
     <div class="section-title">👤 Vos paramètres</div>
-    <div id="paramProgress" style="display:flex;gap:6px;margin-bottom:14px;align-items:center;">
-      <div id="prog-poids"  style="flex:1;height:5px;border-radius:3px;background:var(--border);transition:background .3s;" title="Poids"></div>
-      <div id="prog-genre"  style="flex:1;height:5px;border-radius:3px;background:var(--border);transition:background .3s;" title="Genre"></div>
-      <div id="prog-heure"  style="flex:1;height:5px;border-radius:3px;background:var(--border);transition:background .3s;" title="Heure de consommation"></div>
-      <div id="prog-muscle" style="flex:1;height:5px;border-radius:3px;background:var(--border);transition:background .3s;" title="Masse musculaire"></div>
-      <div id="prog-chir"   style="flex:1;height:5px;border-radius:3px;background:var(--border);transition:background .3s;" title="Type de chirurgie"></div>
-      <div id="prog-postop" style="flex:1;height:5px;border-radius:3px;background:var(--border);transition:background .3s;" title="Temps post-op"></div>
-      <span id="prog-label" style="font-size:.68rem;font-weight:800;color:var(--muted);white-space:nowrap;min-width:40px;text-align:right;">0 / 6</span>
-    </div>
+
     <div class="form-row">
       <div style="display:flex;align-items:center;gap:6px;flex:1;">
         <label class="form-label" style="margin:0;">Poids <span id="poidsUnit" style="color:var(--muted);font-size:.78rem;">kg</span></label>
@@ -309,16 +301,7 @@
         <button class="toggle-btn" id="btn-femme" onclick="setGenre('femme')">♀ Femme</button>
       </div>
     </div>
-    <div class="form-row">
-      <label class="form-label">Heure de consommation</label>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;width:140px;">
-        <div style="display:flex;align-items:center;gap:5px;width:140px;">
-          <input type="time" id="heureConso" class="form-input" oninput="onHeureChange()" style="flex:1;padding:7px 8px;font-size:.9rem;">
-          <button onclick="setHeureNow()" title="Sélectionner l'heure actuelle" style="background:rgba(139,26,26,0.1);border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:1rem;padding:4px 7px;line-height:1;color:var(--wine);" aria-label="Sélectionner l'heure actuelle">⏱</button>
-        </div>
-        <span id="dureeCalculee" style="font-size:.72rem;font-weight:700;color:var(--muted);text-align:right;"></span>
-      </div>
-    </div>
+
     <div class="form-row" style="flex-direction:column;align-items:stretch;gap:6px;">
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <label class="form-label">Masse musculaire (<span id="muscleUnit">kg</span>) <span id="muscleInfoBtn" onclick="document.getElementById('muscleInfoBox').classList.toggle('hidden')" style="cursor:pointer;font-size:.85rem;" title="En savoir plus">ℹ️</span></label>
@@ -368,15 +351,9 @@
     <div id="postopWarning" style="display:none;margin-top:8px;padding:9px 12px;border-radius:10px;font-size:.78rem;font-weight:700;line-height:1.5;"></div>
   </div>
 
-  <!-- BOISSON -->
+  <!-- CONSOMMATIONS MULTI-SESSION -->
   <div class="card">
-    <div class="section-title">🍹 Votre boisson</div>
-
-    <button class="btn-boisson" id="btnBoissonOpen" onclick="tryOpenDrink()">
-      <span>🍹 Choisir une boisson</span>
-      <span class="selected-name" id="selectedName">Choisir une boisson</span>
-      <span class="arrow" id="drinkArrow">▼</span>
-    </button>
+    <div class="section-title">🍹 Mes consommations</div>
 
     <!-- LÉGENDE COULEURS -->
     <div class="legende">
@@ -386,52 +363,77 @@
       <div class="legende-item"><div class="legende-dot" style="background:#6a1b9a;"></div><span style="color:#6a1b9a;">Cocktail</span></div>
     </div>
 
-    <!-- PANNEAU INLINE BOISSONS -->
-    <div class="drink-panel" id="drinkPanel">
-      <div class="drink-panel-inner" id="drinkPanelInner"></div>
-    </div>
+    <!-- LISTE DES CONSOMMATIONS -->
+    <div id="sessionList" style="margin-bottom:4px;"></div>
 
-    <!-- ALERTE BOISSON -->
-    <!-- Saisie degré "Autre" -->
-    <div id="degreInputWrap" style="display:none;margin-top:10px;padding:12px;background:#fff9f0;border:1.5px solid #e67e22;border-radius:10px;">
-      <label style="font-size:.8rem;font-weight:700;color:#8a3800;display:block;margin-bottom:6px;">Quel est le dosage en alcool ? (° / %)</label>
-      <input type="number" id="degreCustom" min="0.1" max="70" step="0.5" placeholder="ex: 12.5"
-        oninput="degreCustomVal=parseFloat(this.value)||null; calcul();"
-        style="font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;color:#8B1A1A;background:#fff;border:1.5px solid #e67e22;border-radius:8px;padding:6px 12px;width:110px;">
-    </div>
-    <div class="alerte-boisson" id="alerteBoisson"></div>
-    <button id="btnFavBoisson" onclick="saveFavBoisson(); updateFavBtn();" aria-label="Sauver comme boisson habituelle" style="margin-top:8px;width:100%;padding:8px;background:none;color:var(--muted);border:1px dashed var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .2s;">☆ Sauver comme habituelle</button>
+    <!-- BOUTON AJOUTER -->
+    <button id="btnAjouterBoisson" onclick="tryOuvrirAjout()" style="width:100%;margin-top:4px;padding:11px;background:none;border:1.5px dashed var(--border);border-radius:12px;color:var(--wine);font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;opacity:.4;pointer-events:none;">
+      <span style="font-size:1.3rem;line-height:1;">+</span> Ajouter une boisson
+    </button>
 
-    <div style="margin-top:14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
-      <label class="form-label">Contexte alimentaire</label>
-      <div style="display:flex;gap:6px;">
-        <button id="btn-alim-repas" onclick="setAlimentaire('repas')" style="padding:7px 10px;border-radius:10px;border:1.5px solid #28a745;background:#d4edda;color:#155724;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;">🍽 Repas (&lt;2h)</button>
-        <button id="btn-alim-jeun"  onclick="setAlimentaire('jeun')"  style="padding:7px 10px;border-radius:10px;border:1.5px solid var(--border);background:var(--cream);color:var(--muted);font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;">💧 À jeun</button>
+    <!-- PANNEAU AJOUT/ÉDITION -->
+    <div id="ajoutPanel" style="display:none;margin-top:10px;padding:14px;background:var(--cream);border-radius:14px;border:1.5px solid var(--border);">
+      <div style="font-size:.8rem;font-weight:800;color:var(--wine);margin-bottom:10px;" id="ajoutPanelTitle">Nouvelle consommation</div>
+
+      <!-- Heure -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+        <label style="font-size:.78rem;font-weight:700;color:var(--muted);width:60px;">Heure</label>
+        <input type="time" id="heureAjout" class="form-input" style="flex:1;padding:7px 8px;font-size:.9rem;" oninput="activerBtnValider()">
+        <button onclick="setHeureAjoutNow()" style="background:rgba(139,26,26,0.1);border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:1rem;padding:4px 7px;color:var(--wine);" aria-label="Heure actuelle">⏱</button>
       </div>
-    </div>
-    <div id="alimWarning" style="display:none;margin-bottom:10px;padding:9px 12px;border-radius:10px;font-size:.78rem;font-weight:700;line-height:1.5;background:#fff0e0;border-left:4px solid #e67e22;color:#8a3800;">
-      ⚠️ <strong>À jeun :</strong> absorption plus rapide.<br>NB : Ne buvez pas pendant les repas (règle des 30 min à maintenir à vie).
-    </div>
-    <div class="form-row" style="margin-top:0;">
-      <label class="form-label">Volume du verre (mL)</label>
-      <div style="width:140px;">
-        <div class="slider-header">
-          <span class="slider-val" id="volLabel">—</span>
-          <span class="slider-unit">mL</span>
+
+      <!-- Sélecteur boisson -->
+      <button class="btn-boisson" id="btnBoissonOpen" onclick="toggleDrinkPanel()" style="width:100%;margin-bottom:8px;">
+        <span>🍹 Choisir une boisson</span>
+        <span class="selected-name" id="selectedName">Choisir une boisson</span>
+        <span class="arrow" id="drinkArrow">▼</span>
+      </button>
+      <div class="drink-panel" id="drinkPanel">
+        <div class="drink-panel-inner" id="drinkPanelInner"></div>
+      </div>
+      <div id="degreInputWrap" style="display:none;margin-top:8px;padding:10px;background:#fff9f0;border:1.5px solid #e67e22;border-radius:10px;">
+        <label style="font-size:.78rem;font-weight:700;color:#8a3800;display:block;margin-bottom:6px;">Dosage en alcool (° / %)</label>
+        <input type="number" id="degreCustom" min="0.1" max="70" step="0.5" placeholder="ex: 12.5"
+          oninput="degreCustomVal=parseFloat(this.value)||null;"
+          style="font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;color:#8B1A1A;background:#fff;border:1.5px solid #e67e22;border-radius:8px;padding:6px 12px;width:110px;">
+      </div>
+      <div class="alerte-boisson" id="alerteBoisson"></div>
+      <button id="btnFavBoisson" onclick="saveFavBoisson(); updateFavBtn();" aria-label="Sauver comme boisson habituelle" style="margin-top:6px;width:100%;padding:7px;background:none;color:var(--muted);border:1px dashed var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;">☆ Sauver comme habituelle</button>
+
+      <!-- Contexte alimentaire -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin:10px 0 6px;">
+        <label style="font-size:.78rem;font-weight:700;color:var(--muted);">Contexte alimentaire</label>
+        <div style="display:flex;gap:6px;">
+          <button id="btn-alim-repas" onclick="setAlimentaire('repas')" style="padding:6px 10px;border-radius:10px;border:1.5px solid #28a745;background:#d4edda;color:#155724;font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;">🍽 Repas</button>
+          <button id="btn-alim-jeun"  onclick="setAlimentaire('jeun')"  style="padding:6px 10px;border-radius:10px;border:1.5px solid var(--border);background:var(--cream);color:var(--muted);font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;">💧 À jeun</button>
         </div>
-        <input type="range" id="volume" min="10" max="300" value="" step="5" oninput="updateVol(); calcul()">
+      </div>
+      <div id="alimWarning" style="display:none;margin-bottom:8px;padding:8px 12px;border-radius:10px;font-size:.75rem;font-weight:700;line-height:1.5;background:#fff0e0;border-left:4px solid #e67e22;color:#8a3800;">
+        ⚠️ <strong>À jeun :</strong> absorption plus rapide.
+      </div>
+
+      <!-- Volume -->
+      <div class="form-row" style="margin:0 0 6px;">
+        <label class="form-label">Volume (mL)</label>
+        <div style="width:140px;">
+          <div class="slider-header">
+            <span class="slider-val" id="volLabel">—</span>
+            <span class="slider-unit">mL</span>
+          </div>
+          <input type="range" id="volume" min="10" max="300" value="" step="5" oninput="updateVol(); previewTaux();">
+        </div>
+      </div>
+      <!-- Aperçu taux instantané -->
+      <div id="tauxPreview" style="display:none;padding:8px 12px;border-radius:10px;font-size:.78rem;font-weight:700;margin-bottom:8px;text-align:center;"></div>
+
+
+
+      <!-- Boutons -->
+      <div style="display:flex;gap:8px;">
+        <button onclick="annulerAjout()" style="flex:1;padding:10px;background:none;border:1.5px solid var(--border);border-radius:10px;color:var(--muted);font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;">Annuler</button>
+        <button onclick="validerAjout()" id="btnValiderAjout" style="flex:2;padding:10px;background:var(--wine);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;cursor:pointer;opacity:.4;pointer-events:none;">✓ Ajouter</button>
       </div>
     </div>
-
-    <div class="form-row">
-      <label class="form-label">Nombre de verres</label>
-      <div class="counter-row">
-        <button class="counter-btn" onclick="changeVerres(-1)" aria-label="Diminuer le nombre de verres">−</button>
-        <span class="counter-val" id="verresLabel">1</span>
-        <button class="counter-btn" onclick="changeVerres(1)" aria-label="Augmenter le nombre de verres">+</button>
-      </div>
-    </div>
-
   </div>
 
   <!-- RÉSULTAT -->
@@ -441,10 +443,53 @@
     <div class="result-label">Taux d'alcoolémie estimé</div>
     <div class="result-value" id="resultVal">0.00</div>
     <div class="result-unit">g/L de sang</div>
+    <div style="font-size:.64rem;color:inherit;opacity:.65;font-weight:600;margin-top:2px;">± variabilité individuelle importante · résultat indicatif sans valeur médicale</div>
     <div class="result-msg" id="resultMsg">✅ En dessous du seuil légal</div>
     <div class="result-time" id="resultTime"></div>
   </div>
 
+  <!-- GRAPHIQUE -->
+  <div class="chart-wrap" id="chartWrap" style="display:none;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
+      <div class="section-title" style="margin-bottom:0;">📊 Courbe d'élimination</div>
+      <button onclick="agrandirCourbe()" style="background:none;border:1px solid var(--border);border-radius:8px;padding:4px 9px;font-size:.75rem;color:var(--muted);cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;" aria-label="Agrandir la courbe">⛶ Agrandir</button>
+    </div>
+    <canvas id="alcooChart" height="180"></canvas>
+  </div>
+  <!-- Modal courbe plein écran -->
+  <div id="courbeModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:5000;align-items:center;justify-content:center;padding:16px;">
+    <div style="background:var(--card-bg);border-radius:18px;padding:20px 16px 16px;width:100%;max-width:520px;max-height:90vh;overflow:auto;position:relative;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="section-title" style="margin-bottom:0;">📊 Courbe d'élimination</div>
+        <button onclick="fermerCourbe()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--muted);padding:4px 8px;" aria-label="Fermer">✕</button>
+      </div>
+      <canvas id="alcooChartModal" height="280"></canvas>
+    </div>
+  </div>
+
+  <!-- DÉTAILS -->
+  <div class="details-grid">
+    <div class="detail-tile">
+      <div class="detail-tile-label">Alcool pur ingéré</div>
+      <div class="detail-tile-val" id="dAlcool">—</div>
+      <div style="font-size:.7rem;color:var(--muted);font-weight:600;">grammes</div>
+    </div>
+    <div class="detail-tile">
+      <div class="detail-tile-label">En mg/L expiré</div>
+      <div class="detail-tile-val" id="dMgL">—</div>
+      <div style="font-size:.7rem;color:var(--muted);font-weight:600;">mg/L</div>
+    </div>
+    <div class="detail-tile">
+      <div class="detail-tile-label">Coeff. Widmark ajusté</div>
+      <div class="detail-tile-val" id="dCoeff">0.68</div>
+      <div style="font-size:.7rem;color:var(--muted);font-weight:600;">(genre + masse musc.)</div>
+    </div>
+    <div class="detail-tile">
+      <div class="detail-tile-label">Élimination/h</div>
+      <div class="detail-tile-val" id="dElim">0.12</div>
+      <div style="font-size:.7rem;color:var(--muted);font-weight:600;">g/L/h</div>
+    </div>
+  </div>
   <!-- VOTRE CONSOMMATION -->
   <div class="card" id="consoCard" style="display:none;">
     <div class="section-title">📋 Votre consommation</div>
@@ -468,10 +513,15 @@
   </div>
 
 
+
+
     <!-- LÉGALITÉ PAR PAYS -->
   <div class="card" style="margin-top:16px;">
     <div class="section-title">🚗 Légalité conduite par pays</div>
-    <p style="font-size:.75rem;color:var(--muted);font-weight:600;margin-bottom:10px;">Les seuils varient selon votre pays et votre profil de conducteur :</p>
+    <p style="font-size:.75rem;color:var(--muted);font-weight:600;margin-bottom:6px;">Les seuils légaux varient selon votre pays et votre profil de conducteur :</p>
+    <div style="font-size:.72rem;padding:6px 10px;background:var(--warn-bari);border-radius:8px;color:var(--warn-bari-text);font-weight:600;margin-bottom:10px;line-height:1.5;">
+      ⚕️ Après une chirurgie bariatrique, votre aptitude à conduire doit être évaluée par votre médecin — indépendamment du taux légal.
+    </div>
     <div class="pays-btn-row" id="paysBtnRow">
       <button class="pays-btn" onclick="filterPays('be-std')">🇧🇪 Belgique — standard</button>
       <button class="pays-btn" onclick="filterPays('be-rec')">🇧🇪 Belgique — récidive</button>
@@ -501,39 +551,10 @@
   </div>
 
 
-  <!-- GRAPHIQUE -->
-  <div class="chart-wrap">
-    <div class="section-title">📊 Courbe d'élimination</div>
-    <canvas id="alcooChart" height="180"></canvas>
   </div>
-
-  <!-- DÉTAILS -->
-  <div class="details-grid">
-    <div class="detail-tile">
-      <div class="detail-tile-label">Alcool pur ingéré</div>
-      <div class="detail-tile-val" id="dAlcool">—</div>
-      <div style="font-size:.7rem;color:var(--muted);font-weight:600;">grammes</div>
-    </div>
-    <div class="detail-tile">
-      <div class="detail-tile-label">En mg/L expiré</div>
-      <div class="detail-tile-val" id="dMgL">—</div>
-      <div style="font-size:.7rem;color:var(--muted);font-weight:600;">mg/L</div>
-    </div>
-    <div class="detail-tile">
-      <div class="detail-tile-label">Coeff. Widmark ajusté</div>
-      <div class="detail-tile-val" id="dCoeff">0.68</div>
-      <div style="font-size:.7rem;color:var(--muted);font-weight:600;">(genre + masse musc.)</div>
-    </div>
-    <div class="detail-tile">
-      <div class="detail-tile-label">Élimination/h</div>
-      <div class="detail-tile-val" id="dElim">0.12</div>
-      <div style="font-size:.7rem;color:var(--muted);font-weight:600;">g/L/h</div>
-    </div>
-  </div>
-
   <!-- DISCLAIMER -->
   <div class="disclaimer">
-    ⚠️ Ce calculateur est basé sur la formule de Widmark. Les résultats sont <strong>indicatifs</strong> et varient fortement selon les individus. En cas de doute, suivez toujours les recommandations de votre équipe de santé. <strong>Ne prenez jamais le volant si vous avez consommé de l'alcool.</strong>
+    ⚠️ Ce calculateur est basé sur la formule de Widmark adaptée. Les résultats sont <strong>indicatifs</strong> et ne constituent pas un avis médical. La variabilité individuelle post-bariatrique est <strong>importante</strong> : un même verre peut donner un taux 2 à 3× différent selon les personnes. En cas de doute, suivez toujours les recommandations de votre équipe de santé.
   </div>
 </div>
 
@@ -612,15 +633,19 @@
         </ul>
       </div>
       <div class="guide-step">
-        <h4>Étape 2 — Votre boisson</h4>
+        <h4>Étape 2 — Vos consommations</h4>
         <ul>
-          <li>Appuyez sur le bouton "Choisir une boisson"</li>
-          <li>Sélectionnez votre boisson dans la liste — chaque catégorie propose « Autre » pour saisir un degré personnalisé</li>
+          <li>Appuyez sur <strong>+ Ajouter une boisson</strong> pour chaque consommation</li>
+          <li>Indiquez l'heure à laquelle vous <strong>commencez</strong> à boire</li>
+          <li>Sélectionnez la boisson — chaque catégorie propose « Autre » pour un degré personnalisé</li>
           <li>Indiquez le contexte alimentaire (repas ou à jeun)</li>
-          <li>Avec le bouton <strong>⭐ Habituelle / ☆ Sauver comme habituelle</strong>, conservez votre boisson et son volume pour les prochaines utilisations</li>
-          <li>Ajustez le volume en mL via le curseur</li>
-          <li>Indiquez le nombre de verres</li>
+          <li>Ajustez le volume en mL via le curseur — l'aperçu du taux s'actualise en temps réel</li>
+          <li>Avec <strong>⭐ Sauver comme habituelle</strong>, conservez votre boisson préférée pour les prochaines utilisations</li>
+          <li>Répétez pour chaque boisson consommée — le taux cumulatif est calculé automatiquement</li>
         </ul>
+        <div style="margin-top:8px;padding:8px 12px;background:var(--warn-bari);border-left:3px solid var(--warn-bari-border);border-radius:8px;font-size:.78rem;color:var(--warn-bari-text);line-height:1.5;">
+          ⏱ <strong>Approximation :</strong> l'heure saisie est le <em>début</em> de la consommation. Le pic réel d'alcoolémie survient après un délai d'absorption variable selon votre chirurgie (15 à 50 min). Ce délai est pris en compte dans le calcul.
+        </div>
       </div>
       <div class="guide-step">
         <h4>Étape 3 — Lisez les résultats</h4>
@@ -646,6 +671,10 @@
           <li>📲 Installez cette application via le bouton <strong>Installer</strong> en haut, sous le mode sombre/clair</li>
           <li>Une fois installée, retrouvez-la dans le <strong>tiroir d'apps</strong> sous le nom « Barialimites »</li>
           <li>Pour la désinstaller : appui long sur l'icône → <strong>Désinstaller</strong></li>
+          <li style="margin-top:6px;padding:6px 10px;background:var(--warn-bari);border-radius:8px;list-style:none;">
+            ⚠️ <strong>Navigateur requis :</strong>
+            <span style="font-weight:400;"> Android → <strong>Chrome</strong> uniquement · iOS → <strong>Safari</strong> uniquement · Firefox et Samsung Internet ne supportent pas l'installation.</span>
+          </li>
         </ul>
         <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
           <button onclick="resetParams()" aria-label="Réinitialiser tous les paramètres et le journal de bord" style="width:100%;padding:8px;background:none;border:1.5px solid #c0392b;color:#c0392b;border-radius:8px;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;">🗑 Réinitialiser tous mes paramètres</button>
@@ -681,12 +710,29 @@ Coeff. Widmark : Homme = 0.68 / Femme = 0.55<br><br>
   <tr><td style="padding:2px 6px 2px 0;">Dérivation biliopancréatique</td><td style="padding:2px 4px;text-align:center;">0.80</td><td style="padding:2px 4px;text-align:center;">0.90</td><td style="padding:2px 4px;text-align:center;">0.05 g/L</td></tr>
 </table>
 Si &lt; 6 mois post-op : seuil × 0.5<br><br>
+<span style="opacity:.6;">── Délai d'absorption appliqué ──────</span><br>
+L'heure saisie = début de consommation. Le pic est décalé :<br>
+<table style="font-size:.7rem;border-collapse:collapse;width:100%;margin:6px 0;">
+  <tr style="opacity:.7;"><th style="text-align:left;padding:2px 6px 2px 0;">Chirurgie</th><th style="padding:2px 4px;">Délai pic</th><th style="padding:2px 4px;">Détail</th></tr>
+  <tr><td style="padding:2px 6px 2px 0;">DBP</td><td style="padding:2px 4px;text-align:center;">+15 min</td><td style="padding:2px 4px;font-size:.65rem;">Absorption ultra-rapide</td></tr>
+  <tr><td style="padding:2px 6px 2px 0;">Bypass / Conversion</td><td style="padding:2px 4px;text-align:center;">+25 min</td><td style="padding:2px 4px;font-size:.65rem;">~10 min boisson + 15 min absorption</td></tr>
+  <tr><td style="padding:2px 6px 2px 0;">Sleeve</td><td style="padding:2px 4px;text-align:center;">+40 min</td><td style="padding:2px 4px;font-size:.65rem;">~10 min boisson + 30 min absorption</td></tr>
+  <tr><td style="padding:2px 6px 2px 0;">Anneau</td><td style="padding:2px 4px;text-align:center;">+50 min</td><td style="padding:2px 4px;font-size:.65rem;">~10 min boisson + 40 min absorption</td></tr>
+</table>
 <span style="opacity:.6;">── Variables utilisées ───────────────</span><br>
 Vos valeurs s'affichent ici lors du calcul :<br>
 → Poids · Genre · Masse musc. · Degré · Vol. · Nb verres<br>
 → Temps écoulé · Contexte alim. · Chirurgie · Temps post-op
         </div>
         <p style="font-size:.75rem;color:var(--muted);margin-top:8px;">Les valeurs réelles s'affichent dans le panneau <strong>Votre consommation</strong> après chaque calcul.</p>
+      </div>
+      <div class="guide-step">
+        <h4>📋 Versions</h4>
+        <ul style="font-size:.78rem;line-height:1.8;color:var(--text);">
+          <li><strong>V1</strong> — Idée de départ · 22/04/2026</li>
+          <li><strong>V2</strong> — Application mobile (PWA) · 24/05/2026</li>
+          <li><strong>V3</strong> — Multi-boissons &amp; délai d'absorption · 29/05/2026</li>
+        </ul>
       </div>
       <div class="guide-step" style="background:var(--cream);">
         <h4>📤 Partagez</h4>
@@ -699,7 +745,7 @@ Vos valeurs s'affichent ici lors du calcul :<br>
       <div style="padding:16px 0 8px;">
         <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
       </div>
-      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 2.1 — Build 46 — MàJ 28/05/2026</div>
+      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 3.0 — Build 55 — MàJ 29/05/2026</div>
     </div>
     <!-- Onglet Risques -->
     <div class="guide-tab-content" id="content-risques">
@@ -840,6 +886,270 @@ function updatePaysDisplay(taux) {
 let genre = null, chir = null, postOp = null, alimentaire = 'repas';
 let unitMode = 'kg'; // 'kg' ou 'lb'
 let boissonIdx = null, nbVerres = 1, chart = null;
+
+// ── Session multi-consommations (v3.0) ───────────────────────────
+let session = [];          // [{id,heure,heureDecimal,boissonIdx,nbVerres,vol,alimentaire,degreCustom}]
+let sessionEditId = null;  // null=ajout, sinon id en cours d'edition
+let sessionNextId = 1;
+
+function heureToDecimal(hhmm) {
+  if (!hhmm) return null;
+  const [hh, mm] = hhmm.split(':').map(Number);
+  return hh + mm / 60;
+}
+function nowDecimal() {
+  const n = new Date();
+  return n.getHours() + n.getMinutes() / 60;
+}
+function getSeuilBari() {
+  const base = chir==='dbp'?0.05:chir==='conversion'?0.08:chir==='bypass'?0.10:chir==='sleeve'?0.20:0.30;
+  return postOp==='recent' ? base*0.5 : base;
+}
+function getChirFactors() {
+  let cf=1.0, ef=1.0;
+  if (chir==='anneau')     { cf=0.90; ef=1.0;  }
+  if (chir==='conversion') { cf=1.0;  ef=0.95; }
+  if (chir==='dbp')        { cf=0.80; ef=0.90; }
+  return {cf, ef};
+}
+function getDelaiAbsorption() {
+  // Délai moyen en heures entre début de consommation et pic d'alcoolémie
+  if (chir === 'dbp')                            return 15/60;
+  if (chir === 'bypass' || chir === 'conversion') return 25/60;
+  if (chir === 'sleeve')                          return 40/60;
+  if (chir === 'anneau')                          return 50/60;
+  return 30/60;
+}
+function getFourchettePic() {
+  // Fourchette affichée à l'utilisateur (arrondie, imprécise volontairement)
+  if (chir === 'dbp')                            return '15 à 25 min';
+  if (chir === 'bypass' || chir === 'conversion') return '20 à 35 min';
+  if (chir === 'sleeve')                          return '30 à 50 min';
+  if (chir === 'anneau')                          return '40 à 60 min';
+  return '20 à 50 min';
+}
+
+function tauxCumulatif(tNow) {
+  const poids  = getPoidsKg() || 80;
+  const muscle = parseFloat(document.getElementById('muscle').value) || 10;
+  const coeff  = genre==='homme' ? 0.68 : 0.55;
+  const elim   = genre==='homme' ? 0.12 : 0.10;
+  const {cf, ef} = getChirFactors();
+  const coeffAjuste = coeff * (1 + 0.3*(muscle/poids)) * cf;
+  const elimAjuste  = elim * ef;
+  const delai = getDelaiAbsorption();
+  let taux = 0;
+  let tauxPicAVenir = 0;  // somme des pics pas encore atteints
+  let minMinAvantPic = Infinity; // minutes avant le prochain pic
+  session.forEach(c => {
+    const b = boissons[c.boissonIdx];
+    const degre = b.autre ? (c.degreCustom||0) : b.degre;
+    const af = c.alimentaire==='jeun' ? 1.15 : 1.0;
+    const alcoolPur = c.vol * c.nbVerres * (degre/100) * 0.789 * af;
+    const t0 = alcoolPur / (poids * coeffAjuste * 1000) * 1000;
+    const heurePic = c.heureDecimal + delai;
+    const duree = tNow - heurePic;
+    if (duree >= 0) {
+      taux += Math.max(0, t0 - elimAjuste*duree);
+    } else {
+      // Pic pas encore atteint
+      tauxPicAVenir += t0;
+      const minRestants = Math.round(-duree * 60);
+      if (minRestants < minMinAvantPic) minMinAvantPic = minRestants;
+    }
+  });
+  return {
+    taux: Math.max(0, taux),
+    tauxPicAVenir,
+    minAvantPic: minMinAvantPic === Infinity ? 0 : minMinAvantPic,
+    elimAjuste,
+    coeffAjuste
+  };
+}
+function setHeureAjoutNow() {
+  const n = new Date();
+  document.getElementById('heureAjout').value =
+    String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
+  activerBtnValider();
+}
+function activerBtnValider() {
+  const heure = document.getElementById('heureAjout').value;
+  const btn   = document.getElementById('btnValiderAjout');
+  if (!btn) return;
+  const ok = !!(heure && boissonIdx !== null);
+  btn.style.opacity = ok ? '1' : '0.4';
+  btn.style.pointerEvents = ok ? 'auto' : 'none';
+}
+function tryOuvrirAjout() {
+  if (!paramsComplete()) {
+    const t = document.getElementById('incompletToast');
+    t.style.display = 'block';
+    setTimeout(() => { t.style.display='none'; }, 3000);
+    return;
+  }
+  ouvrirAjout();
+}
+function ouvrirAjout(editId) {
+  sessionEditId = editId !== undefined ? editId : null;
+  document.getElementById('ajoutPanel').style.display = 'block';
+  document.getElementById('btnAjouterBoisson').style.display = 'none';
+  document.getElementById('ajoutPanelTitle').textContent =
+    sessionEditId !== null ? 'Modifier la consommation' : 'Nouvelle consommation';
+  if (sessionEditId !== null) {
+    const c = session.find(x => x.id === sessionEditId);
+    if (c) {
+      document.getElementById('heureAjout').value = c.heure;
+      boissonIdx = c.boissonIdx;
+      nbVerres = 1;
+      const b = boissons[boissonIdx];
+      document.getElementById('selectedName').textContent = b.nom;
+      document.getElementById('volume').value = c.vol;
+      updateVol();
+      alimentaire = c.alimentaire;
+      setAlimentaire(alimentaire);
+      degreCustomVal = c.degreCustom || null;
+    }
+  } else {
+    boissonIdx = null; nbVerres = 1;
+    document.getElementById('heureAjout').value = '';
+    document.getElementById('selectedName').textContent = 'Choisir une boisson';
+    document.getElementById('degreInputWrap').style.display = 'none';
+    degreCustomVal = null;
+  }
+  activerBtnValider();
+}
+function annulerAjout() {
+  document.getElementById('ajoutPanel').style.display = 'none';
+  document.getElementById('btnAjouterBoisson').style.display = 'flex';
+  if (panelOpen) toggleDrinkPanel();
+  sessionEditId = null; boissonIdx = null;
+}
+function previewTaux() {
+  const prev = document.getElementById('tauxPreview');
+  if (!prev || boissonIdx === null || !paramsComplete()) { if(prev) prev.style.display='none'; return; }
+  const poids  = getPoidsKg() || 80;
+  const muscle = parseFloat(document.getElementById('muscle').value) || 10;
+  const vol    = parseFloat(document.getElementById('volume').value) || 0;
+  const b      = boissons[boissonIdx];
+  const degre  = b.autre ? (degreCustomVal||0) : b.degre;
+  const af     = alimentaire==='jeun' ? 1.15 : 1.0;
+  const coeff  = genre==='homme' ? 0.68 : 0.55;
+  const {cf}   = getChirFactors();
+  const coeffAjuste = coeff * (1 + 0.3*(muscle/poids)) * cf;
+  const alc    = vol * 1 * (degre/100) * 0.789 * af;
+  const t0     = alc / (poids * coeffAjuste * 1000) * 1000;
+  const seuil  = getSeuilBari();
+  prev.style.display = 'block';
+  if (t0 >= 0.5) {
+    prev.style.background='var(--danger-road)'; prev.style.color='var(--danger-road-text)';
+    prev.textContent = '🚨 Taux légal dépassé à la consommation (' + t0.toFixed(2) + ' g/L)';
+  } else if (t0 >= seuil) {
+    prev.style.background='var(--danger-bari)'; prev.style.color='var(--danger-bari-text)';
+    prev.textContent = '⚠️ Seuil bariatrique dépassé (' + t0.toFixed(2) + ' g/L > ' + seuil + ' g/L)';
+  } else {
+    prev.style.background='var(--safe-green)'; prev.style.color='var(--safe-text)';
+    prev.textContent = '✅ Sous le seuil bariatrique (' + t0.toFixed(2) + ' g/L ≤ ' + seuil + ' g/L)';
+  }
+}
+
+function validerAjout() {
+  const heure = document.getElementById('heureAjout').value;
+  if (!heure || boissonIdx === null) return;
+  // Refuser heure future (> 30 min dans le futur)
+  const [hh,mm] = heure.split(':').map(Number);
+  const consoDate = new Date(); consoDate.setHours(hh,mm,0,0);
+  const now = new Date();
+  if ((consoDate - now) > 30*60*1000) {
+    const prev = document.getElementById('tauxPreview');
+    if (prev) { prev.style.display='block'; prev.style.background='#fff0e0'; prev.style.color='#8a3800'; prev.textContent='⚠️ Heure dans le futur — vérifiez l\'heure saisie'; }
+    return;
+  }
+  const vol = parseFloat(document.getElementById('volume').value) || boissons[boissonIdx].vol;
+  const conso = {
+    id: sessionEditId !== null ? sessionEditId : sessionNextId++,
+    heure, heureDecimal: heureToDecimal(heure),
+    boissonIdx, nbVerres, vol, alimentaire,
+    degreCustom: degreCustomVal
+  };
+  if (sessionEditId !== null) {
+    const idx = session.findIndex(x => x.id === sessionEditId);
+    if (idx !== -1) session[idx] = conso;
+  } else {
+    session.push(conso);
+    session.sort((a,b) => a.heureDecimal - b.heureDecimal);
+  }
+  annulerAjout();
+  renderSession();
+  calcul();
+  updateProgress();
+}
+function supprimerConso(id) {
+  session = session.filter(x => x.id !== id);
+  renderSession();
+  if (session.length > 0) calcul(); else {
+    document.getElementById('resultBox').style.display = 'none';
+    document.getElementById('consoCard').style.display = 'none';
+  }
+  updateProgress();
+}
+function renderSession() {
+  const list = document.getElementById('sessionList');
+  if (!list) return;
+  if (session.length === 0) {
+    list.innerHTML = '<div style="font-size:.78rem;color:var(--muted);text-align:center;padding:10px 0 4px;">Aucune consommation — appuyez sur + pour commencer</div>';
+    return;
+  }
+  const poids  = getPoidsKg() || 80;
+  const muscle = parseFloat(document.getElementById('muscle').value) || 10;
+  const coeff  = genre==='homme' ? 0.68 : 0.55;
+  const {cf}   = getChirFactors();
+  const coeffAjuste = coeff * (1 + 0.3*(muscle/poids)) * cf;
+  const colors = {leger:'#2e7d32', petillant:'#1565c0', fort:'#b71c1c', cocktail:'#6a1b9a'};
+  list.innerHTML = session.map(c => {
+    const b   = boissons[c.boissonIdx];
+    const deg = b.autre ? (c.degreCustom||0) : b.degre;
+    const af  = c.alimentaire==='jeun' ? 1.15 : 1.0;
+    const alc = c.vol * c.nbVerres * (deg/100) * 0.789 * af;
+    const contrib = (alc / (poids * coeffAjuste * 1000) * 1000).toFixed(2);
+    const col  = colors[b.type] || '#8B1A1A';
+    const vtxt = c.nbVerres%1===0 ? c.nbVerres : c.nbVerres.toFixed(1);
+    return '<div style="background:var(--cream);border:1.5px solid ' + col + '40;border-radius:12px;padding:10px 12px;margin-bottom:6px;position:relative;">' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;padding-right:52px;">' +
+        '<span style="font-size:.83rem;font-weight:800;color:var(--text);flex:1;">' + b.nom + '</span>' +
+        '<span style="font-size:.72rem;font-weight:700;color:' + col + ';background:' + col + '18;padding:2px 7px;border-radius:20px;white-space:nowrap;">+' + contrib + ' g/L</span>' +
+      '</div>' +
+      '<div style="display:flex;gap:10px;font-size:.70rem;color:var(--muted);font-weight:600;flex-wrap:wrap;">' +
+        '<span>&#9201; ' + c.heure + '</span>' +
+        '<span>&#128347; ' + c.vol + ' mL</span>' +
+        (c.alimentaire==='jeun' ? '<span>&#128167; jeun</span>' : '') +
+      '</div>' +
+      (function(){
+        // Temps avant sobriété pour cette consommation seule
+        const pds = getPoidsKg()||80, mus = parseFloat(document.getElementById('muscle').value)||10;
+        const co = genre==='homme'?0.68:0.55, el = genre==='homme'?0.12:0.10;
+        const {cf,ef} = getChirFactors();
+        const cA = co*(1+0.3*(mus/pds))*cf, eA = el*ef;
+        const b2 = boissons[c.boissonIdx], deg2 = b2.autre?(c.degreCustom||0):b2.degre;
+        const af2 = c.alimentaire==='jeun'?1.15:1.0;
+        const alc2 = c.vol*c.nbVerres*(deg2/100)*0.789*af2;
+        const t02 = alc2/(pds*cA*1000)*1000;
+        const tRetour = t02/eA; // heures depuis le pic
+        const heureFin = c.heureDecimal + getDelaiAbsorption() + tRetour;
+        const now2 = nowDecimal();
+        if (heureFin > now2) {
+          const restH = heureFin - now2;
+          const rh = Math.floor(restH), rm = Math.round((restH-rh)*60);
+          return '<div style="font-size:.68rem;color:var(--muted);font-weight:600;margin-top:2px;">🕐 Sober dans ' + (rh>0?rh+'h ':'') + rm + 'min</div>';
+        }
+        return '<div style="font-size:.68rem;color:#28a745;font-weight:700;margin-top:2px;">✅ Éliminé</div>';
+      })() +
+      '<div style="position:absolute;top:8px;right:6px;display:flex;gap:2px;">' +
+        '<button onclick="ouvrirAjout(' + c.id + ')" style="background:none;border:none;cursor:pointer;font-size:.85rem;padding:3px 5px;color:var(--muted);" aria-label="Modifier">&#9998;</button>' +
+        '<button onclick="supprimerConso(' + c.id + ')" style="background:none;border:none;cursor:pointer;font-size:.85rem;padding:3px 5px;color:#c0392b;" aria-label="Supprimer">&#x2715;</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
 let degreCustomVal = null;
 let miniPopupShown = false, spiritueuxPopupShown = false;
 let isLoadingFav = false;
@@ -978,7 +1288,8 @@ function selectBoisson(i) {
   document.getElementById('btnBoissonOpen').classList.remove('open');
   updateAlerte();
   updateFavBtn();
-  calcul();
+  activerBtnValider();
+  previewTaux();
 }
 
 function showMiniPopup(title, body) {
@@ -1021,15 +1332,8 @@ function updateAlerte() {
 function updateVol() {
   document.getElementById('volLabel').textContent = document.getElementById('volume').value;
 }
-function changeVerres(d) {
-  nbVerres = Math.max(0.5, Math.min(10, nbVerres + d));
-  document.getElementById('verresLabel').textContent = nbVerres % 1 === 0 ? nbVerres : nbVerres.toFixed(1);
-  if (postOp === 'recent' && nbVerres > 1 && !miniPopupShown) {
-    miniPopupShown = true;
-    showMiniPopupWithRisques('⚠️ Attention à la quantité', 'En post-op récent, plus d\'un verre peut avoir des effets très imprévisibles. Faites confiance au calculateur plutôt qu\'à vos sensations.');
-  }
-  calcul();
-}
+function changeVerres(d) { nbVerres = 1; } // v3.0 : 1 verre par consommation
+
 function setGenre(g, silent) {
   genre = g;
   document.getElementById('btn-homme').classList.toggle('active', g==='homme');
@@ -1064,28 +1368,7 @@ function setChir(c, silent) {
 }
 
 function updateProgress() {
-  const poids = getPoidsKg();
-  const heureVal = (document.getElementById('heureConso').value || '').trim();
-  const filled = [
-    poids >= 30,                   // Poids
-    genre !== null,                // Genre
-    heureVal !== '',               // Heure de consommation (session uniquement)
-    muscleSavedByUser,             // Masse musculaire (sauvée)
-    chir !== null,                 // Type de chirurgie
-    postOp !== null                // Temps post-op
-  ];
-  const ids = ['prog-poids','prog-genre','prog-heure','prog-muscle','prog-chir','prog-postop'];
-  const count = filled.filter(Boolean).length;
-  ids.forEach((id, i) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.style.background = filled[i] ? '#28a745' : 'var(--border)';
-  });
-  const lbl = document.getElementById('prog-label');
-  if (lbl) {
-    lbl.textContent = count + ' / 6';
-    lbl.style.color = count === 6 ? '#28a745' : 'var(--muted)';
-  }
+  // Barre de progression supprimée en v3.0 — fonction conservée pour compatibilité
 }
 
 function toggleUnit() {
@@ -1227,223 +1510,221 @@ function paramsComplete() {
 
 function onParamChange() {
   updateProgress();
-  const btn = document.getElementById('btnBoissonOpen');
-  if (paramsComplete()) {
-    btn.classList.remove('disabled');
-    btn.style.background = '';
-    btn.style.cursor = '';
-  } else {
-    btn.classList.add('disabled');
-    btn.style.background = '#b0a0a0';
-    btn.style.cursor = 'not-allowed';
+  const btn = document.getElementById('btnAjouterBoisson');
+  if (btn) {
+    btn.style.opacity = paramsComplete() ? '1' : '0.4';
+    btn.style.pointerEvents = paramsComplete() ? 'auto' : 'none';
   }
-  calcul();
+  if (session.length > 0) calcul();
 }
 
-function tryOpenDrink() {
-  if (!paramsComplete()) {
-    const t = document.getElementById('incompletToast');
-    t.style.display = 'block';
-    setTimeout(() => { t.style.display = 'none'; }, 3000);
-    return;
-  }
-  toggleDrinkPanel();
-}
+function tryOpenDrink() { tryOuvrirAjout(); }
 
 function calcul() {
-  if (boissonIdx === null || boissonIdx === undefined) return;
-  const poids = getPoidsKg() || 80;
-  const duree = getDureeH();
-  const vol   = parseFloat(document.getElementById('volume').value) || 0;
+  if (session.length === 0) {
+    document.getElementById('resultBox').style.display = 'none';
+    document.getElementById('consoCard').style.display = 'none';
+    return;
+  }
+  const tNow = nowDecimal();
+  const {taux, tauxPicAVenir, minAvantPic, elimAjuste, coeffAjuste} = tauxCumulatif(tNow);
+  const seuilBari  = getSeuilBari();
+  const {cf:chirCoeffFactor, ef:chirElimFactor} = getChirFactors();
+  const poids  = getPoidsKg() || 80;
   const muscle = parseFloat(document.getElementById('muscle').value) || 10;
-  const b     = boissons[boissonIdx];
-  const coeff = genre==='homme' ? 0.68 : 0.55;
-  const elim  = genre==='homme' ? 0.12 : 0.10;
-  // Facteurs par chirurgie (littérature bariatrique)
-  // Anneau      : absorption ralentie, volume distribution +10% → coeffFactor 0.90
-  // Sleeve      : référence, pas de modification
-  // Conversion  : cumul sleeve+bypass, élimination ralentie → elimFactor 0.95, coeffFactor 1.0
-  // Bypass      : référence bypass, pas de modification
-  // DBP/Switch  : malabsorption massive → coeffFactor 0.80 (taux pic plus élevé)
-  let chirCoeffFactor = 1.0;
-  let chirElimFactor  = 1.0;
-  if (chir === 'anneau')     { chirCoeffFactor = 0.90; chirElimFactor = 1.0;  }
-  if (chir === 'sleeve')     { chirCoeffFactor = 1.0;  chirElimFactor = 1.0;  }
-  if (chir === 'conversion') { chirCoeffFactor = 1.0;  chirElimFactor = 0.95; }
-  if (chir === 'bypass')     { chirCoeffFactor = 1.0;  chirElimFactor = 1.0;  }
-  if (chir === 'dbp')        { chirCoeffFactor = 0.80; chirElimFactor = 0.90; }
-  // Formule de Widmark adaptée : facteur masse musculaire + facteur chirurgie
-  const coeffAjuste = coeff * (1 + 0.3 * (muscle / poids)) * chirCoeffFactor;
-  const elimAjuste  = elim * chirElimFactor;
-  const degreFinal = b.autre ? (degreCustomVal || 0) : b.degre;
-  const alimentFactor = alimentaire === 'jeun' ? 1.15 : 1.0;
-  const alcoolPur = vol * nbVerres * (degreFinal/100) * 0.789 * alimentFactor;
-  const taux0 = alcoolPur / (poids * coeffAjuste * 1000) * 1000;
-  const taux  = Math.max(0, taux0 - elimAjuste * duree);
-  const mgL   = taux * 0.5;
-  const tempsRetour = taux0 / elimAjuste;
-  const h = Math.floor(taux / elimAjuste);
-  const m = Math.round(((taux/elimAjuste) - h) * 60);
-  // Seuils bariatriques par chirurgie
-  const seuilBariBase = chir==='dbp' ? 0.05 : chir==='conversion' ? 0.08 : chir==='bypass' ? 0.10 : chir==='sleeve' ? 0.20 : 0.30;
-  const seuilBari = postOp === 'recent' ? seuilBariBase * 0.5 : seuilBariBase;
+  const coeff  = genre==='homme' ? 0.68 : 0.55;
+  const elim   = genre==='homme' ? 0.12 : 0.10;
+  const mgL    = taux * 0.5;
 
-  const box = document.getElementById('resultBox');
+  let taux0 = 0, totalAlcool = 0;
+  session.forEach(c => {
+    const b = boissons[c.boissonIdx];
+    const deg = b.autre ? (c.degreCustom||0) : b.degre;
+    const af  = c.alimentaire==='jeun' ? 1.15 : 1.0;
+    const alc = c.vol * c.nbVerres * (deg/100) * 0.789 * af;
+    totalAlcool += alc;
+    taux0 += alc / (poids * coeffAjuste * 1000) * 1000;
+  });
+  const tempsRetour = taux > 0 ? taux / elimAjuste : 0;
+
   document.getElementById('resultBox').style.display = 'block';
   document.getElementById('consoCard').style.display = 'block';
-  document.getElementById('resultVal').textContent = taux.toFixed(2);
+  const cw = document.getElementById('chartWrap');
+  if (cw) cw.style.display = 'block';
+  // Taux affiché = taux actuel + contribution des pics à venir au moment où ils arriveront
+  const tauxAffiche = taux > 0 ? taux : (tauxPicAVenir > 0 ? tauxPicAVenir : 0);
+  document.getElementById('resultVal').textContent = tauxAffiche.toFixed(2);
 
-  // Mise à jour des variables de debug dans l'aide
+  // Debug
   const dbg = document.getElementById('debugVars');
   if (dbg) {
-    const b = boissons[boissonIdx];
-    const degreFinalDbg = b.autre ? (degreCustomVal || 0) : b.degre;
     dbg.style.display = 'block';
+    const cdbg = session.map(c => boissons[c.boissonIdx].nom+' x'+c.nbVerres+' ('+c.heure+')').join(', ');
     dbg.innerHTML =
-      `Poids          : ${poids.toFixed(1)} kg${unitMode==='lb' ? ' (' + (poids*2.20462).toFixed(1) + ' lb)' : ''}<br>` +
-      `Genre          : ${genre}<br>` +
-      `Masse musc.    : ${muscle.toFixed(1)} kg${unitMode==='lb' ? ' (' + (muscle*2.20462).toFixed(1) + ' lb)' : ''}<br>` +
-      `Degré          : ${degreFinalDbg}°<br>` +
-      `Volume         : ${vol} mL × ${nbVerres} verre(s)<br>` +
-      `Alcool pur     : ${alcoolPur.toFixed(2)} g<br>` +
-      `Alim.          : ${alimentaire} (×${alimentaire==='jeun'?'1.15':'1.00'})<br>` +
-      `Temps écoulé   : ${Math.floor(duree)}h ${String(Math.round((duree%1)*60)).padStart(2,'0')}min<br>` +
-      `Chirurgie      : ${chir || '—'} (coeffFactor:${chirCoeffFactor}, elimFactor:${chirElimFactor})<br>` +
-      `Post-op        : ${postOp || '—'}<br>` +
-      `Coeff. ajusté  : ${coeffAjuste.toFixed(4)}<br>` +
-      `Élimination    : ${elim} g/L/h<br>` +
-      `Seuil bari.    : ${seuilBari} g/L<br>` +
-      `Taux pic (t=0) : ${taux0.toFixed(3)} g/L<br>` +
-      `Taux actuel    : ${taux.toFixed(3)} g/L`;
+      'Poids         : '+poids.toFixed(1)+' kg<br>Genre         : '+genre+'<br>Masse musc.   : '+muscle.toFixed(1)+' kg<br>'+
+      'Chirurgie     : '+(chir||'—')+' (coeff:'+chirCoeffFactor+', elim:'+chirElimFactor+')<br>Post-op       : '+(postOp||'—')+'<br>'+
+      'Consommations : '+cdbg+'<br>Alcool total  : '+totalAlcool.toFixed(2)+' g<br>'+
+      'Coeff. ajusté : '+coeffAjuste.toFixed(4)+'<br>Élimination   : '+elimAjuste.toFixed(3)+' g/L/h<br>'+
+      'Seuil bari.   : '+seuilBari+' g/L<br>Taux pic cumul: '+taux0.toFixed(3)+' g/L<br>Taux actuel   : '+taux.toFixed(3)+' g/L';
   }
+
+  // Temps retour
   const timeEl = document.getElementById('resultTime');
   if (taux > 0) {
-    const tempsZero = taux / elimAjuste;
-    const hZero = Math.floor(tempsZero);
-    const mZero = Math.round((tempsZero - hZero) * 60);
+    const tz = taux/elimAjuste, hz=Math.floor(tz), mz=Math.round((tz-hz)*60);
     let html = '';
     if (taux > seuilBari) {
-      const tempsSeuil = (taux - seuilBari) / elimAjuste;
-      const hSeuil = Math.floor(tempsSeuil);
-      const mSeuil = Math.round((tempsSeuil - hSeuil) * 60);
-      html += `⏱ Retour sous le seuil ${seuilBari} g/L dans : ${hSeuil}h ${String(mSeuil).padStart(2,'0')}min<br>`;
+      const ts=(taux-seuilBari)/elimAjuste, hs=Math.floor(ts), ms=Math.round((ts-hs)*60);
+      html += '⏱ Retour sous le seuil '+seuilBari+' g/L dans : '+hs+'h '+String(ms).padStart(2,'0')+'min<br>';
     }
-    html += `⏱ Retour à 0.00 g/L dans : ${hZero}h ${String(mZero).padStart(2,'0')}min`;
+    html += '⏱ Retour à 0.00 g/L dans : '+hz+'h '+String(mz).padStart(2,'0')+'min';
     timeEl.innerHTML = html;
-  } else {
-    timeEl.innerHTML = '✅ Taux nul à ce stade';
-  }
+  } else { timeEl.innerHTML = '✅ Taux nul à ce stade'; }
 
+  // Couleur boîte
+  const box = document.getElementById('resultBox');
   const msg = document.getElementById('resultMsg');
-  if (taux === 0 && taux0 === 0) {
-    box.className='result-box safe';
-    msg.textContent='✅ Aucun alcool détecté';
-  } else if (taux === 0 && taux0 > 0) {
-    // Taux revenu à 0 grâce au temps écoulé
-    if (taux0 > seuilBari) {
-      box.className='result-box warn-bari';
-      msg.textContent=`⚠️ Seuil bariatrique dépassé à la consommation — Risque élevé (taux actuel nul)`;
+  const tauxTotal = taux + tauxPicAVenir; // taux actuel + pics à venir
+  if (taux===0 && taux0===0 && tauxPicAVenir===0) {
+    box.className='result-box safe'; msg.textContent='✅ Aucun alcool détecté';
+  } else if (taux===0 && tauxPicAVenir > 0) {
+    // Pic pas encore atteint : alerter sur ce qui va arriver
+    const picStr = tauxPicAVenir.toFixed(2);
+    if (tauxPicAVenir >= 0.5) {
+      box.className='result-box danger-road';
+      msg.innerHTML='🚨 Pic prévu dans '+getFourchettePic()+' : '+picStr+' g/L — Ne conduisez pas !';
+    } else if (tauxPicAVenir >= seuilBari) {
+      box.className='result-box danger-bari';
+      msg.innerHTML='⚠️ Pic prévu dans '+getFourchettePic()+' : '+picStr+' g/L — Seuil bariatrique dépassé';
     } else {
-      box.className='result-box safe';
-      msg.textContent='✅ Taux revenu à 0 — Alcool éliminé';
+      box.className='result-box warn-bari';
+      msg.innerHTML='⏱ Pic prévu dans '+getFourchettePic()+' : '+picStr+' g/L — Restez vigilant';
     }
-  } else if (taux > 0 && taux0 > seuilBari && taux < seuilBari) {
-    // En cours d'élimination, avait dépassé le seuil bari
-    box.className='result-box warn-bari';
-    msg.textContent=`⚠️ Seuil bariatrique dépassé à la consommation — Risque élevé`;
-  } else if (taux >= 0.5) {
-    box.className='result-box danger-road';
-    msg.textContent='🚨 Taux légal dépassé — Ne conduisez pas !';
-  } else if (taux >= seuilBari) {
-    box.className='result-box danger-bari';
-    msg.innerHTML=`🔴 Seuil bariatrique dépassé (${seuilBari} g/L) — Risque élevé<br>
-      <span style="font-size:.78rem;font-weight:600;display:block;margin-top:5px;">⚠️ Tolérance faussée : beaucoup d'opérés se sentent "à peine ivres" alors que leur taux est déjà dangereux.</span>`;
+  } else if (taux===0) {
+    box.className='result-box safe'; msg.textContent='✅ Taux revenu à 0 — Alcool éliminé';
+  } else if (taux>=0.5) {
+    box.className='result-box danger-road'; msg.textContent='🚨 Taux légal dépassé — Ne conduisez pas !';
+  } else if (taux>=seuilBari) {
+    box.className='result-box danger-bari'; msg.innerHTML='🔴 Seuil bariatrique dépassé ('+seuilBari+' g/L) — Risque élevé<br><span style="font-size:.78rem;font-weight:600;display:block;margin-top:5px;">⚠️ Tolérance faussée : vérifiez le calculateur, pas vos sensations.</span><span style="font-size:.72rem;font-weight:600;display:block;margin-top:3px;opacity:.9;">💊 Rappel : l\'alcool peut amplifier l\'effet de vos médicaments.</span>';
+  } else if (taux>0 && taux0>seuilBari && taux<seuilBari) {
+    box.className='result-box warn-bari'; msg.textContent='⚠️ Seuil bariatrique dépassé à la consommation — Risque élevé';
   } else {
-    // taux > 0 mais sous le seuil bariatrique
-    box.className='result-box safe';
-    msg.textContent=`✅ Sous le seuil bariatrique (${seuilBari} g/L)`;
+    box.className='result-box safe'; msg.textContent='✅ Sous le seuil bariatrique ('+seuilBari+' g/L)';
   }
 
+  // SeuilInfo
   const seuilEl = document.getElementById('seuilInfo');
-  const postOpLabel = postOp==='recent' ? ' — <span style="font-weight:800;">⚠️ seuil abaissé (&lt;6 mois)</span>' : postOp==='mid' ? ' — stabilisation' : '';
-  if (chir === 'bypass') {
-    seuilEl.innerHTML = `<strong>🚨 Bypass</strong> — Seuil d'alerte : <strong>${seuilBari} g/L</strong>${postOpLabel}<br>
-      <span style="font-size:.7rem;opacity:.85;">⏱ Absorption max. 15–30 min · alcool 2–3× plus vite · risque dumping</span><br>
-      <span style="font-size:.68rem;opacity:.7;">Recommandation des professionnels de santé</span>`;
-  } else {
-    seuilEl.innerHTML = `<strong>⚠️ Sleeve</strong> — Seuil d'alerte : <strong>${seuilBari} g/L</strong>${postOpLabel}<br>
-      <span style="font-size:.7rem;opacity:.85;">⏱ Absorption max. 30–45 min (vs 45–60 min avant l'op.)</span><br>
-      <span style="font-size:.68rem;opacity:.7;">Recommandation des professionnels de santé</span>`;
-  }
-  document.getElementById('dAlcool').textContent = alcoolPur.toFixed(1);
+  const pol = postOp==='recent' ? ' — <span style="font-weight:800;">⚠️ seuil abaissé (&lt;6 mois)</span>' : postOp==='mid' ? ' — stabilisation' : '';
+  const chl = {anneau:'Anneau',sleeve:'Sleeve',conversion:'Conversion',bypass:'Bypass',dbp:'DBP'};
+  seuilEl.innerHTML = '<strong>'+(chl[chir]||chir||'—')+'</strong> — Seuil d\'alerte : <strong>'+seuilBari+' g/L</strong>'+pol+'<br>'+
+    '<span style="font-size:.68rem;opacity:.7;">Recommandation des professionnels de santé</span><br>'+
+    '<span style="font-size:.7rem;opacity:.85;">'+session.length+' consommation'+(session.length>1?'s':'')+' · taux cumulatif</span>';
+
+  document.getElementById('dAlcool').textContent = totalAlcool.toFixed(1);
   document.getElementById('dMgL').textContent    = mgL.toFixed(3);
   document.getElementById('dCoeff').textContent  = coeffAjuste.toFixed(3);
-  document.getElementById('dElim').textContent   = elim;
+  document.getElementById('dElim').textContent   = elimAjuste.toFixed(3);
 
-  // Show risques overlay on first threshold crossing
   showRisquesIfNeeded(taux0, seuilBari);
 
   const tbody = document.getElementById('paysTableBody');
   tbody.innerHTML = '';
-  const videEl = document.getElementById('paysVide');
+  const videEl  = document.getElementById('paysVide');
   const peinesEl = document.getElementById('peinesText');
-
-  // Toujours mettre à jour la courbe
   updateChart(taux0, elimAjuste, tempsRetour, seuilBari);
-
-  // Rien sélectionné : afficher le message d'invite
-  if (!currentPaysFilter) {
-    if (videEl) videEl.style.display = 'block';
-    if (peinesEl) peinesEl.innerHTML = '';
-    return;
-  }
+  if (!currentPaysFilter) { if(videEl) videEl.style.display='block'; if(peinesEl) peinesEl.innerHTML=''; return; }
   if (videEl) videEl.style.display = 'none';
-
-  // Une seule situation sélectionnée
-  const p = pays[currentPaysFilter];
-  if (!p) return;
-
-  if (peinesEl) {
-    peinesEl.innerHTML = '<strong>Peine :</strong> ' + p.peine;
-  }
-
-  const situationsToShow = [p];
-  situationsToShow.forEach(p => {
-    const legal = taux <= p.seuil;
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${p.nom}<br><span class="peine">${p.peine}</span></td>
-      <td>${p.seuil.toFixed(1)}</td>
-      <td><span class="badge ${legal?'legal':'illegal'}">${legal?'✅ LÉGAL':'⛔ INTERDIT'}</span></td>`;
-    tbody.appendChild(tr);
-  });
-
+  const p = pays[currentPaysFilter]; if (!p) return;
+  if (peinesEl) peinesEl.innerHTML = '<strong>Peine :</strong> '+p.peine;
+  const legal = taux <= p.seuil;
+  const tr = document.createElement('tr');
+  tr.innerHTML = '<td>'+p.nom+'<br><span class="peine">'+p.peine+'</span></td><td>'+p.seuil.toFixed(1)+'</td><td><span class="badge '+(legal?'legal':'illegal')+'">'+(legal?'✅ LÉGAL':'⛔ INTERDIT')+'</span></td>';
+  tbody.appendChild(tr);
   updateChart(taux0, elimAjuste, tempsRetour, seuilBari);
 }
 
-function updateChart(taux0, elim, tempsRetour, seuilBari) {
-  const maxH = Math.max(Math.ceil(tempsRetour)+1, 5);
-  const step = maxH > 12 ? 0.5 : 0.25;
-  const labels=[], data=[];
+function updateChart(taux0global, elimAjuste, tempsRetour, seuilBari) {
+  const poids  = getPoidsKg() || 80;
+  const muscle = parseFloat(document.getElementById('muscle').value) || 10;
+  const coeff  = genre==='homme' ? 0.68 : 0.55;
+  const {cf}   = getChirFactors();
+  const delai  = getDelaiAbsorption();
+  const coeffAjuste = coeff * (1 + 0.3*(muscle/poids)) * cf;
+  const heureMin = session.length>0 ? Math.min(...session.map(c=>c.heureDecimal)) : nowDecimal();
+  const heureNow = nowDecimal();
+  const maxH = Math.max(Math.ceil(taux0global/elimAjuste)+2, 5);
+  const step = maxH>12 ? 0.5 : 0.25;
+  const labels=[], dataCourbe=[], dataPasse=[];
+  let idxNow = 0;
+
   for (let t=0; t<=maxH; t+=step) {
-    labels.push(t%1===0?`${t}h`:'');
-    data.push(Math.max(0, taux0 - elim * t));
+    const tAbs = heureMin + t;
+    const totalMin = Math.round(tAbs * 60);
+    const hh = Math.floor(totalMin/60) % 24;
+    const mm  = totalMin % 60;
+    labels.push(t%1===0 ? String(hh).padStart(2,'0')+'h'+String(mm).padStart(2,'0') : '');
+
+    let taux = 0;
+    session.forEach(c => {
+      const b = boissons[c.boissonIdx];
+      const deg = b.autre ? (c.degreCustom||0) : b.degre;
+      const af  = c.alimentaire==='jeun' ? 1.15 : 1.0;
+      const alc = c.vol * c.nbVerres * (deg/100) * 0.789 * af;
+      const t0  = alc / (poids * coeffAjuste * 1000) * 1000;
+      const heurePic = c.heureDecimal + delai;
+      const dur = tAbs - heurePic;
+      if (dur >= 0) taux += Math.max(0, t0 - elimAjuste*dur);
+    });
+    const tauxVal = parseFloat(taux.toFixed(3));
+    dataCourbe.push(tauxVal);
+    // Zone grisée = temps passé (jusqu'à maintenant)
+    dataPasse.push(tAbs <= heureNow ? tauxVal : null);
+    if (tAbs <= heureNow) idxNow = labels.length - 1;
   }
+
   const ctx = document.getElementById('alcooChart').getContext('2d');
   if (chart) chart.destroy();
+
+  // Trait vertical "Maintenant" via plugin inline
+  const pluginNow = {
+    id: 'traitMaintenant',
+    afterDraw(chartInst) {
+      const meta = chartInst.getDatasetMeta(0);
+      if (!meta.data[idxNow]) return;
+      const x = meta.data[idxNow].x;
+      const {top, bottom} = chartInst.chartArea;
+      const ctx2 = chartInst.ctx;
+      ctx2.save();
+      ctx2.beginPath();
+      ctx2.moveTo(x, top);
+      ctx2.lineTo(x, bottom);
+      ctx2.strokeStyle = '#2e7d32';
+      ctx2.lineWidth = 2;
+      ctx2.setLineDash([4,3]);
+      ctx2.stroke();
+      ctx2.fillStyle = '#2e7d32';
+      ctx2.font = 'bold 10px Nunito,sans-serif';
+      ctx2.fillText('▶ Maintenant', x+4, top+12);
+      ctx2.restore();
+    }
+  };
+
   chart = new Chart(ctx, {
     type:'line',
     data:{ labels, datasets:[
-      { label:'Taux (g/L)', data, borderColor:'#8B1A1A', backgroundColor:'rgba(139,26,26,0.1)', borderWidth:2.5, pointRadius:0, fill:true, tension:0.2 },
-      { label:`Seuil bariatrique (${seuilBari} g/L)`, data:labels.map(()=>seuilBari), borderColor:'#e67e22', borderDash:[5,4], borderWidth:1.5, pointRadius:0, fill:false },
-      { label:'Seuil légal France (0.5 g/L)', data:labels.map(()=>0.5), borderColor:'#c0392b', borderDash:[8,4], borderWidth:1.5, pointRadius:0, fill:false }
+      { label:'Taux cumulatif (g/L)', data:dataCourbe, borderColor:'#8B1A1A', backgroundColor:'rgba(139,26,26,0.08)', borderWidth:2.5, pointRadius:0, fill:true, tension:0.3 },
+      { label:'Temps écoulé', data:dataPasse, borderColor:'rgba(0,0,0,0)', backgroundColor:'rgba(100,100,100,0.15)', borderWidth:0, pointRadius:0, fill:true, tension:0.3 },
+      { label:'Seuil bariatrique ('+seuilBari+' g/L)', data:labels.map(()=>seuilBari), borderColor:'#e67e22', borderDash:[5,4], borderWidth:1.5, pointRadius:0, fill:false },
+      { label:'Seuil légal (0.5 g/L)', data:labels.map(()=>0.5), borderColor:'#c0392b', borderDash:[8,4], borderWidth:1.5, pointRadius:0, fill:false }
     ]},
+    plugins:[pluginNow],
     options:{ responsive:true, animation:{duration:300},
-      plugins:{ legend:{ labels:{ font:{family:'Nunito',size:11}, boxWidth:16, padding:10 } },
-        tooltip:{ callbacks:{ label:ctx=>`${ctx.dataset.label}: ${ctx.raw.toFixed(3)} g/L` } }
-      },
+      plugins:{ legend:{labels:{font:{family:'Nunito',size:11},boxWidth:16,padding:10,
+        filter:item=>item.text!=='Temps écoulé'}} ,
+        tooltip:{callbacks:{label:c=>c.dataset.label+': '+Number(c.raw).toFixed(3)+' g/L'}} },
       scales:{
-        x:{ ticks:{font:{family:'Nunito',size:10},color:'#8a6565'}, grid:{color:'rgba(139,26,26,0.08)'} },
-        y:{ min:0, ticks:{font:{family:'Nunito',size:10},color:'#8a6565',callback:v=>v.toFixed(2)+' g/L'}, grid:{color:'rgba(139,26,26,0.08)'} }
+        x:{ticks:{font:{family:'Nunito',size:9},color:'#8a6565',maxRotation:45},grid:{color:'rgba(139,26,26,0.08)'}},
+        y:{min:0,ticks:{font:{family:'Nunito',size:10},color:'#8a6565',callback:v=>v.toFixed(2)+' g/L'},grid:{color:'rgba(139,26,26,0.08)'}}
       }
     }
   });
@@ -1606,13 +1887,13 @@ function onDisclaimerCheck() {
 function closeDisclaimer() {
   const checked = document.getElementById('disclaimerCheck').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b46', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b55', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b46') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b55') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
@@ -1662,8 +1943,8 @@ function getJournal() {
 }
 
 function saveToJournal() {
-  const b = boissons[boissonIdx];
-  if (!b) return;
+  if (session.length === 0) { alert('Ajoutez au moins une consommation avant d\'enregistrer.'); return; }
+  const b = boissons[session[0].boissonIdx]; // pour compatibilité
   const degreFinal = b.autre ? (degreCustomVal || 0) : b.degre;
   const poids  = getPoidsKg() || 0;
   const muscle = parseFloat(document.getElementById('muscle').value) || 10;
@@ -1852,6 +2133,86 @@ function updateRisquesChir() {
   }
 }
 
+// ── Courbe plein écran ──────────────────────────────────────────────────────
+let chartModal = null;
+function agrandirCourbe() {
+  const modal = document.getElementById('courbeModal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+  // Redessiner dans le canvas modal
+  if (session.length === 0) return;
+  const {taux, elimAjuste, coeffAjuste} = tauxCumulatif(nowDecimal());
+  const seuilBari = getSeuilBari();
+  let taux0 = 0;
+  session.forEach(c => {
+    const b = boissons[c.boissonIdx], deg = b.autre?(c.degreCustom||0):b.degre;
+    const af = c.alimentaire==='jeun'?1.15:1.0;
+    const alc = c.vol*c.nbVerres*(deg/100)*0.789*af;
+    taux0 += alc/(getPoidsKg()*coeffAjuste*1000)*1000;
+  });
+  const delai = getDelaiAbsorption();
+  const poids = getPoidsKg()||80, muscle = parseFloat(document.getElementById('muscle').value)||10;
+  const coeff = genre==='homme'?0.68:0.55, {cf} = getChirFactors();
+  const cA = coeff*(1+0.3*(muscle/poids))*cf;
+  const heureMin = Math.min(...session.map(c=>c.heureDecimal));
+  const heureNow = nowDecimal();
+  const maxH = Math.max(Math.ceil(taux0/elimAjuste)+2, 5);
+  const step = 0.25;
+  const labels=[], data=[], passe=[];
+  let idxNow2 = 0;
+  for (let t=0; t<=maxH; t+=step) {
+    const tAbs = heureMin+t;
+    const tot = Math.round(tAbs*60), hh2=Math.floor(tot/60)%24, mm2=tot%60;
+    labels.push(t%1===0 ? String(hh2).padStart(2,'0')+'h'+String(mm2).padStart(2,'0') : '');
+    let tx=0;
+    session.forEach(c=>{
+      const b=boissons[c.boissonIdx], deg=b.autre?(c.degreCustom||0):b.degre;
+      const af=c.alimentaire==='jeun'?1.15:1.0;
+      const alc=c.vol*c.nbVerres*(deg/100)*0.789*af;
+      const t02=alc/(poids*cA*1000)*1000;
+      const dur=tAbs-(c.heureDecimal+delai);
+      if(dur>=0) tx+=Math.max(0,t02-elimAjuste*dur);
+    });
+    data.push(parseFloat(tx.toFixed(3)));
+    passe.push(tAbs<=heureNow?parseFloat(tx.toFixed(3)):null);
+    if(tAbs<=heureNow) idxNow2=labels.length-1;
+  }
+  const ctx2 = document.getElementById('alcooChartModal').getContext('2d');
+  if (chartModal) chartModal.destroy();
+  const pluginNow2 = {
+    id:'traitNow2',
+    afterDraw(ci){
+      const meta=ci.getDatasetMeta(0); if(!meta.data[idxNow2]) return;
+      const x=meta.data[idxNow2].x, {top,bottom}=ci.chartArea, c2=ci.ctx;
+      c2.save(); c2.beginPath(); c2.moveTo(x,top); c2.lineTo(x,bottom);
+      c2.strokeStyle='#2e7d32'; c2.lineWidth=2; c2.setLineDash([4,3]); c2.stroke();
+      c2.fillStyle='#2e7d32'; c2.font='bold 10px Nunito,sans-serif';
+      c2.fillText('▶ Maintenant',x+4,top+12); c2.restore();
+    }
+  };
+  chartModal = new Chart(ctx2, {
+    type:'line',
+    data:{labels, datasets:[
+      {label:'Taux (g/L)',data,borderColor:'#8B1A1A',backgroundColor:'rgba(139,26,26,0.08)',borderWidth:2,pointRadius:0,fill:true,tension:0.3},
+      {label:'Écoulé',data:passe,borderColor:'rgba(0,0,0,0)',backgroundColor:'rgba(100,100,100,0.15)',borderWidth:0,pointRadius:0,fill:true,tension:0.3},
+      {label:'Seuil bari. ('+seuilBari+' g/L)',data:labels.map(()=>seuilBari),borderColor:'#e67e22',borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false},
+      {label:'Seuil légal (0.5 g/L)',data:labels.map(()=>0.5),borderColor:'#c0392b',borderDash:[8,4],borderWidth:1.5,pointRadius:0,fill:false}
+    ]},
+    plugins:[pluginNow2],
+    options:{responsive:true,animation:{duration:200},
+      plugins:{legend:{labels:{font:{family:'Nunito',size:11},boxWidth:14,padding:8,filter:i=>i.text!=='Écoulé'}},
+        tooltip:{callbacks:{label:c=>c.dataset.label+': '+Number(c.raw).toFixed(3)+' g/L'}}},
+      scales:{
+        x:{ticks:{font:{family:'Nunito',size:9},color:'#8a6565',maxRotation:45},grid:{color:'rgba(139,26,26,0.08)'}},
+        y:{min:0,ticks:{font:{family:'Nunito',size:10},color:'#8a6565',callback:v=>v.toFixed(2)+' g/L'},grid:{color:'rgba(139,26,26,0.08)'}}
+      }
+    }
+  });
+}
+function fermerCourbe() {
+  document.getElementById('courbeModal').style.display = 'none';
+}
+
 // ── Partage natif (Web Share API) ───────────────────────────────────────────
 function partagerApp() {
   const url   = 'https://obesiteguidepratique.github.io/alcool-barialimites.html/';
@@ -1888,11 +2249,9 @@ function resetParams() {
 // Toutes les 30 s : si une heure est saisie + boisson sélectionnée,
 // recalcule taux actuel et régénère la courbe d'élimination.
 setInterval(function() {
-  const heureEl = document.getElementById('heureConso');
-  if (!heureEl || !heureEl.value) return;
-  if (boissonIdx === null || boissonIdx === undefined) return;
-  if (!paramsComplete()) return;
-  onHeureChange();
+  if (session.length === 0 || !paramsComplete()) return;
+  calcul();
+  renderSession();
 }, 30000);
 
 // ── PWA — Service Worker + bouton d'installation ────────────────────────────
