@@ -10,6 +10,8 @@
 <meta name="apple-mobile-web-app-title" content="Barialimites">
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 <title>Alcool Barialimites</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -49,7 +51,7 @@
     --dm-toggle-bg: rgba(200,120,120,0.2);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 40px; transition: background .3s, color .3s; }
+  body { font-family: 'Nunito', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 40px; transition: background .3s, color .3s; }
 
   /* HEADER */
   header { background: linear-gradient(135deg, var(--wine) 0%, #5a0f0f 100%); padding: 14px 20px 16px; text-align: center; position: relative; overflow: hidden; }
@@ -60,7 +62,7 @@
   .header-logo-img  { width:72px; height:72px; border-radius:50%; border:2.5px solid var(--gold); box-shadow:0 4px 12px rgba(0,0,0,0.4); object-fit:cover; display:block; }
   .header-logo-img:hover { opacity:0.85; }
 
-  .logo-title   { font-family:'Playfair Display',serif; font-size:1.45rem; color:var(--gold); letter-spacing:0.5px; text-shadow:0 1px 3px rgba(0,0,0,0.5); margin-bottom:2px; }
+  .logo-title   { font-family:'Playfair Display', Georgia, serif; font-size:1.45rem; color:var(--gold); letter-spacing:0.5px; text-shadow:0 1px 3px rgba(0,0,0,0.5); margin-bottom:2px; }
   .logo-subtitle{ font-size:0.7rem; color:rgba(255,255,255,0.7); letter-spacing:1.5px; text-transform:uppercase; }
 
   .btn-aide { position:absolute; top:16px; right:16px; background:rgba(212,175,55,0.2); border:1.5px solid var(--gold); color:var(--gold); border-radius:20px; padding:5px 12px; font-size:0.78rem; font-weight:700; font-family:'Nunito',sans-serif; cursor:pointer; transition:all .2s; z-index:10; }
@@ -164,7 +166,7 @@
   .result-box.danger-bari  { background:var(--danger-bari); border:3px solid var(--danger-bari-border); }
   .result-box.danger-road  { background:var(--danger-road); border:3px solid var(--danger-road-border); }
   .result-label { font-size:.7rem; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin-bottom:4px; opacity:.7; }
-  .result-value { font-family:'Playfair Display',serif; font-size:3.2rem; font-weight:700; line-height:1; margin-bottom:4px; }
+  .result-value { font-family:'Playfair Display', Georgia, serif; font-size:3.2rem; font-weight:700; line-height:1; margin-bottom:4px; }
   .result-unit  { font-size:.9rem; font-weight:600; opacity:.7; margin-bottom:10px; }
   .result-msg   { font-size:.88rem; font-weight:700; padding:8px 16px; border-radius:20px; background:rgba(0,0,0,0.08); display:inline-block; }
   .result-time  { margin-top:10px; font-size:.82rem; font-weight:600; opacity:.75; }
@@ -218,7 +220,7 @@
   .disclaimer-inner { display:flex; flex-direction:column; align-items:center; gap:14px; }
   .disclaimer-img { width:110px; border-radius:50%; box-shadow:0 4px 16px rgba(139,26,26,0.25); }
   .disclaimer-content { width:100%; }
-  .disclaimer-panel h2 { font-family:'Playfair Display',serif; font-size:1.25rem; color:var(--wine); margin-bottom:14px; text-align:center; }
+  .disclaimer-panel h2 { font-family:'Playfair Display', Georgia, serif; font-size:1.25rem; color:var(--wine); margin-bottom:14px; text-align:center; }
   .disclaimer-panel p { font-size:.87rem; color:var(--text); line-height:1.65; margin-bottom:10px; }
   .disclaimer-panel .warn-line { background:#fff3cd; border-left:4px solid #e67e22; border-radius:0 8px 8px 0; padding:10px 12px; font-size:.83rem; font-weight:700; color:#7a4000; margin:14px 0; }
   /* Dark mode — disclaimer */
@@ -238,7 +240,7 @@
   .risques-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(20,5,5,0.90); z-index:300; align-items:center; justify-content:center; padding:20px; }
   .risques-overlay.open { display:flex; }
   .risques-panel { background:#fff; border-radius:20px; padding:22px 20px 24px; max-width:480px; width:100%; box-shadow:0 8px 40px rgba(0,0,0,0.5); animation:slideUp .35s ease; max-height:85vh; overflow-y:auto; }
-  .risques-panel h2 { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--danger-bari-text); margin-bottom:14px; text-align:center; }
+  .risques-panel h2 { font-family:'Playfair Display', Georgia, serif; font-size:1.2rem; color:var(--danger-bari-text); margin-bottom:14px; text-align:center; }
   .risques-content-inner { font-size:.83rem; color:var(--text); line-height:1.6; }
   .risques-content-inner li { margin-bottom:8px; }
   .risques-content-inner strong { color:var(--danger-bari-text); }
@@ -258,7 +260,7 @@
   .guide-close2 { position:absolute; top:10px; right:14px; background:none; border:none; font-size:1.4rem; color:var(--muted); cursor:pointer; z-index:2; }
   @keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
   .guide-close { position:absolute; top:14px; right:16px; background:none; border:none; font-size:1.4rem; color:var(--muted); cursor:pointer; }
-  .guide-title { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--wine); margin-bottom:18px; }
+  .guide-title { font-family:'Playfair Display', Georgia, serif; font-size:1.3rem; color:var(--wine); margin-bottom:18px; }
   .guide-step { margin-bottom:16px; padding:14px; background:var(--input-bg); border-radius:12px; }
   .guide-step h4 { font-size:.8rem; font-weight:800; color:var(--wine); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
   .guide-step p, .guide-step li { font-size:.83rem; color:var(--text); line-height:1.5; margin-bottom:3px; }
@@ -343,9 +345,14 @@
     <div class="section-title" style="font-size:.62rem;margin-bottom:10px;">🏥 Chirurgie bariatrique</div>
     <div class="form-row" style="flex-direction:column;align-items:stretch;gap:8px;">
       <label class="form-label">Type de chirurgie</label>
+      <div class="chirurgie-group" style="margin-bottom:4px;">
+        <button class="chir-btn" id="btn-anneau"      onclick="setChir('anneau')">Anneau gastrique</button>
+        <button class="chir-btn" id="btn-sleeve"      onclick="setChir('sleeve')">Sleeve Gastrectomie</button>
+        <button class="chir-btn" id="btn-conversion"  onclick="setChir('conversion')">Conversion sleeve / bypass</button>
+      </div>
       <div class="chirurgie-group">
-        <button class="chir-btn" id="btn-bypass" onclick="setChir('bypass')">Bypass en Y de Roux</button>
-        <button class="chir-btn" id="btn-sleeve" onclick="setChir('sleeve')">Sleeve Gastrectomie</button>
+        <button class="chir-btn" id="btn-bypass"      onclick="setChir('bypass')">Bypass en Y de Roux</button>
+        <button class="chir-btn" id="btn-dbp"         onclick="setChir('dbp')">Dérivation biliopancréatique</button>
       </div>
     </div>
     <div class="form-row" style="flex-direction:column;align-items:stretch;gap:6px;margin-top:10px;">
@@ -356,6 +363,7 @@
         <button class="chir-btn" id="btn-postop-stable" onclick="setPostOp('stable')">&gt; 18 mois</button>
       </div>
     </div>
+    <div id="chirWarning" style="display:none;margin-top:6px;"></div>
     <div id="postopWarning" style="display:none;margin-top:8px;padding:9px 12px;border-radius:10px;font-size:.78rem;font-weight:700;line-height:1.5;"></div>
   </div>
 
@@ -534,12 +542,21 @@
     <h2>🚨 Risques spécifiques post-bariatrique</h2>
     <div class="risques-content-inner">
       <ul>
-        <li><strong>Absorption ultra-rapide :</strong> le taux maximal est atteint en 15–30 min après un bypass, 30–45 min après une sleeve (vs 45–60 min avant l'opération). Vous pouvez être en danger avant de vous sentir ivre.</li>
-        <li><strong>Estomac vide :</strong> si vous n'avez pas mangé dans les 2 heures précédentes, l'absorption est encore plus rapide. Rappel post-op : ne buvez pas pendant les repas (règle des 30 min) — l'alcool ne fait pas exception.</li>
-        <li><strong>Tolérance faussée :</strong> beaucoup d'opérés se sentent "à peine ivres" alors que leur taux est déjà dangereux. Cette application vous montre votre taux réel — faites-lui confiance, pas à vos sensations.</li>
-        <li><strong>Transfert d'addiction :</strong> reconnu par les experts comme l'un des risques majeurs post-bypass. Si vous ressentez une attirance croissante pour l'alcool, consultez votre équipe sans attendre.</li>
-        <li><strong>Interactions médicamenteuses :</strong> l'alcool peut amplifier l'effet de vos médicaments de façon imprévisible.</li>
-        <li><strong>Carences :</strong> les carences (B1, B12, fer…) altèrent la métabolisation de l'alcool.</li>
+        <li><strong>Absorption ultra-rapide :</strong> le pic d'alcoolémie survient en 15–30 min (bypass, conversion), 30–45 min (sleeve), encore plus vite après une dérivation biliopancréatique (DBP). L'anneau gastrique ralentit légèrement mais de façon variable. Vous pouvez être en danger <em>avant</em> de vous sentir ivre.</li>
+        <li><strong>Risques selon votre chirurgie :</strong>
+          <ul style="margin-top:6px;margin-left:12px;">
+            <li><strong>DBP / Switch duodénal :</strong> malabsorption massive — l'alcoolémie peut être très élevée pour une consommation minime. Seuil de tolérance : 0.05 g/L.</li>
+            <li><strong>Conversion sleeve → bypass :</strong> cumul des deux effets. Seuil : 0.08 g/L.</li>
+            <li><strong>Bypass en Y de Roux :</strong> court-circuit du pylore, pic rapide. Seuil : 0.10 g/L.</li>
+            <li><strong>Sleeve gastrectomie :</strong> volume réduit, absorption accélérée. Seuil : 0.20 g/L.</li>
+            <li><strong>Anneau gastrique :</strong> effet variable selon réglage. Seuil indicatif : 0.30 g/L.</li>
+          </ul>
+        </li>
+        <li><strong>Tolérance faussée :</strong> beaucoup d'opérés se sentent "à peine ivres" alors que leur taux est déjà dangereux. Faites confiance au calculateur, pas à vos sensations.</li>
+        <li><strong>Estomac vide :</strong> absorption encore plus rapide si vous n'avez pas mangé dans les 2 heures. Règle des 30 min à maintenir à vie — l'alcool ne fait pas exception.</li>
+        <li><strong>Transfert d'addiction :</strong> risque reconnu et démontré, plus élevé après bypass et DBP. Si vous ressentez une attirance croissante pour l'alcool, consultez votre équipe sans attendre.</li>
+        <li><strong>Interactions médicamenteuses :</strong> l'alcool peut amplifier l'effet de vos médicaments de façon imprévisible. Vérifiez avec votre équipe soignante.</li>
+        <li><strong>Carences :</strong> les carences (B1, B12, fer…) altèrent la métabolisation de l'alcool et aggravent ses effets.</li>
       </ul>
     </div>
     <div class="risques-actions">
@@ -621,6 +638,19 @@
           <li>Envoyez le journal à votre équipe par mail ou téléchargez-le en CSV</li>
         </ul>
       </div>
+      <div class="guide-step">
+        <h4>⚙️ Configuration et Installation</h4>
+        <ul>
+          <li>🌙 Basculez entre <strong>mode sombre</strong> et <strong>mode clair</strong> avec le bouton en haut à gauche</li>
+          <li>📲 Installez cette application via le bouton <strong>Installer</strong> en haut, sous le mode sombre/clair</li>
+          <li>Une fois installée, retrouvez-la dans le <strong>tiroir d'apps</strong> sous le nom « Barialimites »</li>
+          <li>Pour la désinstaller : appui long sur l'icône → <strong>Désinstaller</strong></li>
+        </ul>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+          <button onclick="resetParams()" style="width:100%;padding:8px;background:none;border:1.5px solid #c0392b;color:#c0392b;border-radius:8px;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;">🗑 Réinitialiser tous mes paramètres</button>
+          <p style="font-size:.7rem;color:var(--muted);text-align:center;margin-top:5px;">Efface poids, genre, chirurgie, journal… Les données PWA restent.</p>
+        </div>
+      </div>
       <div class="guide-step" style="background:#f0f7f0;border-left:3px solid #28a745;">
         <h4 style="color:#155724;">🔒 Confidentialité</h4>
         <p style="font-size:.83rem;color:#155724;line-height:1.6;">Vos données restent sur votre appareil. Aucune information (poids, genre, historique) n'est envoyée à un serveur. Nous ne collectons rien.</p>
@@ -640,8 +670,15 @@ Coeff. ajusté = Coeff. Widmark × (1 + 0.3 × Masse musc. / Poids)<br>
 Coeff. Widmark : Homme = 0.68 / Femme = 0.55<br><br>
 <span style="opacity:.6;">── Élimination ───────────────────────</span><br>
 Élim. : Homme = 0.12 g/L/h / Femme = 0.10 g/L/h<br><br>
-<span style="opacity:.6;">── Seuil bariatrique ─────────────────</span><br>
-Seuil base : Bypass = 0.10 g/L / Sleeve = 0.20 g/L<br>
+<span style="opacity:.6;">── Facteurs par chirurgie ────────────</span><br>
+<table style="font-size:.7rem;border-collapse:collapse;width:100%;margin:6px 0;">
+  <tr style="opacity:.7;"><th style="text-align:left;padding:2px 6px 2px 0;">Chirurgie</th><th style="padding:2px 4px;">coeff×</th><th style="padding:2px 4px;">élim×</th><th style="padding:2px 4px;">Seuil</th></tr>
+  <tr><td style="padding:2px 6px 2px 0;">Anneau gastrique</td><td style="padding:2px 4px;text-align:center;">0.90</td><td style="padding:2px 4px;text-align:center;">1.00</td><td style="padding:2px 4px;text-align:center;">0.30 g/L</td></tr>
+  <tr><td style="padding:2px 6px 2px 0;">Sleeve gastrectomie</td><td style="padding:2px 4px;text-align:center;">1.00</td><td style="padding:2px 4px;text-align:center;">1.00</td><td style="padding:2px 4px;text-align:center;">0.20 g/L</td></tr>
+  <tr><td style="padding:2px 6px 2px 0;">Conversion sleeve/bypass</td><td style="padding:2px 4px;text-align:center;">1.00</td><td style="padding:2px 4px;text-align:center;">0.95</td><td style="padding:2px 4px;text-align:center;">0.08 g/L</td></tr>
+  <tr><td style="padding:2px 6px 2px 0;">Bypass en Y de Roux</td><td style="padding:2px 4px;text-align:center;">1.00</td><td style="padding:2px 4px;text-align:center;">1.00</td><td style="padding:2px 4px;text-align:center;">0.10 g/L</td></tr>
+  <tr><td style="padding:2px 6px 2px 0;">Dérivation biliopancréatique</td><td style="padding:2px 4px;text-align:center;">0.80</td><td style="padding:2px 4px;text-align:center;">0.90</td><td style="padding:2px 4px;text-align:center;">0.05 g/L</td></tr>
+</table>
 Si &lt; 6 mois post-op : seuil × 0.5<br><br>
 <span style="opacity:.6;">── Variables utilisées ───────────────</span><br>
 Vos valeurs s'affichent ici lors du calcul :<br>
@@ -651,28 +688,38 @@ Vos valeurs s'affichent ici lors du calcul :<br>
         <p style="font-size:.75rem;color:var(--muted);margin-top:8px;">Les valeurs réelles s'affichent dans le panneau <strong>Votre consommation</strong> après chaque calcul.</p>
       </div>
       <div class="guide-step" style="background:var(--cream);">
-        <h4>💡 Améliorations</h4>
-        <p style="font-size:.83rem;color:var(--text);line-height:1.6;margin-bottom:8px;">💬 Vous avez des idées à nous proposer ?</p>
+        <h4>📤 Partagez</h4>
+        <p style="font-size:.8rem;color:var(--muted);line-height:1.6;margin-bottom:12px;font-style:italic;">Ceci est une application de patient pour des patients. Elle est gratuite et n'a pas de valeur médicale.</p>
+        <button onclick="partagerApp()" style="display:block;width:100%;text-align:center;padding:10px 14px;background:var(--wine);color:#fff;border-radius:10px;font-weight:800;font-size:.85rem;border:none;cursor:pointer;font-family:'Nunito',sans-serif;margin-bottom:14px;">📤 Envoyer cette app à d'autres opérés</button>
+        <p style="font-size:.83rem;color:var(--text);line-height:1.6;margin-bottom:6px;">💬 Vous avez des idées à nous proposer ?</p>
         <p style="font-size:.83rem;color:var(--text);line-height:1.6;margin-bottom:6px;">🐛 Vous avez trouvé une erreur dans les calculs ?</p>
         <a href="mailto:otyrbasbaria@sfr.fr?subject=Alcool%20Barialimites" style="display:inline-block;color:var(--wine);font-weight:800;font-size:.85rem;text-decoration:none;">→ Contactez-nous</a>
       </div>
       <div style="padding:16px 0 8px;">
         <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
       </div>
-      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 1.4 — Build 39 — MàJ 27/05/2026</div>
+      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 2.0 — Build 43 — MàJ 27/05/2026</div>
     </div>
     <!-- Onglet Risques -->
     <div class="guide-tab-content" id="content-risques">
       <div class="guide-step" style="background:var(--danger-bari); border-left:4px solid #c0392b;">
         <h4 style="color:var(--danger-bari-text);">🚨 Risques spécifiques post-bariatrique à connaître</h4>
         <ul>
-          <li><strong>Absorption ultra-rapide :</strong> le taux maximal est atteint en 15–30 min après un bypass, 30–45 min après une sleeve (vs 45–60 min avant l'opération). Vous pouvez être en danger avant de vous sentir ivre.</li>
-          <li><strong>Estomac vide :</strong> si vous n'avez pas mangé dans les 2 heures précédentes, l'absorption est encore plus rapide. Règle des 30 min à maintenir à vie — l'alcool ne fait pas exception.</li>
+          <li><strong>Absorption ultra-rapide :</strong> pic en 15–30 min (bypass, conversion), 30–45 min (sleeve), encore plus vite après DBP. L'anneau ralentit légèrement mais de façon variable. Vous pouvez être en danger <em>avant</em> de vous sentir ivre.</li>
+          <li><strong>Risques selon votre chirurgie :</strong>
+            <ul style="margin-top:6px;margin-left:12px;">
+              <li><strong>DBP / Switch duodénal :</strong> malabsorption massive, alcoolémie très élevée pour une consommation minime. Seuil : 0.05 g/L.</li>
+              <li><strong>Conversion sleeve → bypass :</strong> cumul des deux effets. Seuil : 0.08 g/L.</li>
+              <li><strong>Bypass en Y de Roux :</strong> court-circuit du pylore, pic rapide. Seuil : 0.10 g/L.</li>
+              <li><strong>Sleeve gastrectomie :</strong> volume réduit, absorption accélérée. Seuil : 0.20 g/L.</li>
+              <li><strong>Anneau gastrique :</strong> effet variable selon réglage. Seuil indicatif : 0.30 g/L.</li>
+            </ul>
+          </li>
           <li><strong>Tolérance faussée :</strong> beaucoup d'opérés se sentent "à peine ivres" alors que leur taux est déjà dangereux. Faites confiance au calculateur, pas à vos sensations.</li>
-          <li><strong>Transfert d'addiction :</strong> reconnu par les experts comme l'un des risques majeurs. Si vous ressentez une attirance croissante pour l'alcool, consultez votre équipe sans attendre.</li>
-          <li><strong>Interactions médicamenteuses :</strong> l'alcool peut amplifier l'effet de vos médicaments de façon imprévisible.</li>
-          <li><strong>Médicaments post-bariatrique :</strong> certains sont incompatibles avec la consommation d'alcool. Une validation avec votre équipe soignante est nécessaire.</li>
-          <li><strong>Carences :</strong> les carences (B1, B12, fer…) altèrent la métabolisation de l'alcool.</li>
+          <li><strong>Estomac vide :</strong> absorption encore plus rapide si pas de repas dans les 2h. Règle des 30 min à maintenir à vie.</li>
+          <li><strong>Transfert d'addiction :</strong> risque reconnu et démontré, plus élevé après bypass et DBP. Consultez votre équipe si vous ressentez une attirance croissante pour l'alcool.</li>
+          <li><strong>Interactions médicamenteuses :</strong> l'alcool peut amplifier l'effet de vos médicaments. Validez avec votre équipe soignante.</li>
+          <li><strong>Carences :</strong> les carences (B1, B12, fer…) altèrent la métabolisation de l'alcool et aggravent ses effets.</li>
         </ul>
       </div>
       <div class="guide-step" style="background:var(--danger-bari); border-left:4px solid #c0392b;">
@@ -992,8 +1039,26 @@ function setGenre(g, silent) {
 }
 function setChir(c, silent) {
   chir = c;
-  document.getElementById('btn-bypass').classList.toggle('active', c==='bypass');
-  document.getElementById('btn-sleeve').classList.toggle('active', c==='sleeve');
+  ['bypass','sleeve','conversion','anneau','dbp'].forEach(id => {
+    const el = document.getElementById('btn-' + id);
+    if (el) el.classList.toggle('active', c === id);
+  });
+  // Avertissement spécifique selon chirurgie
+  const chirWarn = document.getElementById('chirWarning');
+  if (chirWarn) {
+    if (c === 'conversion') {
+      chirWarn.style.cssText = 'display:block;margin-top:6px;padding:8px 12px;border-radius:10px;font-size:.76rem;font-weight:700;line-height:1.5;background:var(--danger-bari);border-left:4px solid #c0392b;color:var(--danger-bari-text);';
+      chirWarn.innerHTML = '🚨 <strong>Conversion sleeve → bypass :</strong> cumul des deux effets. Absorption encore plus rapide qu\'un bypass seul. Seuil de tolérance très bas.';
+    } else if (c === 'dbp') {
+      chirWarn.style.cssText = 'display:block;margin-top:6px;padding:8px 12px;border-radius:10px;font-size:.76rem;font-weight:700;line-height:1.5;background:var(--danger-bari);border-left:4px solid #900;color:var(--danger-bari-text);';
+      chirWarn.innerHTML = '🚨 <strong>Dérivation biliopancréatique :</strong> malabsorption massive. Risque d\'alcoolémie très élevée pour une consommation minime. Vigilance maximale.';
+    } else if (c === 'anneau') {
+      chirWarn.style.cssText = 'display:block;margin-top:6px;padding:8px 12px;border-radius:10px;font-size:.76rem;font-weight:700;line-height:1.5;background:#f0f4ff;border-left:4px solid #5577bb;color:#223366;';
+      chirWarn.innerHTML = 'ℹ️ <strong>Anneau gastrique :</strong> absorption variable selon le réglage de l\'anneau. Les résultats sont plus indicatifs que pour les autres chirurgies.';
+    } else {
+      chirWarn.style.display = 'none';
+    }
+  }
   if (!silent) { savePrefs(); onParamChange(); } else onParamChange();
 }
 
@@ -1192,19 +1257,33 @@ function calcul() {
   const b     = boissons[boissonIdx];
   const coeff = genre==='homme' ? 0.68 : 0.55;
   const elim  = genre==='homme' ? 0.12 : 0.10;
-  // Formule de Widmark adaptée : facteur masse musculaire
-  // Le muscle (~75% eau) augmente le volume de distribution → taux plus bas
-  const coeffAjuste = coeff * (1 + 0.3 * (muscle / poids));
+  // Facteurs par chirurgie (littérature bariatrique)
+  // Anneau      : absorption ralentie, volume distribution +10% → coeffFactor 0.90
+  // Sleeve      : référence, pas de modification
+  // Conversion  : cumul sleeve+bypass, élimination ralentie → elimFactor 0.95, coeffFactor 1.0
+  // Bypass      : référence bypass, pas de modification
+  // DBP/Switch  : malabsorption massive → coeffFactor 0.80 (taux pic plus élevé)
+  let chirCoeffFactor = 1.0;
+  let chirElimFactor  = 1.0;
+  if (chir === 'anneau')     { chirCoeffFactor = 0.90; chirElimFactor = 1.0;  }
+  if (chir === 'sleeve')     { chirCoeffFactor = 1.0;  chirElimFactor = 1.0;  }
+  if (chir === 'conversion') { chirCoeffFactor = 1.0;  chirElimFactor = 0.95; }
+  if (chir === 'bypass')     { chirCoeffFactor = 1.0;  chirElimFactor = 1.0;  }
+  if (chir === 'dbp')        { chirCoeffFactor = 0.80; chirElimFactor = 0.90; }
+  // Formule de Widmark adaptée : facteur masse musculaire + facteur chirurgie
+  const coeffAjuste = coeff * (1 + 0.3 * (muscle / poids)) * chirCoeffFactor;
+  const elimAjuste  = elim * chirElimFactor;
   const degreFinal = b.autre ? (degreCustomVal || 0) : b.degre;
   const alimentFactor = alimentaire === 'jeun' ? 1.15 : 1.0;
   const alcoolPur = vol * nbVerres * (degreFinal/100) * 0.789 * alimentFactor;
   const taux0 = alcoolPur / (poids * coeffAjuste * 1000) * 1000;
-  const taux  = Math.max(0, taux0 - elim * duree);
+  const taux  = Math.max(0, taux0 - elimAjuste * duree);
   const mgL   = taux * 0.5;
-  const tempsRetour = taux0 / elim;
-  const h = Math.floor(taux / elim);
-  const m = Math.round(((taux/elim) - h) * 60);
-  const seuilBariBase = chir==='bypass' ? 0.10 : 0.20;
+  const tempsRetour = taux0 / elimAjuste;
+  const h = Math.floor(taux / elimAjuste);
+  const m = Math.round(((taux/elimAjuste) - h) * 60);
+  // Seuils bariatriques par chirurgie
+  const seuilBariBase = chir==='dbp' ? 0.05 : chir==='conversion' ? 0.08 : chir==='bypass' ? 0.10 : chir==='sleeve' ? 0.20 : 0.30;
   const seuilBari = postOp === 'recent' ? seuilBariBase * 0.5 : seuilBariBase;
 
   const box = document.getElementById('resultBox');
@@ -1227,7 +1306,7 @@ function calcul() {
       `Alcool pur     : ${alcoolPur.toFixed(2)} g<br>` +
       `Alim.          : ${alimentaire} (×${alimentaire==='jeun'?'1.15':'1.00'})<br>` +
       `Temps écoulé   : ${Math.floor(duree)}h ${String(Math.round((duree%1)*60)).padStart(2,'0')}min<br>` +
-      `Chirurgie      : ${chir || '—'}<br>` +
+      `Chirurgie      : ${chir || '—'} (coeffFactor:${chirCoeffFactor}, elimFactor:${chirElimFactor})<br>` +
       `Post-op        : ${postOp || '—'}<br>` +
       `Coeff. ajusté  : ${coeffAjuste.toFixed(4)}<br>` +
       `Élimination    : ${elim} g/L/h<br>` +
@@ -1237,12 +1316,12 @@ function calcul() {
   }
   const timeEl = document.getElementById('resultTime');
   if (taux > 0) {
-    const tempsZero = taux / elim;
+    const tempsZero = taux / elimAjuste;
     const hZero = Math.floor(tempsZero);
     const mZero = Math.round((tempsZero - hZero) * 60);
     let html = '';
     if (taux > seuilBari) {
-      const tempsSeuil = (taux - seuilBari) / elim;
+      const tempsSeuil = (taux - seuilBari) / elimAjuste;
       const hSeuil = Math.floor(tempsSeuil);
       const mSeuil = Math.round((tempsSeuil - hSeuil) * 60);
       html += `⏱ Retour sous le seuil ${seuilBari} g/L dans : ${hSeuil}h ${String(mSeuil).padStart(2,'0')}min<br>`;
@@ -1308,7 +1387,7 @@ function calcul() {
   const peinesEl = document.getElementById('peinesText');
 
   // Toujours mettre à jour la courbe
-  updateChart(taux0, elim, tempsRetour, seuilBari);
+  updateChart(taux0, elimAjuste, tempsRetour, seuilBari);
 
   // Rien sélectionné : afficher le message d'invite
   if (!currentPaysFilter) {
@@ -1336,7 +1415,7 @@ function calcul() {
     tbody.appendChild(tr);
   });
 
-  updateChart(taux0, elim, tempsRetour, seuilBari);
+  updateChart(taux0, elimAjuste, tempsRetour, seuilBari);
 }
 
 function updateChart(taux0, elim, tempsRetour, seuilBari) {
@@ -1524,13 +1603,13 @@ function onDisclaimerCheck() {
 function closeDisclaimer() {
   const checked = document.getElementById('disclaimerCheck').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b39', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b43', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b39') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b43') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
@@ -1601,7 +1680,7 @@ function saveToJournal() {
   const alimentFactor = alimentaire === 'jeun' ? 1.15 : 1.0;
   const alcoolPur = vol * nbVerres * (degreFinal / 100) * 0.789 * alimentFactor;
   const taux0 = alcoolPur / (poids * coeffAjuste * 1000) * 1000;
-  const seuilBariBase = chir === 'bypass' ? 0.10 : 0.20;
+  const seuilBariBase = chir==='dbp' ? 0.05 : chir==='conversion' ? 0.08 : chir==='bypass' ? 0.10 : chir==='sleeve' ? 0.20 : 0.30;
   const seuilBari = postOp === 'recent' ? seuilBariBase * 0.5 : seuilBariBase;
   const tempsRetour = taux0 / elim;
   const mgL = taux * 0.5;
@@ -1741,6 +1820,31 @@ setTimeout(function() {
   }
 }, 2500);
 
+// ── Partage natif (Web Share API) ───────────────────────────────────────────
+function partagerApp() {
+  const url   = 'https://obesiteguidepratique.github.io/alcool-barialimites.html/';
+  const titre = 'Alcool Barialimites';
+  const texte = 'J\'ai trouv\u00e9 cette application gratuite pour calculer son alcool\u00e9mie apr\u00e8s une chirurgie bariatrique. Tu peux la charger ici :';
+  if (navigator.share) {
+    navigator.share({ title: titre, text: texte + ' ' + url, url: url }).catch(() => {});
+  } else {
+    const body = encodeURIComponent(texte + '%20' + url);
+    window.location.href = 'mailto:?subject=' + encodeURIComponent(titre) + '&body=' + body;
+  }
+}
+
+// ── Réinitialisation des paramètres ──────────────────────────────────────────────────
+function resetParams() {
+  if (!confirm('R\u00e9initialiser tous vos param\u00e8tres et votre journal de bord ?\n\nCette action est irr\u00e9versible.')) return;
+  try {
+    localStorage.removeItem(LS_PREFS);
+    localStorage.removeItem(LS_JOURNAL);
+    localStorage.removeItem(LS_USAGE);
+    localStorage.removeItem('bari_fav_boisson');
+  } catch(e) {}
+  window.location.reload();
+}
+
 // Mise à jour temps réel (Passe 2 — Build 30)
 // Toutes les 30 s : si une heure est saisie + boisson sélectionnée,
 // recalcule taux actuel et régénère la courbe d'élimination.
@@ -1844,7 +1948,7 @@ function showIosInstallModal() {
 <!-- MINI POPUP -->
 <div id="miniPopupOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(20,5,5,0.75);z-index:400;align-items:center;justify-content:center;padding:20px;">
   <div style="background:#fff;border-radius:16px;padding:22px 20px;max-width:420px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.5);">
-    <h3 id="miniPopupTitle" style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--danger-bari-text);margin-bottom:10px;"></h3>
+    <h3 id="miniPopupTitle" style="font-family:'Playfair Display', Georgia, serif;font-size:1.1rem;color:var(--danger-bari-text);margin-bottom:10px;"></h3>
     <p id="miniPopupBody" style="font-size:.86rem;color:#3d1c1c;line-height:1.6;margin-bottom:16px;"></p>
     <button onclick="document.getElementById('miniPopupOverlay').style.display='none';"
       style="width:100%;padding:12px;background:#8B1A1A;color:#fff;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;">J'ai compris</button>
