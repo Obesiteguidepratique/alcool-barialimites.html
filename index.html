@@ -699,7 +699,7 @@ Vos valeurs s'affichent ici lors du calcul :<br>
       <div style="padding:16px 0 8px;">
         <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
       </div>
-      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 2.1 — Build 44 — MàJ 28/05/2026</div>
+      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 2.1 — Build 46 — MàJ 28/05/2026</div>
     </div>
     <!-- Onglet Risques -->
     <div class="guide-tab-content" id="content-risques">
@@ -708,13 +708,7 @@ Vos valeurs s'affichent ici lors du calcul :<br>
         <ul>
           <li><strong>Absorption ultra-rapide :</strong> pic en 15–30 min (bypass, conversion), 30–45 min (sleeve), encore plus vite après DBP. L'anneau ralentit légèrement mais de façon variable. Vous pouvez être en danger <em>avant</em> de vous sentir ivre.</li>
           <li><strong>Risques selon votre chirurgie :</strong>
-            <ul style="margin-top:6px;margin-left:12px;">
-              <li><strong>DBP / Switch duodénal :</strong> malabsorption massive, alcoolémie très élevée pour une consommation minime. Seuil : 0.05 g/L.</li>
-              <li><strong>Conversion sleeve → bypass :</strong> cumul des deux effets. Seuil : 0.08 g/L.</li>
-              <li><strong>Bypass en Y de Roux :</strong> court-circuit du pylore, pic rapide. Seuil : 0.10 g/L.</li>
-              <li><strong>Sleeve gastrectomie :</strong> volume réduit, absorption accélérée. Seuil : 0.20 g/L.</li>
-              <li><strong>Anneau gastrique :</strong> effet variable selon réglage. Seuil indicatif : 0.30 g/L.</li>
-            </ul>
+            <div id="risquesChirDetail" style="margin-top:6px;margin-left:12px;font-size:.82rem;line-height:1.7;"></div>
           </li>
           <li><strong>Tolérance faussée :</strong> beaucoup d'opérés se sentent "à peine ivres" alors que leur taux est déjà dangereux. Faites confiance au calculateur, pas à vos sensations.</li>
           <li><strong>Estomac vide :</strong> absorption encore plus rapide si pas de repas dans les 2h. Règle des 30 min à maintenir à vie.</li>
@@ -1065,6 +1059,7 @@ function setChir(c, silent) {
       chirWarn.style.display = 'none';
     }
   }
+  updateRisquesChir();
   if (!silent) { savePrefs(); onParamChange(); } else onParamChange();
 }
 
@@ -1459,6 +1454,7 @@ function toggleGuide(tab) {
   if (tab) switchGuideTab(tab);
 }
 function switchGuideTab(tab) {
+  if (tab === 'risques') updateRisquesChir();
   ['guide','risques'].forEach(t => {
     document.getElementById('tab-'+t).classList.toggle('active', t===tab);
     document.getElementById('content-'+t).classList.toggle('active', t===tab);
@@ -1610,13 +1606,13 @@ function onDisclaimerCheck() {
 function closeDisclaimer() {
   const checked = document.getElementById('disclaimerCheck').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b44', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b46', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b44') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b46') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
@@ -1655,13 +1651,8 @@ function closeRisques() {
 }
 
 loadPrefs();
-// Pays par défaut : France expérimenté si rien de sauvegardé
-if (!currentPaysFilter) {
-  currentPaysFilter = 'fr-exp';
-  document.querySelectorAll('.pays-btn').forEach(b => {
-    b.classList.toggle('active', b.getAttribute('onclick').includes("'fr-exp'"));
-  });
-}
+// Pas de pays sélectionné par défaut — l'utilisateur choisit
+// (currentPaysFilter reste null si rien de sauvegardé)
 
 // ── Journal de bord ──────────────────────────
 const LS_JOURNAL = 'bari_journal';
@@ -1829,6 +1820,38 @@ setTimeout(function() {
   }
 }, 2500);
 
+// ── Risques contextuels selon chirurgie ──────────────────────────────────────
+function updateRisquesChir() {
+  const el = document.getElementById('risquesChirDetail');
+  if (!el) return;
+  if (!chir) {
+    el.innerHTML = '<em style="color:var(--muted);">Sélectionnez votre chirurgie pour voir les risques spécifiques.</em>';
+    return;
+  }
+  const items = [];
+  // Chaque chirurgie voit uniquement ses propres risques + ceux "en dessous"
+  if (chir === 'dbp') {
+    items.push('<strong>DBP / Switch duodénal :</strong> malabsorption massive, alcoólémie très élevée pour une consommation minime. Seuil : <strong>0.05 g/L</strong>.');
+  }
+  if (chir === 'conversion') {
+    items.push('<strong>Conversion sleeve → bypass :</strong> cumul des deux effets. Seuil : <strong>0.08 g/L</strong>.');
+  }
+  if (chir === 'bypass' || chir === 'conversion') {
+    items.push('<strong>Bypass en Y de Roux :</strong> court-circuit du pylore, pic rapide. Seuil : <strong>0.10 g/L</strong>.');
+  }
+  if (chir === 'sleeve' || chir === 'conversion') {
+    items.push('<strong>Sleeve gastrectomie :</strong> volume réduit, absorption accélérée. Seuil : <strong>0.20 g/L</strong>.');
+  }
+  if (chir === 'anneau') {
+    items.push('<strong>Anneau gastrique :</strong> effet variable selon réglage. Seuil indicatif : <strong>0.30 g/L</strong>.');
+  }
+  if (items.length === 0) {
+    el.innerHTML = '<em style="color:var(--muted);">Aucune donnée spécifique pour cette chirurgie.</em>';
+  } else {
+    el.innerHTML = items.map(i => '<div style="margin-bottom:4px;">• ' + i + '</div>').join('');
+  }
+}
+
 // ── Partage natif (Web Share API) ───────────────────────────────────────────
 function partagerApp() {
   const url   = 'https://obesiteguidepratique.github.io/alcool-barialimites.html/';
@@ -1850,12 +1873,14 @@ function resetParams() {
     localStorage.removeItem(LS_JOURNAL);
     localStorage.removeItem(LS_USAGE);
     localStorage.removeItem('bari_fav_boisson');
-    // Supprimer aussi toutes les clés disclaimer connues
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
       if (k && k.startsWith('bari_disclaimer')) { localStorage.removeItem(k); i--; }
     }
   } catch(e) {}
+  // Vider la sélection pays visuellement avant rechargement
+  currentPaysFilter = null;
+  document.querySelectorAll('.pays-btn').forEach(b => b.classList.remove('active'));
   window.location.reload();
 }
 
