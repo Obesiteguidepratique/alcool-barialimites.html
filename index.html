@@ -275,6 +275,7 @@
   </a>
   <div class="logo-title">Alcool Barialimites</div>
   <div class="logo-subtitle">Post-chirurgie bariatrique</div>
+  <div id="sessionCounter" style="font-size:.62rem;color:rgba(255,255,255,0.45);letter-spacing:.5px;margin-top:2px;"></div>
   <button class="btn-aide" onclick="toggleGuide()" aria-label="Ouvrir l'aide">❓ Aide</button>
   <button id="btnDarkMode" onclick="toggleDarkMode()" aria-label="Basculer mode sombre" id="btnDarkModeTitle" title="Activer le mode sombre" style="position:absolute;top:16px;left:16px;background:rgba(212,175,55,0.2);border:1.5px solid var(--gold);color:var(--gold);border-radius:20px;padding:5px 12px;font-size:0.78rem;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;transition:all .2s;z-index:10;">🌙</button>
 <button id="btnInstall" onclick="pwaInstall()" aria-label="Installer l'application sur l'écran d'accueil" title="Ajouter à l'écran d'accueil" style="display:none;position:absolute;top:52px;left:16px;background:rgba(212,175,55,0.2);border:1.5px solid var(--gold);color:var(--gold);border-radius:20px;padding:5px 10px;font-size:0.72rem;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;transition:all .2s;z-index:10;">📲 Installer</button>
@@ -454,7 +455,7 @@
         <input type="text" id="noteJournal" placeholder="ex: anniversaire, restaurant…" maxlength="80"
           style="width:100%;padding:8px 12px;border-radius:8px;border:1.5px solid var(--border);font-family:'Nunito',sans-serif;font-size:.82rem;background:var(--cream);color:var(--text);">
       </div>
-      <button onclick="saveToJournal()" style="width:100%;padding:11px;background:var(--wine);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;cursor:pointer;">📓 Collecter dans le journal de bord</button>
+      <button onclick="saveToJournal()" aria-label="Enregistrer cette consommation dans le journal de bord" style="width:100%;padding:11px;background:var(--wine);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;cursor:pointer;">📓 Collecter dans le journal de bord</button>
       <div style="font-size:.72rem;color:var(--muted);font-weight:600;line-height:1.6;padding:6px 2px 8px;text-align:center;">
         📤 <strong>Partager le journal :</strong> choisissez selon la taille de votre journal.<br>
         Peu d'entrées → le mail suffit. Au-delà d'une vingtaine → préférez le fichier CSV.
@@ -647,7 +648,7 @@
           <li>Pour la désinstaller : appui long sur l'icône → <strong>Désinstaller</strong></li>
         </ul>
         <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
-          <button onclick="resetParams()" style="width:100%;padding:8px;background:none;border:1.5px solid #c0392b;color:#c0392b;border-radius:8px;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;">🗑 Réinitialiser tous mes paramètres</button>
+          <button onclick="resetParams()" aria-label="Réinitialiser tous les paramètres et le journal de bord" style="width:100%;padding:8px;background:none;border:1.5px solid #c0392b;color:#c0392b;border-radius:8px;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;">🗑 Réinitialiser tous mes paramètres</button>
           <p style="font-size:.7rem;color:var(--muted);text-align:center;margin-top:5px;">Efface poids, genre, chirurgie, journal… Les données PWA restent.</p>
         </div>
       </div>
@@ -671,7 +672,7 @@ Coeff. Widmark : Homme = 0.68 / Femme = 0.55<br><br>
 <span style="opacity:.6;">── Élimination ───────────────────────</span><br>
 Élim. : Homme = 0.12 g/L/h / Femme = 0.10 g/L/h<br><br>
 <span style="opacity:.6;">── Facteurs par chirurgie ────────────</span><br>
-<table style="font-size:.7rem;border-collapse:collapse;width:100%;margin:6px 0;">
+<table role="table" aria-label="Facteurs par chirurgie" style="font-size:.7rem;border-collapse:collapse;width:100%;margin:6px 0;">
   <tr style="opacity:.7;"><th style="text-align:left;padding:2px 6px 2px 0;">Chirurgie</th><th style="padding:2px 4px;">coeff×</th><th style="padding:2px 4px;">élim×</th><th style="padding:2px 4px;">Seuil</th></tr>
   <tr><td style="padding:2px 6px 2px 0;">Anneau gastrique</td><td style="padding:2px 4px;text-align:center;">0.90</td><td style="padding:2px 4px;text-align:center;">1.00</td><td style="padding:2px 4px;text-align:center;">0.30 g/L</td></tr>
   <tr><td style="padding:2px 6px 2px 0;">Sleeve gastrectomie</td><td style="padding:2px 4px;text-align:center;">1.00</td><td style="padding:2px 4px;text-align:center;">1.00</td><td style="padding:2px 4px;text-align:center;">0.20 g/L</td></tr>
@@ -690,7 +691,7 @@ Vos valeurs s'affichent ici lors du calcul :<br>
       <div class="guide-step" style="background:var(--cream);">
         <h4>📤 Partagez</h4>
         <p style="font-size:.8rem;color:var(--muted);line-height:1.6;margin-bottom:12px;font-style:italic;">Ceci est une application de patient pour des patients. Elle est gratuite et n'a pas de valeur médicale.</p>
-        <button onclick="partagerApp()" style="display:block;width:100%;text-align:center;padding:10px 14px;background:var(--wine);color:#fff;border-radius:10px;font-weight:800;font-size:.85rem;border:none;cursor:pointer;font-family:'Nunito',sans-serif;margin-bottom:14px;">📤 Envoyer cette app à d'autres opérés</button>
+        <button onclick="partagerApp()" aria-label="Partager l'application avec d'autres opérés bariatriques" style="display:block;width:100%;text-align:center;padding:10px 14px;background:var(--wine);color:#fff;border-radius:10px;font-weight:800;font-size:.85rem;border:none;cursor:pointer;font-family:'Nunito',sans-serif;margin-bottom:14px;">📤 Envoyer cette app à d'autres opérés</button>
         <p style="font-size:.83rem;color:var(--text);line-height:1.6;margin-bottom:6px;">💬 Vous avez des idées à nous proposer ?</p>
         <p style="font-size:.83rem;color:var(--text);line-height:1.6;margin-bottom:6px;">🐛 Vous avez trouvé une erreur dans les calculs ?</p>
         <a href="mailto:otyrbasbaria@sfr.fr?subject=Alcool%20Barialimites" style="display:inline-block;color:var(--wine);font-weight:800;font-size:.85rem;text-decoration:none;">→ Contactez-nous</a>
@@ -698,7 +699,7 @@ Vos valeurs s'affichent ici lors du calcul :<br>
       <div style="padding:16px 0 8px;">
         <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
       </div>
-      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 2.0 — Build 43 — MàJ 27/05/2026</div>
+      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 2.1 — Build 44 — MàJ 28/05/2026</div>
     </div>
     <!-- Onglet Risques -->
     <div class="guide-tab-content" id="content-risques">
@@ -909,6 +910,11 @@ try {
   usage.sessions = (usage.sessions || []).filter(t => t >= cutoff);
   usage.sessions.push(now);
   sessionOpenCount = usage.sessions.length;
+  // Afficher le compteur dans le header
+  const scEl = document.getElementById('sessionCounter');
+  if (scEl && sessionOpenCount > 1) {
+    scEl.textContent = sessionOpenCount + ' session' + (sessionOpenCount > 1 ? 's' : '') + ' enregistrée' + (sessionOpenCount > 1 ? 's' : '');
+  }
   localStorage.setItem(LS_USAGE, JSON.stringify(usage));
 } catch(e) {}
 let panelOpen = false;
@@ -1198,6 +1204,7 @@ function setPostOp(p, silent) {
     warn.style.cssText = 'display:block;margin-top:8px;padding:9px 12px;border-radius:10px;font-size:.78rem;font-weight:700;line-height:1.5;background:#f0f4ff;border-left:4px solid #5577bb;color:#223366;';
     warn.innerHTML = 'ℹ️ <strong>Plus de 18 mois post-op :</strong> profil plus stable, mais les risques bariatriques restent permanents.';
   }
+  if (!silent) savePrefs();
   onParamChange();
 }
 
@@ -1603,13 +1610,13 @@ function onDisclaimerCheck() {
 function closeDisclaimer() {
   const checked = document.getElementById('disclaimerCheck').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b43', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b44', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b43') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b44') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
@@ -1725,6 +1732,8 @@ function saveToJournal() {
   localStorage.setItem(LS_JOURNAL, JSON.stringify(journal));
   updateJournalCount();
 
+  // Retour haptique sur mobile
+  if (navigator.vibrate) navigator.vibrate(50);
   const btn = event.target;
   btn.textContent = '✅ Enregistré !';
   btn.style.background = '#28a745';
@@ -1841,6 +1850,11 @@ function resetParams() {
     localStorage.removeItem(LS_JOURNAL);
     localStorage.removeItem(LS_USAGE);
     localStorage.removeItem('bari_fav_boisson');
+    // Supprimer aussi toutes les clés disclaimer connues
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('bari_disclaimer')) { localStorage.removeItem(k); i--; }
+    }
   } catch(e) {}
   window.location.reload();
 }
