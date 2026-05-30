@@ -81,6 +81,7 @@
   .form-row:last-child { margin-bottom:0; }
   .form-label { font-size:.85rem; font-weight:600; color:var(--text); flex:1; }
   .form-input { font-family:'Nunito',sans-serif; font-size:.9rem; font-weight:700; color:var(--wine); background:var(--input-bg); border:1.5px solid var(--border); border-radius:10px; padding:8px 12px; width:140px; transition:border-color .2s; -webkit-appearance:none; }
+  body.dark-mode .form-input[type="time"] { color-scheme: dark; color: var(--gold); }
   .form-input:focus { outline:none; border-color:var(--wine); background:#fff; }
 
   /* TOGGLE */
@@ -365,6 +366,7 @@
 
     <!-- LISTE DES CONSOMMATIONS -->
     <div id="sessionList" style="margin-bottom:4px;"></div>
+    <div id="previBandeau"></div>
 
     <!-- BOUTON AJOUTER -->
     <button id="btnAjouterBoisson" onclick="tryOuvrirAjout()" style="width:100%;margin-top:4px;padding:11px;background:none;border:1.5px dashed var(--border);border-radius:12px;color:var(--wine);font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;opacity:.4;pointer-events:none;">
@@ -398,7 +400,7 @@
           style="font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;color:#8B1A1A;background:#fff;border:1.5px solid #e67e22;border-radius:8px;padding:6px 12px;width:110px;">
       </div>
       <div class="alerte-boisson" id="alerteBoisson"></div>
-      <button id="btnFavBoisson" onclick="saveFavBoisson(); updateFavBtn();" aria-label="Sauver comme boisson habituelle" style="margin-top:6px;width:100%;padding:7px;background:none;color:var(--muted);border:1px dashed var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;">☆ Sauver comme habituelle</button>
+
 
       <!-- Contexte alimentaire -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin:10px 0 6px;">
@@ -501,6 +503,8 @@
           style="width:100%;padding:8px 12px;border-radius:8px;border:1.5px solid var(--border);font-family:'Nunito',sans-serif;font-size:.82rem;background:var(--cream);color:var(--text);">
       </div>
       <button onclick="saveToJournal()" aria-label="Enregistrer cette consommation dans le journal de bord" style="width:100%;padding:11px;background:var(--wine);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;cursor:pointer;">📓 Collecter dans le journal de bord</button>
+      <div style="font-size:.68rem;color:var(--muted);text-align:center;padding:2px 0 4px;">🔒 Aucune information n'est envoyée à un serveur.</div>
+      <button onclick="afficherHistorique()" style="width:100%;padding:9px;background:none;color:var(--wine);border:1.5px solid var(--wine);border-radius:10px;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;">📋 Afficher mon historique</button>
       <div style="font-size:.72rem;color:var(--muted);font-weight:600;line-height:1.6;padding:6px 2px 8px;text-align:center;">
         📤 <strong>Partager le journal :</strong> choisissez selon la taille de votre journal.<br>
         Peu d'entrées → le mail suffit. Au-delà d'une vingtaine → préférez le fichier CSV.
@@ -600,6 +604,7 @@
         <p>Chaque personne réagit différemment à l'alcool. Les résultats de cette application sont <strong>indicatifs</strong>.</p>
         <div class="warn-line">⚠️ Après une chirurgie bariatrique, le risque de développer une addiction à l'alcool est <strong>avéré et démontré</strong>. Restez vigilant, en post-op immédiat comme à long terme. Partagez avec votre équipe votre consommation.</div>
         <p>Cette application est là pour vous éviter les mauvaises surprises — pas pour autoriser ou encourager la consommation.</p>
+        <p style="font-size:.83rem;color:var(--muted);margin-top:6px;">Elle est gratuite. Aucune information n'est envoyée à un serveur.</p>
       </div>
     </div>
     <div id="disclaimerCheckWrap" style="margin-top:14px;padding:10px 12px;background:var(--cream);border-radius:10px;display:flex;align-items:flex-start;gap:10px;">
@@ -627,7 +632,6 @@
           <li>Renseignez votre poids actuel (en kg ou lb)</li>
           <li>🌙 Basculez entre <strong>mode sombre</strong> et <strong>mode clair</strong> avec le bouton en haut à gauche</li>
           <li>Sélectionnez votre genre (Homme / Femme)</li>
-          <li>Indiquez l'heure de consommation — appuyez sur ⏱ pour sélectionner l'heure actuelle</li>
           <li>Entrez votre masse musculaire (en kg ou lb)</li>
           <li>Choisissez votre type de chirurgie et le temps depuis l'opération</li>
         </ul>
@@ -640,10 +644,13 @@
           <li>Sélectionnez la boisson — chaque catégorie propose « Autre » pour un degré personnalisé</li>
           <li>Indiquez le contexte alimentaire (repas ou à jeun)</li>
           <li>Ajustez le volume en mL via le curseur — l'aperçu du taux s'actualise en temps réel</li>
-          <li>Avec <strong>⭐ Sauver comme habituelle</strong>, conservez votre boisson préférée pour les prochaines utilisations</li>
           <li>Répétez pour chaque boisson consommée — le taux cumulatif est calculé automatiquement</li>
+          <li>Vous pouvez saisir des heures <strong>futures</strong> pour planifier votre soirée (mode prévisionnel) — les boissons futures apparaissent encadrées en bleu</li>
         </ul>
-        <div style="margin-top:8px;padding:8px 12px;background:var(--warn-bari);border-left:3px solid var(--warn-bari-border);border-radius:8px;font-size:.78rem;color:var(--warn-bari-text);line-height:1.5;">
+        <div style="margin-top:8px;padding:8px 12px;background:#e8f4fd;border-left:3px solid #1565c0;border-radius:8px;font-size:.78rem;color:#0d47a1;line-height:1.5;">
+          📅 <strong>Plage horaire :</strong> les consommations sont mémorisées automatiquement. Si vous rouvrez l'application plus tard, elles seront rechargées. Pensez à les inscrire dans votre <strong>journal de bord</strong> en fin de soirée via le bouton 📓.
+        </div>
+        <div style="margin-top:6px;padding:8px 12px;background:var(--warn-bari);border-left:3px solid var(--warn-bari-border);border-radius:8px;font-size:.78rem;color:var(--warn-bari-text);line-height:1.5;">
           ⏱ <strong>Approximation :</strong> l'heure saisie est le <em>début</em> de la consommation. Le pic réel d'alcoolémie survient après un délai d'absorption variable selon votre chirurgie (15 à 50 min). Ce délai est pris en compte dans le calcul.
         </div>
       </div>
@@ -678,7 +685,7 @@
         </ul>
         <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
           <button onclick="resetParams()" aria-label="Réinitialiser tous les paramètres et le journal de bord" style="width:100%;padding:8px;background:none;border:1.5px solid #c0392b;color:#c0392b;border-radius:8px;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;">🗑 Réinitialiser tous mes paramètres</button>
-          <p style="font-size:.7rem;color:var(--muted);text-align:center;margin-top:5px;">Efface poids, genre, chirurgie, journal… Les données PWA restent.</p>
+          <p style="font-size:.7rem;color:var(--muted);text-align:center;margin-top:5px;">Efface poids, genre, chirurgie, journal et consommations en cours. L’application reste installée sur votre téléphone.</p>
         </div>
       </div>
       <div class="guide-step" style="background:#f0f7f0;border-left:3px solid #28a745;">
@@ -741,11 +748,16 @@ Vos valeurs s'affichent ici lors du calcul :<br>
         <p style="font-size:.83rem;color:var(--text);line-height:1.6;margin-bottom:6px;">💬 Vous avez des idées à nous proposer ?</p>
         <p style="font-size:.83rem;color:var(--text);line-height:1.6;margin-bottom:6px;">🐛 Vous avez trouvé une erreur dans les calculs ?</p>
         <a href="mailto:otyrbasbaria@sfr.fr?subject=Alcool%20Barialimites" style="display:inline-block;color:var(--wine);font-weight:800;font-size:.85rem;text-decoration:none;">→ Contactez-nous</a>
+        <div style="margin-top:12px;text-align:center;">
+          <a href="https://ko-fi.com/obesiteguidepratique" target="_blank" rel="noopener noreferrer"
+            style="display:inline-block;padding:10px 20px;background:#72a4f2;color:#fff;border-radius:12px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;text-decoration:none;">☕ Soutenir sur Ko-fi</a>
+          <div style="font-size:.7rem;color:var(--muted);margin-top:5px;">Application gratuite — un café fait toujours plaisir ☕</div>
+        </div>
       </div>
       <div style="padding:16px 0 8px;">
         <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
       </div>
-      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 3.0 — Build 55 — MàJ 29/05/2026</div>
+      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 3.1 — Build 90 — MàJ 30/05/2026</div>
     </div>
     <!-- Onglet Risques -->
     <div class="guide-tab-content" id="content-risques">
@@ -877,15 +889,14 @@ function updatePaysDisplay(taux) {
   if (peinesEl) peinesEl.innerHTML = '<strong>Peine :</strong> ' + p.peine;
   const legal = taux <= p.seuil;
   const tr = document.createElement('tr');
-  tr.innerHTML = `<td>${p.nom}<br><span class="peine">${p.peine}</span></td>
-    <td>${p.seuil.toFixed(1)}</td>
-    <td><span class="badge ${legal?'legal':'illegal'}">${legal?'✅ LÉGAL':'⛔ INTERDIT'}</span></td>`;
+  tr.innerHTML = '<td>'+p.nom+'<br><span class="peine">'+p.peine+'</span></td><td>'+p.seuil.toFixed(1)+'</td><td><span class="badge '+(legal?'legal':'illegal')+'">'+(legal?'✅ LÉGAL':'⛔ INTERDIT')+'</span></td>';
   tbody.appendChild(tr);
 }
 
 let genre = null, chir = null, postOp = null, alimentaire = 'repas';
 let unitMode = 'kg'; // 'kg' ou 'lb'
 let boissonIdx = null, nbVerres = 1, chart = null;
+const LS_SESSION_TEMP = 'bari_session_temp';
 
 // ── Session multi-consommations (v3.0) ───────────────────────────
 let session = [];          // [{id,heure,heureDecimal,boissonIdx,nbVerres,vol,alimentaire,degreCustom}]
@@ -896,6 +907,20 @@ function heureToDecimal(hhmm) {
   if (!hhmm) return null;
   const [hh, mm] = hhmm.split(':').map(Number);
   return hh + mm / 60;
+}
+function heureToDecimalNorm(hhmm) {
+  // Normalise pour gérer le passage minuit
+  // Référence = heure actuelle (nowDecimal)
+  const val = heureToDecimal(hhmm);
+  if (val === null) return null;
+  const ref = session.length > 0
+    ? Math.min(...session.map(c => c.heureDecimal))
+    : nowDecimal();
+  // Si val est > 12h avant la référence → c'est le lendemain → +24h
+  if (ref - val > 12) return val + 24;
+  // Si val est > 12h après la référence → c'était hier → -24h ? Non.
+  // On ne soustrait jamais : on ne peut pas boire dans le passé lointain
+  return val;
 }
 function nowDecimal() {
   const n = new Date();
@@ -987,15 +1012,30 @@ function tryOuvrirAjout() {
     setTimeout(() => { t.style.display='none'; }, 3000);
     return;
   }
+  if (session.length > 0) {
+    const r3 = tauxCumulatif(nowDecimal());
+    const tauxTotal = r3.taux + r3.tauxPicAVenir;
+    if (tauxTotal >= getSeuilBari() * 2) {
+      alert('🚨 Je ne suis pas autorisé à vous proposer un nouvel alcool. Il y a un risque pour votre santé. Revoyez votre consommation et consultez votre équipe.');
+      return;
+    }
+  }
   ouvrirAjout();
 }
 function ouvrirAjout(editId) {
   sessionEditId = editId !== undefined ? editId : null;
-  document.getElementById('ajoutPanel').style.display = 'block';
-  document.getElementById('btnAjouterBoisson').style.display = 'none';
+  const panel = document.getElementById('ajoutPanel');
+  panel.style.display = 'block';
   document.getElementById('ajoutPanelTitle').textContent =
     sessionEditId !== null ? 'Modifier la consommation' : 'Nouvelle consommation';
+
   if (sessionEditId !== null) {
+    // Mode édition : insérer le panneau après la carte concernée
+    document.getElementById('btnAjouterBoisson').style.display = 'none';
+    const cardEl = document.getElementById('card-' + sessionEditId);
+    if (cardEl && cardEl.parentNode) {
+      cardEl.parentNode.insertBefore(panel, cardEl.nextSibling);
+    }
     const c = session.find(x => x.id === sessionEditId);
     if (c) {
       document.getElementById('heureAjout').value = c.heure;
@@ -1010,6 +1050,12 @@ function ouvrirAjout(editId) {
       degreCustomVal = c.degreCustom || null;
     }
   } else {
+    // Mode ajout : panneau sous le bouton
+    document.getElementById('btnAjouterBoisson').style.display = 'none';
+    const btn = document.getElementById('btnAjouterBoisson');
+    if (btn && btn.parentNode) {
+      btn.parentNode.insertBefore(panel, btn.nextSibling);
+    }
     boissonIdx = null; nbVerres = 1;
     document.getElementById('heureAjout').value = '';
     document.getElementById('selectedName').textContent = 'Choisir une boisson';
@@ -1024,6 +1070,94 @@ function annulerAjout() {
   if (panelOpen) toggleDrinkPanel();
   sessionEditId = null; boissonIdx = null;
 }
+// ── Variables autothrottle ─────────────────────────────────────────────────
+let _throttlePendingConso = null;
+
+function autoThrottle(vol) {
+  if (boissonIdx === null) return 0;
+  var poids  = getPoidsKg() || 80;
+  var muscle = parseFloat(document.getElementById('muscle').value) || 10;
+  var coeff  = genre==='homme' ? 0.68 : 0.55;
+  var cf     = getChirFactors().cf;
+  var coeffAjuste = coeff * (1 + 0.3*(muscle/poids)) * cf;
+  var seuil  = getSeuilBari();
+  var b      = boissons[boissonIdx];
+  var degre  = b.autre ? (degreCustomVal||0) : b.degre;
+  var af     = alimentaire==='jeun' ? 1.15 : 1.0;
+  var alc    = vol * (degre/100) * 0.789 * af;
+  var tauxPic = alc / (poids * coeffAjuste);
+  if (tauxPic <= seuil) return -1;
+  var volMax = Math.floor(seuil * poids * coeffAjuste / ((degre/100) * 0.789 * af) / 5) * 5 || 5;
+  return volMax;
+}
+
+function afficherModaleThrottle() {
+  var p = window._throttleParams;
+  if (!p) return;
+  var b = boissons[p.boissonIdxLocal];
+  var hh = parseInt(p.heureBase.split(':')[0]);
+  var mm = parseInt(p.heureBase.split(':')[1]);
+  var volMax = p.volMaxArrondi;
+  var fracs = [];
+  var restant = p.volTotal;
+  while (restant > 0) { fracs.push(Math.min(restant, volMax)); restant -= volMax; }
+  p.fractions = fracs;
+  var det = '';
+  for (var i=0; i<fracs.length; i++) {
+    var tot = hh*60+mm+i*40, h2=Math.floor(tot/60)%24, m2=tot%60;
+    det += '<div style="padding:3px 0;font-size:.82rem;">'+String(h2).padStart(2,'0')+'h'+String(m2).padStart(2,'0')+' — '+b.nom+' <strong>'+fracs[i]+' mL</strong></div>';
+  }
+  var ex = document.getElementById('throttleModal'); if (ex) ex.remove();
+  var modal = document.createElement('div');
+  modal.id = 'throttleModal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px;';
+  modal.innerHTML =
+    '<div style="background:var(--card-bg);border-radius:18px;padding:22px 18px;max-width:360px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.4);">'+
+    '<div style="font-size:1rem;font-weight:800;color:var(--wine);margin-bottom:10px;">⚠️ Seuil bariatrique dépassé</div>'+
+    '<div style="font-size:.84rem;color:var(--text);margin-bottom:10px;">Je vous propose de séparer en <strong>'+fracs.length+' prise'+(fracs.length>1?'s':'')+'</strong> :</div>'+
+    '<div style="background:var(--cream);border-radius:10px;padding:10px 12px;margin-bottom:14px;color:var(--text);">'+det+'</div>'+
+    '<div style="display:flex;gap:8px;">'+
+    '<button onclick="throttleNon()" style="flex:1;padding:11px;background:none;border:1.5px solid var(--border);border-radius:10px;font-family:Nunito,sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;color:var(--muted);">Non</button>'+
+    '<button onclick="throttleOui()" style="flex:2;padding:11px;background:var(--wine);color:#fff;border:none;border-radius:10px;font-family:Nunito,sans-serif;font-size:.85rem;font-weight:800;cursor:pointer;">Oui, répartir</button>'+
+    '</div></div>';
+  document.body.appendChild(modal);
+}
+
+function throttleNon() {
+  var modal = document.getElementById('throttleModal');
+  if (modal) modal.remove();
+  if (_throttlePendingConso) {
+    session.push(_throttlePendingConso);
+    session.sort(function(a,b2){return a.heureDecimal-b2.heureDecimal;});
+    _throttlePendingConso = null;
+  }
+  sauverBrouillon(); renderSession(); mettreAJourBandeau(); calcul(); updateProgress();
+}
+
+function throttleOui() {
+  var p = window._throttleParams;
+  var modal = document.getElementById('throttleModal');
+  if (modal) modal.remove();
+  if (!p || !p.fractions) return;
+  _throttlePendingConso = null;
+  var hh = parseInt(p.heureBase.split(':')[0]);
+  var mm = parseInt(p.heureBase.split(':')[1]);
+  for (var i=0; i<p.fractions.length; i++) {
+    var tot = hh*60+mm+i*40, h2=Math.floor(tot/60)%24, m2=tot%60;
+    var hs = String(h2).padStart(2,'0')+':'+String(m2).padStart(2,'0');
+    session.push({id:sessionNextId++, heure:hs, heureDecimal:heureToDecimalNorm(hs),
+      boissonIdx:p.boissonIdxLocal, nbVerres:1, vol:p.fractions[i],
+      alimentaire:p.alimentaireLocal, degreCustom:p.degreCustomLocal});
+  }
+  session.sort(function(a,b2){return a.heureDecimal-b2.heureDecimal;});
+  sauverBrouillon(); renderSession(); mettreAJourBandeau(); calcul(); updateProgress();
+}
+
+function finaliserAjout() {
+  annulerAjout();
+  sauverBrouillon(); renderSession(); mettreAJourBandeau(); calcul(); updateProgress();
+}
+
 function previewTaux() {
   const prev = document.getElementById('tauxPreview');
   if (!prev || boissonIdx === null || !paramsComplete()) { if(prev) prev.style.display='none'; return; }
@@ -1053,38 +1187,46 @@ function previewTaux() {
 }
 
 function validerAjout() {
-  const heure = document.getElementById('heureAjout').value;
+  var heure = document.getElementById('heureAjout').value;
   if (!heure || boissonIdx === null) return;
-  // Refuser heure future (> 30 min dans le futur)
-  const [hh,mm] = heure.split(':').map(Number);
-  const consoDate = new Date(); consoDate.setHours(hh,mm,0,0);
-  const now = new Date();
-  if ((consoDate - now) > 30*60*1000) {
-    const prev = document.getElementById('tauxPreview');
-    if (prev) { prev.style.display='block'; prev.style.background='#fff0e0'; prev.style.color='#8a3800'; prev.textContent='⚠️ Heure dans le futur — vérifiez l\'heure saisie'; }
+  var heureDecTest = heureToDecimalNorm(heure);
+  var diffH = heureDecTest - nowDecimal();
+  if (diffH < -6 || diffH > 18) {
+    var prev = document.getElementById('tauxPreview');
+    if (prev) { prev.style.display='block'; prev.style.background='#fff0e0'; prev.style.color='#8a3800';
+      prev.textContent='Cette application gère une plage de 6 heures par rapport à l\'heure actuelle.'; }
     return;
   }
-  const vol = parseFloat(document.getElementById('volume').value) || boissons[boissonIdx].vol;
-  const conso = {
-    id: sessionEditId !== null ? sessionEditId : sessionNextId++,
-    heure, heureDecimal: heureToDecimal(heure),
-    boissonIdx, nbVerres, vol, alimentaire,
-    degreCustom: degreCustomVal
-  };
+  var vol = parseFloat(document.getElementById('volume').value) || boissons[boissonIdx].vol;
+  var conso = { id: sessionEditId!==null ? sessionEditId : sessionNextId++,
+    heure: heure, heureDecimal: heureToDecimalNorm(heure),
+    boissonIdx: boissonIdx, nbVerres: nbVerres, vol: vol,
+    alimentaire: alimentaire, degreCustom: degreCustomVal };
   if (sessionEditId !== null) {
-    const idx = session.findIndex(x => x.id === sessionEditId);
+    var idx = session.findIndex(function(x){return x.id===sessionEditId;});
     if (idx !== -1) session[idx] = conso;
-  } else {
-    session.push(conso);
-    session.sort((a,b) => a.heureDecimal - b.heureDecimal);
+    finaliserAjout(); return;
   }
-  annulerAjout();
-  renderSession();
-  calcul();
-  updateProgress();
+  // Autothrottle : capturer AVANT annulerAjout
+  var volMax = autoThrottle(vol);
+  if (volMax > 0) {
+    _throttlePendingConso = conso;
+    var volMaxArrondi = Math.floor(volMax/5)*5 || 5;
+    window._throttleParams = { volTotal:vol, volMaxArrondi:volMaxArrondi,
+      heureBase:heure, boissonIdxLocal:boissonIdx,
+      alimentaireLocal:alimentaire, degreCustomLocal:degreCustomVal };
+    annulerAjout();
+    afficherModaleThrottle();
+    return;
+  }
+  session.push(conso);
+  session.sort(function(a,b2){return a.heureDecimal-b2.heureDecimal;});
+  finaliserAjout();
 }
+
 function supprimerConso(id) {
   session = session.filter(x => x.id !== id);
+  sauverBrouillon();
   renderSession();
   if (session.length > 0) calcul(); else {
     document.getElementById('resultBox').style.display = 'none';
@@ -1093,27 +1235,43 @@ function supprimerConso(id) {
   updateProgress();
 }
 function renderSession() {
-  const list = document.getElementById('sessionList');
+  // Remettre ajoutPanel dans son parent d'origine avant tout innerHTML
+  var panel = document.getElementById('ajoutPanel');
+  var btn   = document.getElementById('btnAjouterBoisson');
+  if (panel && btn && btn.parentNode && panel.parentNode !== btn.parentNode) {
+    btn.parentNode.insertBefore(panel, btn.nextSibling);
+  }
+  var list = document.getElementById('sessionList');
   if (!list) return;
   if (session.length === 0) {
     list.innerHTML = '<div style="font-size:.78rem;color:var(--muted);text-align:center;padding:10px 0 4px;">Aucune consommation — appuyez sur + pour commencer</div>';
     return;
   }
-  const poids  = getPoidsKg() || 80;
-  const muscle = parseFloat(document.getElementById('muscle').value) || 10;
-  const coeff  = genre==='homme' ? 0.68 : 0.55;
-  const {cf}   = getChirFactors();
-  const coeffAjuste = coeff * (1 + 0.3*(muscle/poids)) * cf;
-  const colors = {leger:'#2e7d32', petillant:'#1565c0', fort:'#b71c1c', cocktail:'#6a1b9a'};
-  list.innerHTML = session.map(c => {
-    const b   = boissons[c.boissonIdx];
-    const deg = b.autre ? (c.degreCustom||0) : b.degre;
-    const af  = c.alimentaire==='jeun' ? 1.15 : 1.0;
-    const alc = c.vol * c.nbVerres * (deg/100) * 0.789 * af;
-    const contrib = (alc / (poids * coeffAjuste * 1000) * 1000).toFixed(2);
-    const col  = colors[b.type] || '#8B1A1A';
-    const vtxt = c.nbVerres%1===0 ? c.nbVerres : c.nbVerres.toFixed(1);
-    return '<div style="background:var(--cream);border:1.5px solid ' + col + '40;border-radius:12px;padding:10px 12px;margin-bottom:6px;position:relative;">' +
+  var now = nowDecimal();
+  var poids  = getPoidsKg() || 80;
+  var muscle = parseFloat(document.getElementById('muscle').value) || 10;
+  var coeff  = genre==='homme' ? 0.68 : 0.55;
+  var chirF  = getChirFactors();
+  var coeffAjuste = coeff * (1 + 0.3*(muscle/poids)) * chirF.cf;
+  var colors = {leger:'#2e7d32', petillant:'#1565c0', fort:'#b71c1c', cocktail:'#6a1b9a'};
+
+  function carteHTML(c) {
+    var b   = boissons[c.boissonIdx];
+    var deg = b.autre ? (c.degreCustom || 0) : b.degre;
+    var af  = c.alimentaire === 'jeun' ? 1.15 : 1.0;
+    var alc = c.vol * c.nbVerres * (deg/100) * 0.789 * af;
+    var contrib = (alc / (poids * coeffAjuste * 1000) * 1000).toFixed(2);
+    var col  = colors[b.type] || '#8B1A1A';
+    var sobre = '';
+    if (c.id === session[session.length-1].id) {
+      var r2 = tauxCumulatif(nowDecimal());
+      if (r2.taux > 0.001) {
+        var restH = r2.taux / r2.elimAjuste;
+        var rh2 = Math.floor(restH), rm2 = Math.round((restH-rh2)*60);
+        sobre = '<div style="font-size:.68rem;color:var(--muted);font-weight:700;margin-top:2px;">🕐 Sobre dans ' + (rh2>0?rh2+'h ':'') + rm2 + 'min</div>';
+      }
+    }
+    return '<div id="card-' + c.id + '" style="border:1.5px solid ' + col + '40;background:var(--cream);border-radius:12px;padding:10px 12px;margin-bottom:6px;position:relative;">' +
       '<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;padding-right:52px;">' +
         '<span style="font-size:.83rem;font-weight:800;color:var(--text);flex:1;">' + b.nom + '</span>' +
         '<span style="font-size:.72rem;font-weight:700;color:' + col + ';background:' + col + '18;padding:2px 7px;border-radius:20px;white-space:nowrap;">+' + contrib + ' g/L</span>' +
@@ -1122,33 +1280,26 @@ function renderSession() {
         '<span>&#9201; ' + c.heure + '</span>' +
         '<span>&#128347; ' + c.vol + ' mL</span>' +
         (c.alimentaire==='jeun' ? '<span>&#128167; jeun</span>' : '') +
-      '</div>' +
-      (function(){
-        // Temps avant sobriété pour cette consommation seule
-        const pds = getPoidsKg()||80, mus = parseFloat(document.getElementById('muscle').value)||10;
-        const co = genre==='homme'?0.68:0.55, el = genre==='homme'?0.12:0.10;
-        const {cf,ef} = getChirFactors();
-        const cA = co*(1+0.3*(mus/pds))*cf, eA = el*ef;
-        const b2 = boissons[c.boissonIdx], deg2 = b2.autre?(c.degreCustom||0):b2.degre;
-        const af2 = c.alimentaire==='jeun'?1.15:1.0;
-        const alc2 = c.vol*c.nbVerres*(deg2/100)*0.789*af2;
-        const t02 = alc2/(pds*cA*1000)*1000;
-        const tRetour = t02/eA; // heures depuis le pic
-        const heureFin = c.heureDecimal + getDelaiAbsorption() + tRetour;
-        const now2 = nowDecimal();
-        if (heureFin > now2) {
-          const restH = heureFin - now2;
-          const rh = Math.floor(restH), rm = Math.round((restH-rh)*60);
-          return '<div style="font-size:.68rem;color:var(--muted);font-weight:600;margin-top:2px;">🕐 Sober dans ' + (rh>0?rh+'h ':'') + rm + 'min</div>';
-        }
-        return '<div style="font-size:.68rem;color:#28a745;font-weight:700;margin-top:2px;">✅ Éliminé</div>';
-      })() +
+      '</div>' + sobre +
       '<div style="position:absolute;top:8px;right:6px;display:flex;gap:2px;">' +
         '<button onclick="ouvrirAjout(' + c.id + ')" style="background:none;border:none;cursor:pointer;font-size:.85rem;padding:3px 5px;color:var(--muted);" aria-label="Modifier">&#9998;</button>' +
         '<button onclick="supprimerConso(' + c.id + ')" style="background:none;border:none;cursor:pointer;font-size:.85rem;padding:3px 5px;color:#c0392b;" aria-label="Supprimer">&#x2715;</button>' +
       '</div>' +
     '</div>';
-  }).join('');
+  }
+
+  var passees = session.filter(function(c) { return c.heureDecimal <= now; });
+  var futures = session.filter(function(c) { return c.heureDecimal > now; });
+  var html = passees.map(carteHTML).join('');
+
+  if (futures.length > 0) {
+    html += '<div style="border:2px solid #1565c0;border-radius:14px;padding:10px;margin-top:4px;background:#f0f6ff;">' +
+      '<div style="font-size:.74rem;font-weight:800;color:#0d47a1;margin-bottom:8px;">📅 Consommations futures</div>' +
+      futures.map(carteHTML).join('') +
+    '</div>';
+  }
+
+  list.innerHTML = html;
 }
 let degreCustomVal = null;
 let miniPopupShown = false, spiritueuxPopupShown = false;
@@ -1315,8 +1466,9 @@ function showMiniPopupWithRisques(title, body) {
 }
 
 function updateAlerte() {
-  const b = boissons[boissonIdx];
+  const b = boissonIdx !== null ? boissons[boissonIdx] : null;
   const el = document.getElementById('alerteBoisson');
+  if (!b || !el) return;
   if (b.type === 'petillant') {
     el.className = 'alerte-boisson petillant show';
     el.innerHTML = '⚠️ <strong>Les boissons pétillantes sont risquées en post-op.</strong><br>La consommation est à proscrire sans accord de votre équipe.';
@@ -1342,6 +1494,9 @@ function setGenre(g, silent) {
   if (!silent) { savePrefs(); onParamChange(); } else onParamChange();
 }
 function setChir(c, silent) {
+  if (!silent && chir !== null && chir !== c && session.length > 0) {
+    if (!confirm('Vous avez déjà saisi des consommations.\nChanger de chirurgie modifiera les calculs.\nVoulez-vous continuer ?')) return;
+  }
   chir = c;
   ['bypass','sleeve','conversion','anneau','dbp'].forEach(id => {
     const el = document.getElementById('btn-' + id);
@@ -1651,14 +1806,18 @@ function updateChart(taux0global, elimAjuste, tempsRetour, seuilBari) {
   const delai  = getDelaiAbsorption();
   const coeffAjuste = coeff * (1 + 0.3*(muscle/poids)) * cf;
   const heureMin = session.length>0 ? Math.min(...session.map(c=>c.heureDecimal)) : nowDecimal();
+  const heureMax = session.length>0 ? Math.max(...session.map(c=>c.heureDecimal)) : nowDecimal();
   const heureNow = nowDecimal();
-  const maxH = Math.max(Math.ceil(taux0global/elimAjuste)+2, 5);
-  const step = maxH>12 ? 0.5 : 0.25;
+  const depart = Math.min(heureMin, heureNow - 0.5);
+  const finElim = heureMax + delai + Math.max(taux0global / elimAjuste, 2);
+  const finMax = Math.max(heureNow + 1, finElim) + 0.5;
+  const dureeTotal = Math.min(finMax - depart, 14);
+  const step = dureeTotal > 8 ? 0.5 : 0.25;
   const labels=[], dataCourbe=[], dataPasse=[];
   let idxNow = 0;
 
-  for (let t=0; t<=maxH; t+=step) {
-    const tAbs = heureMin + t;
+  for (let t=0; t<=dureeTotal; t+=step) {
+    const tAbs = depart + t;
     const totalMin = Math.round(tAbs * 60);
     const hh = Math.floor(totalMin/60) % 24;
     const mm  = totalMin % 60;
@@ -1714,9 +1873,8 @@ function updateChart(taux0global, elimAjuste, tempsRetour, seuilBari) {
     data:{ labels, datasets:[
       { label:'Taux cumulatif (g/L)', data:dataCourbe, borderColor:'#8B1A1A', backgroundColor:'rgba(139,26,26,0.08)', borderWidth:2.5, pointRadius:0, fill:true, tension:0.3 },
       { label:'Temps écoulé', data:dataPasse, borderColor:'rgba(0,0,0,0)', backgroundColor:'rgba(100,100,100,0.15)', borderWidth:0, pointRadius:0, fill:true, tension:0.3 },
-      { label:'Seuil bariatrique ('+seuilBari+' g/L)', data:labels.map(()=>seuilBari), borderColor:'#e67e22', borderDash:[5,4], borderWidth:1.5, pointRadius:0, fill:false },
-      { label:'Seuil légal (0.5 g/L)', data:labels.map(()=>0.5), borderColor:'#c0392b', borderDash:[8,4], borderWidth:1.5, pointRadius:0, fill:false }
-    ]},
+      { label:'Seuil bariatrique ('+seuilBari+' g/L)', data:labels.map(()=>seuilBari), borderColor:'#e67e22', borderDash:[5,4], borderWidth:1.5, pointRadius:0, fill:false }
+    ].concat(taux0global > 0.5 ? [{ label:'Seuil légal (0.5 g/L)', data:labels.map(()=>0.5), borderColor:'#c0392b', borderDash:[8,4], borderWidth:1.5, pointRadius:0, fill:false }] : [])},
     plugins:[pluginNow],
     options:{ responsive:true, animation:{duration:300},
       plugins:{ legend:{labels:{font:{family:'Nunito',size:11},boxWidth:16,padding:10,
@@ -1724,7 +1882,8 @@ function updateChart(taux0global, elimAjuste, tempsRetour, seuilBari) {
         tooltip:{callbacks:{label:c=>c.dataset.label+': '+Number(c.raw).toFixed(3)+' g/L'}} },
       scales:{
         x:{ticks:{font:{family:'Nunito',size:9},color:'#8a6565',maxRotation:45},grid:{color:'rgba(139,26,26,0.08)'}},
-        y:{min:0,ticks:{font:{family:'Nunito',size:10},color:'#8a6565',callback:v=>v.toFixed(2)+' g/L'},grid:{color:'rgba(139,26,26,0.08)'}}
+        y:{min:0, suggestedMax: taux0global > 0.5 ? undefined : Math.ceil(Math.max(taux0global, seuilBari) / 0.05 + 1) * 0.05,
+           ticks:{font:{family:'Nunito',size:10},color:'#8a6565',callback:v=>v.toFixed(2)+' g/L'},grid:{color:'rgba(139,26,26,0.08)'}}
       }
     }
   });
@@ -1887,13 +2046,13 @@ function onDisclaimerCheck() {
 function closeDisclaimer() {
   const checked = document.getElementById('disclaimerCheck').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b55', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b90', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b55') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b90') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
@@ -1934,6 +2093,7 @@ function closeRisques() {
 loadPrefs();
 // Pas de pays sélectionné par défaut — l'utilisateur choisit
 // (currentPaysFilter reste null si rien de sauvegardé)
+// chargerPrevisionnel appelé dans window.load
 
 // ── Journal de bord ──────────────────────────
 const LS_JOURNAL = 'bari_journal';
@@ -1944,75 +2104,75 @@ function getJournal() {
 
 function saveToJournal() {
   if (session.length === 0) { alert('Ajoutez au moins une consommation avant d\'enregistrer.'); return; }
-  const b = boissons[session[0].boissonIdx]; // pour compatibilité
-  const degreFinal = b.autre ? (degreCustomVal || 0) : b.degre;
+  const now2 = nowDecimal();
+  if (session.some(c => c.heureDecimal > now2)) {
+    alert('Impossible d\'inscrire dans le journal tant qu\'il y a des consommations futures.\nAttendez que toutes les heures soient passées.');
+    return;
+  }
+  if (!confirm('Je vais inscrire ces consommations dans votre journal de bord et les supprimer du panneau \ud83c\udf79 Mes consommations.\n\nConfirmer ?')) return;
   const poids  = getPoidsKg() || 0;
   const muscle = parseFloat(document.getElementById('muscle').value) || 10;
-  const vol    = parseFloat(document.getElementById('volume').value) || 0;
-  const duree  = getDureeH();
   const taux   = parseFloat(document.getElementById('resultVal').textContent) || 0;
-
-  // Recalcul des variables intermédiaires pour tout stocker
+  const seuilBari = getSeuilBari();
+  const {cf, ef} = getChirFactors();
   const coeff = genre === 'homme' ? 0.68 : 0.55;
   const elim  = genre === 'homme' ? 0.12 : 0.10;
-  const coeffAjuste = coeff * (1 + 0.3 * (muscle / poids));
-  const alimentFactor = alimentaire === 'jeun' ? 1.15 : 1.0;
-  const alcoolPur = vol * nbVerres * (degreFinal / 100) * 0.789 * alimentFactor;
-  const taux0 = alcoolPur / (poids * coeffAjuste * 1000) * 1000;
-  const seuilBariBase = chir==='dbp' ? 0.05 : chir==='conversion' ? 0.08 : chir==='bypass' ? 0.10 : chir==='sleeve' ? 0.20 : 0.30;
-  const seuilBari = postOp === 'recent' ? seuilBariBase * 0.5 : seuilBariBase;
-  const tempsRetour = taux0 / elim;
+  const coeffAjuste = coeff * (1 + 0.3 * (muscle / poids)) * cf;
+  const elimAjuste  = elim * ef;
   const mgL = taux * 0.5;
+
+  const totalAlcool = session.reduce((sum, c) => {
+    const bd = boissons[c.boissonIdx];
+    const deg = bd.autre ? (c.degreCustom||0) : bd.degre;
+    const af = c.alimentaire==='jeun' ? 1.15 : 1.0;
+    return sum + c.vol * c.nbVerres * (deg/100) * 0.789 * af;
+  }, 0);
+  const consosStr = session.map(c => boissons[c.boissonIdx].nom + ' (' + c.heure + ', ' + c.vol + 'mL)').join(' | ');
 
   const entry = {
     date:            new Date().toLocaleString('fr-FR'),
-    // Boisson
-    boisson:         b.nom,
-    categorie:       b.cat,
-    degre:           degreFinal,
-    volume_mL:       vol,
-    nb_verres:       nbVerres,
-    // Contexte
-    alimentaire:     alimentaire,
-    facteur_alim:    alimentFactor,
-    // Paramètres patient
+    nb_consommations: session.length,
+    consommations:   consosStr,
     poids_kg:        poids,
     genre:           genre,
     masse_musc_kg:   muscle,
-    // Chirurgie
     chirurgie:       chir || '—',
     temps_postop:    postOp || '—',
-    temps_ecoule_h:  duree,
-    // Calculs intermédiaires
-    alcool_pur_g:    alcoolPur.toFixed(2),
-    coeff_widmark:   coeff,
+    alcool_pur_g:    totalAlcool.toFixed(2),
     coeff_ajuste:    coeffAjuste.toFixed(4),
-    elimination:     elim,
-    // Résultats
-    taux_pic_gL:     taux0.toFixed(3),
+    elimination:     elimAjuste.toFixed(3),
     taux_actuel_gL:  taux.toFixed(3),
     taux_mgL:        mgL.toFixed(3),
     seuil_bari_gL:   seuilBari,
-    temps_retour_h:  tempsRetour.toFixed(2),
     depasse_seuil:   taux >= seuilBari ? 'OUI' : 'NON',
     note:            (document.getElementById('noteJournal').value || '').trim()
   };
-  document.getElementById('noteJournal').value = ''; // vider après sauvegarde
+  document.getElementById('noteJournal').value = '';
 
   const journal = getJournal();
   journal.push(entry);
-  localStorage.setItem(LS_JOURNAL, JSON.stringify(journal));
+  try { localStorage.setItem(LS_JOURNAL, JSON.stringify(journal)); } catch(e) {}
   updateJournalCount();
 
-  // Retour haptique sur mobile
   if (navigator.vibrate) navigator.vibrate(50);
+  // Vider la session et le brouillon après journalisation
+  session = [];
+  try { localStorage.removeItem(LS_SESSION_TEMP); } catch(e) {}
+  renderSession();
+  mettreAJourBandeau();
+  document.getElementById('resultBox').style.display = 'none';
+  document.getElementById('consoCard').style.display = 'none';
+  const cw2 = document.getElementById('chartWrap');
+  if (cw2) cw2.style.display = 'none';
+  updateProgress();
   const btn = event.target;
-  btn.textContent = '✅ Enregistré !';
+  const total = journal.length;
+  btn.textContent = '✅ Session sauvée — ' + total + ' entrée' + (total > 1 ? 's' : '') + ' au total';
   btn.style.background = '#28a745';
   setTimeout(() => {
     btn.textContent = '📓 Collecter dans le journal de bord';
     btn.style.background = 'var(--wine)';
-  }, 2000);
+  }, 3000);
 }
 
 function buildCsv(journal) {
@@ -2086,7 +2246,6 @@ function updateJournalCount() {
 }
 
 updateMuscle();
-updateAlerte();
 loadFavBoisson();
 updateFavBtn();
 // No default chirurgie selection
@@ -2133,27 +2292,192 @@ function updateRisquesChir() {
   }
 }
 
+// ── Brouillon session (sauvegarde automatique) ──────────────────────────────
+function sauverBrouillon() {
+  try { localStorage.setItem(LS_SESSION_TEMP, JSON.stringify(session)); } catch(e) {}
+}
+
+function mettreAJourBandeau() {}
+
+// Fonctions conservées pour compatibilité (boutons supprimés)
+function sauverPrevisionnel() {}
+function effacerPrevisionnel() {}
+
+function chargerPrevisionnel() {
+  try {
+    const raw = localStorage.getItem(LS_SESSION_TEMP);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (!Array.isArray(data) || data.length === 0) return;
+
+    session = data;
+    sessionNextId = Math.max(...session.map(c => c.id)) + 1;
+
+    const now = nowDecimal();
+    const passees = session.filter(c => c.heureDecimal <= now);
+    const futures = session.filter(c => c.heureDecimal > now);
+
+    // Rendre les cartes AVANT le message
+    renderSession();
+    mettreAJourBandeau();
+    if (passees.length > 0) calcul();
+    updateProgress();
+
+    // Message après renderSession (sessionList existe)
+    if (passees.length > 0 && futures.length === 0) {
+      showBrouillonMessage(
+        'Vous avez ' + session.length + ' consommation' + (session.length > 1 ? 's' : '') +
+        ' non journalisée' + (session.length > 1 ? 's' : '') + '. Que voulez-vous faire ?',
+        'journal'
+      );
+    } else {
+      showBrouillonMessage('Je recharge vos consommations (' + session.length + ' entrée' + (session.length > 1 ? 's' : '') + ').', 'info');
+    }
+  } catch(e) {}
+}
+function showBrouillonMessage(texte, type) {
+  const existing = document.getElementById('brouillonMsg');
+  if (existing) existing.remove();
+  const div = document.createElement('div');
+  div.id = 'brouillonMsg';
+  div.style.cssText = 'margin:8px 0;padding:10px 14px;border-radius:12px;font-size:.78rem;font-weight:700;line-height:1.6;' +
+    (type === 'journal' ? 'background:#fff3cd;border-left:3px solid #e67e22;color:#7a4000;' : 'background:#e8f4fd;border-left:3px solid #1565c0;color:#0d47a1;');
+  div.innerHTML = texte;
+  if (type === 'journal') {
+    div.innerHTML += '<div style="display:flex;gap:8px;margin-top:8px;">' +
+      '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">' +
+      '<button onclick="document.getElementById(\'brouillonMsg\').remove()" style="flex:1;min-width:80px;padding:6px;background:none;border:1px solid #e67e22;color:#7a4000;border-radius:8px;font-family:Nunito,sans-serif;font-size:.70rem;font-weight:700;cursor:pointer;">↩ Garder en cours</button>' +
+      '<button onclick="journaliserEtEffacer()" style="flex:1;min-width:80px;padding:6px;background:#e67e22;color:#fff;border:none;border-radius:8px;font-family:Nunito,sans-serif;font-size:.70rem;font-weight:700;cursor:pointer;">📓 Collecter et effacer</button>' +
+      '<button onclick="effacerSansJournaliser()" style="flex:1;min-width:80px;padding:6px;background:none;border:1px solid #c0392b;color:#c0392b;border-radius:8px;font-family:Nunito,sans-serif;font-size:.70rem;font-weight:700;cursor:pointer;">🗑 Effacer</button>' +
+      '</div>';
+  } else {
+    setTimeout(() => { if (div.parentNode) div.remove(); }, 4000);
+  }
+  // Insérer avant sessionList
+  const sl = document.getElementById('sessionList');
+  if (sl && sl.parentNode) sl.parentNode.insertBefore(div, sl);
+}
+
+function effacerSansJournaliser() {
+  if (!confirm('Effacer toutes les consommations sans les journaliser ?')) return;
+  session = [];
+  try { localStorage.removeItem(LS_SESSION_TEMP); } catch(e) {}
+  const msg = document.getElementById('brouillonMsg');
+  if (msg) msg.remove();
+  renderSession();
+  mettreAJourBandeau();
+  document.getElementById('resultBox').style.display = 'none';
+  document.getElementById('consoCard').style.display = 'none';
+  const cw = document.getElementById('chartWrap');
+  if (cw) cw.style.display = 'none';
+  updateProgress();
+}
+function journaliserEtEffacer() {
+  // Journaliser automatiquement puis vider le panneau
+  const now = nowDecimal();
+  const passees = session.filter(c => c.heureDecimal <= now);
+  if (passees.length > 0) {
+    const journal = getJournal();
+    const seuilBari = getSeuilBari();
+    const poids = getPoidsKg() || 0;
+    const muscle = parseFloat(document.getElementById('muscle').value) || 10;
+    const coeff = genre === 'homme' ? 0.68 : 0.55;
+    const {cf, ef} = getChirFactors();
+    const coeffAjuste = coeff * (1 + 0.3 * (muscle / poids)) * cf;
+    const elimAjuste = (genre === 'homme' ? 0.12 : 0.10) * ef;
+    const totalAlcool = passees.reduce((sum, c) => {
+      const b = boissons[c.boissonIdx], deg = b.autre ? (c.degreCustom||0) : b.degre;
+      return sum + c.vol * c.nbVerres * (deg/100) * 0.789 * (c.alimentaire==='jeun'?1.15:1.0);
+    }, 0);
+    const taux0 = totalAlcool / (poids * coeffAjuste * 1000) * 1000;
+    const mgL = taux0 * 0.5;
+    const entry = {
+      date: new Date().toLocaleString('fr-FR'),
+      nb_consommations: passees.length,
+      consommations: passees.map(c => boissons[c.boissonIdx].nom + ' (' + c.heure + ', ' + c.vol + 'mL)').join(' | '),
+      poids_kg: poids, genre, masse_musc_kg: muscle,
+      chirurgie: chir || '—', temps_postop: postOp || '—',
+      alcool_pur_g: totalAlcool.toFixed(2),
+      coeff_ajuste: coeffAjuste.toFixed(4), elimination: elimAjuste.toFixed(3),
+      taux_actuel_gL: taux0.toFixed(3), taux_mgL: mgL.toFixed(3),
+      seuil_bari_gL: seuilBari, depasse_seuil: taux0 >= seuilBari ? 'OUI' : 'NON', note: ''
+    };
+    journal.push(entry);
+    try { localStorage.setItem(LS_JOURNAL, JSON.stringify(journal)); } catch(e) {}
+    updateJournalCount();
+  }
+  session = [];
+  try { localStorage.removeItem(LS_SESSION_TEMP); } catch(e) {}
+  const msg = document.getElementById('brouillonMsg');
+  if (msg) msg.remove();
+  renderSession();
+  mettreAJourBandeau();
+  document.getElementById('resultBox').style.display = 'none';
+  document.getElementById('consoCard').style.display = 'none';
+  const cw = document.getElementById('chartWrap');
+  if (cw) cw.style.display = 'none';
+  updateProgress();
+}
+
+// ── Historique journal ────────────────────────────────────────────────────────
+function afficherHistorique() {
+  const journal = getJournal();
+  const modal = document.createElement('div');
+  modal.id = 'historiqueModal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:6000;display:flex;align-items:flex-end;justify-content:center;padding:0 8px 16px;';
+  let content2 = '';
+  if (journal.length === 0) {
+    content2 = '<p style="text-align:center;color:var(--muted);padding:20px;">Aucune entrée dans le journal.</p>';
+  } else {
+    content2 = journal.slice().reverse().map(e => {
+      const depasse = e.depasse_seuil === 'OUI';
+      return '<div style="padding:8px 10px;border-radius:10px;margin-bottom:6px;background:var(--cream);border-left:3px solid '+(depasse?'#c0392b':'#28a745')+';font-size:.75rem;">' +
+        '<div style="font-weight:800;color:var(--text);">' + e.date + '</div>' +
+        '<div style="color:var(--muted);margin-top:2px;">' + (e.consommations||e.boisson||'—') + '</div>' +
+        '<div style="font-weight:700;color:'+(depasse?'#c0392b':'#28a745')+';">' +
+          (depasse ? '⚠️ ' : '✅ ') + e.taux_actuel_gL + ' g/L' +
+          (e.note ? ' — ' + e.note : '') +
+        '</div></div>';
+    }).join('');
+  }
+  modal.innerHTML = '<div style="background:var(--card-bg);border-radius:18px 18px 0 0;padding:20px 16px 16px;width:100%;max-width:480px;max-height:75vh;overflow:auto;">' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">' +
+      '<div class="section-title" style="margin-bottom:0;">📋 Historique (' + journal.length + ' entrée' + (journal.length>1?'s':'') + ')</div>' +
+      '<button onclick="document.getElementById(\'historiqueModal\').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--muted);" aria-label="Fermer">✕</button>' +
+    '</div>' + content2 + '</div>';
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  document.body.appendChild(modal);
+}
+
 // ── Courbe plein écran ──────────────────────────────────────────────────────
 let chartModal = null;
 function agrandirCourbe() {
   const modal = document.getElementById('courbeModal');
   if (!modal) return;
   modal.style.display = 'flex';
-  // Redessiner dans le canvas modal
   if (session.length === 0) return;
-  const {taux, elimAjuste, coeffAjuste} = tauxCumulatif(nowDecimal());
+  // Attendre que le DOM soit rendu avant de dessiner
+  requestAnimationFrame(function() { setTimeout(_dessinerCourbeModal, 50); });
+}
+function _dessinerCourbeModal() {
+  if (session.length === 0) return;
   const seuilBari = getSeuilBari();
+  const poids2 = getPoidsKg()||80;
+  const muscle2 = parseFloat(document.getElementById('muscle').value)||10;
+  const coeff2 = genre==='homme'?0.68:0.55;
+  const elim2  = genre==='homme'?0.12:0.10;
+  const {cf:cf2, ef:ef2} = getChirFactors();
+  const coeffAjuste = coeff2*(1+0.3*(muscle2/poids2))*cf2;
+  const elimAjuste  = elim2*ef2;
   let taux0 = 0;
   session.forEach(c => {
     const b = boissons[c.boissonIdx], deg = b.autre?(c.degreCustom||0):b.degre;
     const af = c.alimentaire==='jeun'?1.15:1.0;
     const alc = c.vol*c.nbVerres*(deg/100)*0.789*af;
-    taux0 += alc/(getPoidsKg()*coeffAjuste*1000)*1000;
+    taux0 += alc/(poids2*coeffAjuste*1000)*1000;
   });
   const delai = getDelaiAbsorption();
-  const poids = getPoidsKg()||80, muscle = parseFloat(document.getElementById('muscle').value)||10;
-  const coeff = genre==='homme'?0.68:0.55, {cf} = getChirFactors();
-  const cA = coeff*(1+0.3*(muscle/poids))*cf;
+  const cA = coeffAjuste;
   const heureMin = Math.min(...session.map(c=>c.heureDecimal));
   const heureNow = nowDecimal();
   const maxH = Math.max(Math.ceil(taux0/elimAjuste)+2, 5);
@@ -2169,7 +2493,7 @@ function agrandirCourbe() {
       const b=boissons[c.boissonIdx], deg=b.autre?(c.degreCustom||0):b.degre;
       const af=c.alimentaire==='jeun'?1.15:1.0;
       const alc=c.vol*c.nbVerres*(deg/100)*0.789*af;
-      const t02=alc/(poids*cA*1000)*1000;
+      const t02=alc/(poids2*cA*1000)*1000;
       const dur=tAbs-(c.heureDecimal+delai);
       if(dur>=0) tx+=Math.max(0,t02-elimAjuste*dur);
     });
@@ -2233,6 +2557,7 @@ function resetParams() {
     localStorage.removeItem(LS_PREFS);
     localStorage.removeItem(LS_JOURNAL);
     localStorage.removeItem(LS_USAGE);
+    localStorage.removeItem(LS_SESSION_TEMP);
     localStorage.removeItem('bari_fav_boisson');
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
@@ -2282,6 +2607,7 @@ function isInStandaloneMode() {
 
 // Au chargement : si iOS et pas encore installé, afficher le bouton
 window.addEventListener('load', () => {
+  chargerPrevisionnel();
   if (isIos() && !isInStandaloneMode()) {
     const btn = document.getElementById('btnInstall');
     if (btn) btn.style.display = 'block';
