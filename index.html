@@ -285,8 +285,8 @@
 <div class="container">
 
   <!-- PARAMÈTRES -->
-  <div class="card">
-    <div class="section-title">👤 Vos paramètres</div>
+  <div class="card" id="cardParams">
+    <div class="section-title" id="hdrParams" onclick="toggleCard('cardParams')" style="cursor:pointer;user-select:none;">👤 Mes paramètres <span id="arrParams" style="margin-left:auto;font-size:.8rem;">▼</span></div>
 
     <div class="form-row">
       <div style="display:flex;align-items:center;gap:6px;flex:1;">
@@ -326,6 +326,7 @@
       </div>
       <!-- Label de profil dynamique -->
       <div id="muscleProfileLabel" style="text-align:center;font-size:.75rem;font-weight:700;padding:4px 8px;border-radius:8px;background:var(--cream);color:var(--muted);transition:all .2s;"></div>
+    </div><!-- /form-row muscle -->
     <hr style="border:none;border-top:1px solid var(--border);margin:14px 0;">
     <div class="section-title" style="font-size:.62rem;margin-bottom:10px;">🏥 Chirurgie bariatrique</div>
     <div class="form-row" style="flex-direction:column;align-items:stretch;gap:8px;">
@@ -353,8 +354,8 @@
   </div>
 
   <!-- CONSOMMATIONS MULTI-SESSION -->
-  <div class="card">
-    <div class="section-title">🍹 Mes consommations</div>
+  <div class="card" id="cardConso">
+    <div class="section-title" id="hdrConso" onclick="toggleCard('cardConso')" style="cursor:pointer;user-select:none;">🍹 Mes consommations <span id="arrConso" style="margin-left:auto;font-size:.8rem;">▶</span></div>
 
     <!-- LÉGENDE COULEURS -->
     <div class="legende">
@@ -494,7 +495,7 @@
   </div>
   <!-- VOTRE CONSOMMATION -->
   <div class="card" id="consoCard" style="display:none;">
-    <div class="section-title">📋 Votre consommation</div>
+    <div class="section-title">📋 Mon journal de bord</div>
     <div id="debugVars" style="background:#1a0a0a;color:#a0c080;border-radius:8px;padding:10px;font-family:monospace;font-size:.72rem;line-height:1.8;"></div>
     <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
       <div style="margin-bottom:6px;">
@@ -520,8 +521,8 @@
 
 
     <!-- LÉGALITÉ PAR PAYS -->
-  <div class="card" style="margin-top:16px;">
-    <div class="section-title">🚗 Légalité conduite par pays</div>
+  <div class="card" id="cardPays" style="margin-top:16px;">
+    <div class="section-title" id="hdrPays" onclick="toggleCard('cardPays')" style="cursor:pointer;user-select:none;">🚗 Légalité conduite par pays <span id="arrPays" style="margin-left:auto;font-size:.8rem;">▶</span></div>
     <p style="font-size:.75rem;color:var(--muted);font-weight:600;margin-bottom:6px;">Les seuils légaux varient selon votre pays et votre profil de conducteur :</p>
     <div style="font-size:.72rem;padding:6px 10px;background:var(--warn-bari);border-radius:8px;color:var(--warn-bari-text);font-weight:600;margin-bottom:10px;line-height:1.5;">
       ⚕️ Après une chirurgie bariatrique, votre aptitude à conduire doit être évaluée par votre médecin — indépendamment du taux légal.
@@ -557,7 +558,7 @@
 
   </div>
   <!-- DISCLAIMER -->
-  <div class="disclaimer">
+  <div class="disclaimer" style="max-width:480px;margin:16px auto 0;">
     ⚠️ Ce calculateur est basé sur la formule de Widmark adaptée. Les résultats sont <strong>indicatifs</strong> et ne constituent pas un avis médical. La variabilité individuelle post-bariatrique est <strong>importante</strong> : un même verre peut donner un taux 2 à 3× différent selon les personnes. En cas de doute, suivez toujours les recommandations de votre équipe de santé.
   </div>
 </div>
@@ -612,7 +613,7 @@
       <label for="disclaimerCheck" style="font-size:.83rem;font-weight:700;color:var(--text);cursor:pointer;line-height:1.5;">Je reconnais avoir lu les informations ci-dessus et comprends que les résultats sont indicatifs.</label>
     </div>
     <button class="btn-disclaimer" id="btnDisclaimerContinue" onclick="closeDisclaimer()" style="opacity:.4;pointer-events:none;">J'ai lu et compris — continuer</button>
-    <p style="text-align:center;font-size:.78rem;color:#8a6565;font-weight:600;margin-top:10px;">📖 Consultez l'aide (bouton ❓) pour les risques spécifiques post-bariatrique.</p>
+    <p style="text-align:center;font-size:.78rem;color:#8a6565;font-weight:600;margin-top:10px;">Consultez l'aide (bouton ❓) pour les risques spécifiques post-bariatrique.</p>
   </div>
 </div>
 
@@ -627,17 +628,16 @@
     <!-- Onglet Guide -->
     <div class="guide-tab-content active" id="content-guide">
       <div class="guide-step">
-        <h4>Étape 1 — Vos paramètres</h4>
+        <h4>Étape 1 — Mes paramètres</h4>
         <ul>
           <li>Renseignez votre poids actuel (en kg ou lb)</li>
-          <li>🌙 Basculez entre <strong>mode sombre</strong> et <strong>mode clair</strong> avec le bouton en haut à gauche</li>
           <li>Sélectionnez votre genre (Homme / Femme)</li>
           <li>Entrez votre masse musculaire (en kg ou lb)</li>
           <li>Choisissez votre type de chirurgie et le temps depuis l'opération</li>
         </ul>
       </div>
       <div class="guide-step">
-        <h4>Étape 2 — Vos consommations</h4>
+        <h4>Étape 2 — Mes consommations</h4>
         <ul>
           <li>Appuyez sur <strong>+ Ajouter une boisson</strong> pour chaque consommation</li>
           <li>Indiquez l'heure à laquelle vous <strong>commencez</strong> à boire</li>
@@ -655,7 +655,7 @@
         </div>
       </div>
       <div class="guide-step">
-        <h4>Étape 3 — Lisez les résultats</h4>
+        <h4>Étape 3 — Mes résultats</h4>
         <ul>
           <li>Le taux s'affiche en g/L de sang</li>
           <li>Le tableau indique votre statut légal par pays</li>
@@ -663,7 +663,7 @@
         </ul>
       </div>
       <div class="guide-step">
-        <h4>Étape 4 — 📋 Votre consommation</h4>
+        <h4>Étape 4 — 📋 Mon journal de bord</h4>
         <p style="font-size:.83rem;color:var(--text);line-height:1.6;">Vous pouvez sauver vos résultats <strong>(optionnel)</strong> pour une analyse avec votre équipe de soins de votre consommation.</p>
         <ul>
           <li>Ajoutez une note personnelle pour contextualiser (repas, occasion…)</li>
@@ -757,7 +757,7 @@ Vos valeurs s'affichent ici lors du calcul :<br>
       <div style="padding:16px 0 8px;">
         <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
       </div>
-      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 3.1 — Build 90 — MàJ 30/05/2026</div>
+      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 3.1 — Build 104 — MàJ 30/05/2026</div>
     </div>
     <!-- Onglet Risques -->
     <div class="guide-tab-content" id="content-risques">
@@ -1070,7 +1070,50 @@ function annulerAjout() {
   if (panelOpen) toggleDrinkPanel();
   sessionEditId = null; boissonIdx = null;
 }
+// ── Accordion JS ────────────────────────────────────────────────────────────
+var _cardOpen = {cardParams:true, cardConso:false, cardPays:false};
+
+function toggleCard(cardId) {
+  if (cardId==='cardConso' && !_cardOpen[cardId] && !paramsComplete()) {
+    var t=document.getElementById('incompletToast');
+    if(t){t.style.display='block';setTimeout(function(){t.style.display='none';},3000);}
+    return;
+  }
+  _cardOpen[cardId] = !_cardOpen[cardId];
+  _applyCard(cardId);
+  if (cardId==='cardParams' && !_cardOpen[cardId]) {
+    var cc=document.getElementById('cardConso');
+    if(cc){cc.style.opacity='1';cc.style.pointerEvents='auto';}
+  }
+}
+
+function _applyCard(cardId) {
+  var card=document.getElementById(cardId);
+  if(!card) return;
+  var open=_cardOpen[cardId];
+  var hdrIds={cardParams:'hdrParams',cardConso:'hdrConso',cardPays:'hdrPays'};
+  var arrIds={cardParams:'arrParams',cardConso:'arrConso',cardPays:'arrPays'};
+  var hdrId=hdrIds[cardId], arr=document.getElementById(arrIds[cardId]);
+  if(arr) arr.textContent=open?'▼':'▶';
+  var ch=card.children;
+  for(var i=0;i<ch.length;i++){
+    if(ch[i].id!==hdrId){
+      ch[i].style.display=open?'':'none';
+    }
+  }
+  card.style.paddingBottom=open?'':' 0';
+}
+
+function initAccordion() {
+  _applyCard('cardParams');
+  _applyCard('cardConso');
+  _applyCard('cardPays');
+  var cc=document.getElementById('cardConso');
+  if(cc){cc.style.opacity='0.5';cc.style.pointerEvents='none';}
+}
+
 // ── Variables autothrottle ─────────────────────────────────────────────────
+
 let _throttlePendingConso = null;
 
 function autoThrottle(vol) {
@@ -1670,6 +1713,23 @@ function onParamChange() {
     btn.style.opacity = paramsComplete() ? '1' : '0.4';
     btn.style.pointerEvents = paramsComplete() ? 'auto' : 'none';
   }
+  if (paramsComplete()) {
+    var cc=document.getElementById('cardConso');
+    if(cc){cc.style.opacity='1';cc.style.pointerEvents='auto';}
+    if(!localStorage.getItem('bari_params_done_b104')){
+      localStorage.setItem('bari_params_done_b104','1');
+      var t2=document.getElementById('incompletToast');
+      if(t2){
+        t2.style.background='#28a745';t2.style.color='#fff';
+        t2.textContent='✅ Paramètres complets ! Vous pouvez utiliser l\'application.';
+        t2.style.display='block';
+        setTimeout(function(){
+          t2.style.display='none';t2.style.background='';t2.style.color='';
+          t2.textContent='Complétez vos paramètres avant d\'ajouter une boisson.';
+        },3500);
+      }
+    }
+  }
   if (session.length > 0) calcul();
 }
 
@@ -1734,7 +1794,12 @@ function calcul() {
     }
     html += '⏱ Retour à 0.00 g/L dans : '+hz+'h '+String(mz).padStart(2,'0')+'min';
     timeEl.innerHTML = html;
-  } else { timeEl.innerHTML = '✅ Taux nul à ce stade'; }
+  } else {
+    const nowN = new Date();
+    const hNul = String(nowN.getHours()).padStart(2,'0');
+    const mNul = String(nowN.getMinutes()).padStart(2,'0');
+    timeEl.innerHTML = '✅ Taux nul à ' + hNul + 'h' + mNul;
+  }
 
   // Couleur boîte
   const box = document.getElementById('resultBox');
@@ -1882,7 +1947,7 @@ function updateChart(taux0global, elimAjuste, tempsRetour, seuilBari) {
         tooltip:{callbacks:{label:c=>c.dataset.label+': '+Number(c.raw).toFixed(3)+' g/L'}} },
       scales:{
         x:{ticks:{font:{family:'Nunito',size:9},color:'#8a6565',maxRotation:45},grid:{color:'rgba(139,26,26,0.08)'}},
-        y:{min:0, suggestedMax: taux0global > 0.5 ? undefined : Math.ceil(Math.max(taux0global, seuilBari) / 0.05 + 1) * 0.05,
+        y:{min:0, suggestedMax: taux0global > 0.5 ? undefined : (Math.ceil(Math.max(taux0global, seuilBari) / 0.05) + 1) * 0.05,
            ticks:{font:{family:'Nunito',size:10},color:'#8a6565',callback:v=>v.toFixed(2)+' g/L'},grid:{color:'rgba(139,26,26,0.08)'}}
       }
     }
@@ -2046,13 +2111,13 @@ function onDisclaimerCheck() {
 function closeDisclaimer() {
   const checked = document.getElementById('disclaimerCheck').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b90', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b104', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b90') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b104') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
@@ -2564,8 +2629,13 @@ function resetParams() {
       if (k && k.startsWith('bari_disclaimer')) { localStorage.removeItem(k); i--; }
     }
   } catch(e) {}
-  // Vider la sélection pays visuellement avant rechargement
+  // Vider les champs visuellement avant rechargement
   currentPaysFilter = null;
+  try {
+    document.getElementById('poids').value = '';
+    document.getElementById('muscle').value = 10;
+  } catch(e) {}
+  session = [];
   document.querySelectorAll('.pays-btn').forEach(b => b.classList.remove('active'));
   window.location.reload();
 }
@@ -2607,6 +2677,7 @@ function isInStandaloneMode() {
 
 // Au chargement : si iOS et pas encore installé, afficher le bouton
 window.addEventListener('load', () => {
+  initAccordion();
   chargerPrevisionnel();
   if (isIos() && !isInStandaloneMode()) {
     const btn = document.getElementById('btnInstall');
