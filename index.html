@@ -250,21 +250,26 @@
   .btn-risques-ok:hover { background:#6e1414; }
   .btn-risques-aide { width:100%; padding:10px; background:rgba(139,26,26,0.08); color:var(--wine); border:1.5px solid var(--wine); border-radius:12px; font-family:'Nunito',sans-serif; font-size:.85rem; font-weight:700; cursor:pointer; transition:all .2s; }
   .btn-risques-aide:hover { background:rgba(139,26,26,0.15); }
-  .guide-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(26,10,10,0.75); z-index:100; align-items:flex-end; justify-content:center; }
+  .guide-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(26,10,10,0.75); z-index:100; align-items:center; justify-content:center; padding:16px; box-sizing:border-box; }
   .guide-overlay.open { display:flex; }
-  .guide-panel { background:var(--card-bg); border-radius:20px 20px 0 0; padding:0 0 40px; max-width:480px; width:100%; max-height:85vh; overflow-y:auto; animation:slideUp .3s ease; position:relative; }
-  .guide-tabs { display:flex; border-bottom:2px solid var(--border); position:sticky; top:0; background:#fff; z-index:1; border-radius:20px 20px 0 0; overflow:hidden; }
+  .guide-panel { background:var(--card-bg); border-radius:20px; padding:0 0 20px; max-width:480px; width:100%; max-height:90vh; overflow-y:auto; overflow-x:hidden; animation:slideUp .3s ease; position:relative; -webkit-overflow-scrolling:touch; }
+  .guide-tabs { display:flex; border-bottom:2px solid var(--border); position:sticky; top:0; background:var(--card-bg); z-index:2; border-radius:20px 20px 0 0; overflow:hidden; flex-shrink:0; }
   .guide-tab { flex:1; padding:14px 8px; font-family:'Nunito',sans-serif; font-size:.72rem; font-weight:800; border:none; background:var(--cream); color:var(--muted); cursor:pointer; text-align:center; transition:all .2s; line-height:1.3; }
   .guide-tab.active { background:#fff; color:var(--wine); border-bottom:2px solid var(--wine); margin-bottom:-2px; }
   .guide-tab-content { display:none; padding:18px 20px; }
   .guide-tab-content.active { display:block; }
-  .guide-close2 { position:absolute; top:10px; right:14px; background:none; border:none; font-size:1.4rem; color:var(--muted); cursor:pointer; z-index:2; }
+  .guide-close2 { display:none; }
   @keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
   .guide-close { position:absolute; top:14px; right:16px; background:none; border:none; font-size:1.4rem; color:var(--muted); cursor:pointer; }
   .guide-title { font-family:'Work Sans', sans-serif; font-size:1.3rem; color:var(--wine); margin-bottom:18px; }
   .guide-step { margin-bottom:16px; padding:14px; background:var(--input-bg); border-radius:12px; }
+  .guide-section { padding:0 16px; }
+  .guide-tab-content { padding-bottom:8px; }
   .guide-step h4 { font-size:.8rem; font-weight:800; color:var(--wine); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
   .guide-step p, .guide-step li { font-size:.83rem; color:var(--text); line-height:1.5; margin-bottom:3px; }
+  .guide-step ul, .guide-section ul { padding-left:20px; }
+  .guide-step ul li, .guide-section ul li { margin-bottom:4px; }
+  .guide-tab-content { padding:0 4px; }
   .guide-formula { background:var(--dark-card); color:var(--gold); border-radius:10px; padding:12px; font-family:monospace; font-size:.75rem; line-height:1.7; margin:8px 0; }
 </style>
 </head>
@@ -291,22 +296,40 @@
     <div class="form-row">
       <div style="display:flex;align-items:center;gap:6px;flex:1;">
         <label class="form-label" style="margin:0;">Poids <span id="poidsUnit" style="color:var(--muted);font-size:.78rem;">kg</span></label>
-        <button id="btnUnitToggle" onclick="toggleUnit()" title="Basculer kg / lb" style="background:none;border:none;cursor:pointer;font-size:1rem;padding:0 2px;line-height:1;opacity:.7;" aria-label="Convertir kg/lb">🔄</button>
+        <button id="btnUnitToggle" onclick="toggleUnit()" title="Basculer kg/cm ↔ lb/pi" style="background:none;border:none;cursor:pointer;font-size:.85rem;padding:0 4px;line-height:1;opacity:.7;" aria-label="Convertir kg+cm / lb+pi">🔄</button>
       </div>
       <input type="number" id="poids" class="form-input" placeholder="—" min="1" max="600" step="0.5" oninput="onParamChange(); savePrefs();">
     </div>
     <div class="form-row">
+      <div style="display:flex;align-items:center;gap:6px;flex:1;">
+        <label class="form-label" style="margin:0;">Taille <span id="tailleUnit" style="color:var(--muted);font-size:.78rem;">cm</span></label>
+
+      </div>
+      <div id="tailleInputCm" style="display:flex;align-items:center;gap:4px;">
+        <input type="number" id="taille" class="form-input" placeholder="—" min="100" max="250" step="1"
+               oninput="onTailleChange(); savePrefs();" style="width:90px;">
+      </div>
+      <div id="tailleInputFt" style="display:none;align-items:center;gap:4px;">
+        <input type="number" id="taillePi" class="form-input" placeholder="5" min="3" max="7" step="1"
+               oninput="onTailleChangeFt(); savePrefs();" style="width:55px;">
+        <span style="font-size:.78rem;color:var(--muted);font-weight:700;">pi</span>
+        <input type="number" id="taillePo" class="form-input" placeholder="8" min="0" max="11" step="1"
+               oninput="onTailleChangeFt(); savePrefs();" style="width:55px;">
+        <span style="font-size:.78rem;color:var(--muted);font-weight:700;">po</span>
+      </div>
+    </div>
+    <div class="form-row">
       <label class="form-label">Genre</label>
       <div class="toggle-group">
-        <button class="toggle-btn" id="btn-homme" onclick="setGenre('homme')">♂ Homme</button>
         <button class="toggle-btn" id="btn-femme" onclick="setGenre('femme')">♀ Femme</button>
+        <button class="toggle-btn" id="btn-homme" onclick="setGenre('homme')">♂ Homme</button>
       </div>
     </div>
 
     <div class="form-row" style="flex-direction:column;align-items:stretch;gap:6px;">
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <label class="form-label">Masse musculaire (<span id="muscleUnit">kg</span>) <span id="muscleInfoBtn" onclick="document.getElementById('muscleInfoBox').classList.toggle('hidden')" style="cursor:pointer;font-size:.85rem;" title="En savoir plus">ℹ️</span></label>
-        <span style="font-size:1rem;font-weight:900;color:var(--wine);" id="muscleVal">25</span>
+        <span style="font-size:1rem;font-weight:900;color:var(--wine);" id="muscleVal">—</span>
       </div>
       <div id="muscleInfoBox" style="font-size:.75rem;color:var(--muted);font-weight:600;line-height:1.5;padding:7px 10px;background:var(--cream);border-radius:8px;border-left:3px solid var(--gold);margin-bottom:4px;">
         En l'absence de mesure, utilisez la valeur entre <strong>« Faible à Moyenne en post-op »</strong>.<br>
@@ -314,8 +337,10 @@
         Cf l'aide pour une estimation à 6 mois et 12 mois.
       </div>
       <!-- Slider masse musculaire -->
-      <input type="range" id="muscle" min="10" max="55" value="10" step="0.5"
-             oninput="muscleSavedByUser=true; updateMuscle(); updateProgress(); savePrefs(); calcul();" style="margin:2px 0;">
+      <input type="range" id="muscle" min="10" max="55" value="10" step="0.5" disabled
+             oninput="muscleSavedByUser=true; updateMuscle(); updateProgress(); savePrefs(); calcul();"
+             style="margin:2px 0;opacity:.4;cursor:not-allowed;" id="muscleSlider"
+             title="Sélectionnez d'abord votre genre">
       <!-- Barre de zones colorées -->
       <div id="muscleZoneBar" style="position:relative;height:18px;border-radius:6px;overflow:hidden;display:flex;font-size:.6rem;font-weight:800;">
         <div style="background:#ffcdd2;flex:1;display:flex;align-items:center;justify-content:center;color:#b71c1c;">Min</div>
@@ -434,6 +459,7 @@
       <!-- Boutons -->
       <div style="display:flex;gap:8px;">
         <button onclick="annulerAjout()" style="flex:1;padding:10px;background:none;border:1.5px solid var(--border);border-radius:10px;color:var(--muted);font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;">Annuler</button>
+          <button onclick="appliquerVolMax()" id="btnVolMax" title="Réduire au volume maximum admissible" style="padding:10px 14px;background:none;border:1.5px solid var(--border);border-radius:10px;font-size:.9rem;cursor:pointer;display:none;"><span id="wandEmoji">🙅‍♀️</span></button>
         <button onclick="validerAjout()" id="btnValiderAjout" style="flex:2;padding:10px;background:var(--wine);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;cursor:pointer;opacity:.4;pointer-events:none;">✓ Ajouter</button>
       </div>
     </div>
@@ -622,8 +648,10 @@
   <div class="guide-panel">
     <button class="guide-close2" onclick="toggleGuide()" aria-label="Fermer le guide">✕</button>
     <div class="guide-tabs">
-      <button class="guide-tab active" id="tab-guide" onclick="switchGuideTab('guide')">📖 Guide d'utilisation</button>
+      <button class="guide-tab active" id="tab-guide" onclick="switchGuideTab('guide')">📖 Guide</button>
       <button class="guide-tab" id="tab-risques" onclick="switchGuideTab('risques')">🚨 Risques</button>
+      <button class="guide-tab" id="tab-config" onclick="switchGuideTab('config')">⚙️ Config.</button>
+      <button class="guide-tab" id="tab-apropos" onclick="switchGuideTab('apropos')">ℹ️ À propos</button>
     </div>
     <!-- Onglet Guide -->
     <div class="guide-tab-content active" id="content-guide">
@@ -671,6 +699,13 @@
           <li>Envoyez le journal à votre équipe par mail ou téléchargez-le en CSV</li>
         </ul>
       </div>
+      <div style="padding:10px 20px 4px;">
+        <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
+      </div>
+    </div><!-- /content-guide -->
+
+    <div class="guide-tab-content" id="content-config">
+      <div class="guide-section">
       <div class="guide-step">
         <h4>⚙️ Configuration et Installation</h4>
         <ul>
@@ -688,51 +723,18 @@
           <p style="font-size:.7rem;color:var(--muted);text-align:center;margin-top:5px;">Efface poids, genre, chirurgie, journal et consommations en cours. L’application reste installée sur votre téléphone.</p>
         </div>
       </div>
+      </div>
       <div class="guide-step" style="background:#f0f7f0;border-left:3px solid #28a745;">
         <h4 style="color:#155724;">🔒 Confidentialité</h4>
         <p style="font-size:.83rem;color:#155724;line-height:1.6;">Vos données restent sur votre appareil. Aucune information (poids, genre, historique) n'est envoyée à un serveur. Nous ne collectons rien.</p>
       </div>
-      <div class="guide-step">
-        <h4>🧮 Formule de Widmark</h4>
-        <div class="guide-formula">
-<span style="opacity:.6;">── Résultat ──────────────────────────</span><br>
-Taux (g/L) = [Alcool pur (g) / (Poids × Coeff. ajusté × 1000)] × 1000<br>
-             − [Élimination × Temps écoulé (h)]<br>
-Taux affiché = max(0, Taux)<br><br>
-<span style="opacity:.6;">── Alcool pur ────────────────────────</span><br>
-Alcool pur (g) = Volume (mL) × Nb verres × (Degré / 100) × 0.789 × Facteur alim.<br>
-Facteur alimentaire : À jeun = ×1.15 / Avec repas = ×1.00<br><br>
-<span style="opacity:.6;">── Coeff. Widmark ajusté ─────────────</span><br>
-Coeff. ajusté = Coeff. Widmark × (1 + 0.3 × Masse musc. / Poids)<br>
-Coeff. Widmark : Homme = 0.68 / Femme = 0.55<br><br>
-<span style="opacity:.6;">── Élimination ───────────────────────</span><br>
-Élim. : Homme = 0.12 g/L/h / Femme = 0.10 g/L/h<br><br>
-<span style="opacity:.6;">── Facteurs par chirurgie ────────────</span><br>
-<table role="table" aria-label="Facteurs par chirurgie" style="font-size:.7rem;border-collapse:collapse;width:100%;margin:6px 0;">
-  <tr style="opacity:.7;"><th style="text-align:left;padding:2px 6px 2px 0;">Chirurgie</th><th style="padding:2px 4px;">coeff×</th><th style="padding:2px 4px;">élim×</th><th style="padding:2px 4px;">Seuil</th></tr>
-  <tr><td style="padding:2px 6px 2px 0;">Anneau gastrique</td><td style="padding:2px 4px;text-align:center;">0.90</td><td style="padding:2px 4px;text-align:center;">1.00</td><td style="padding:2px 4px;text-align:center;">0.30 g/L</td></tr>
-  <tr><td style="padding:2px 6px 2px 0;">Sleeve gastrectomie</td><td style="padding:2px 4px;text-align:center;">1.00</td><td style="padding:2px 4px;text-align:center;">1.00</td><td style="padding:2px 4px;text-align:center;">0.20 g/L</td></tr>
-  <tr><td style="padding:2px 6px 2px 0;">Conversion sleeve/bypass</td><td style="padding:2px 4px;text-align:center;">1.00</td><td style="padding:2px 4px;text-align:center;">0.95</td><td style="padding:2px 4px;text-align:center;">0.08 g/L</td></tr>
-  <tr><td style="padding:2px 6px 2px 0;">Bypass en Y de Roux</td><td style="padding:2px 4px;text-align:center;">1.00</td><td style="padding:2px 4px;text-align:center;">1.00</td><td style="padding:2px 4px;text-align:center;">0.10 g/L</td></tr>
-  <tr><td style="padding:2px 6px 2px 0;">Dérivation biliopancréatique</td><td style="padding:2px 4px;text-align:center;">0.80</td><td style="padding:2px 4px;text-align:center;">0.90</td><td style="padding:2px 4px;text-align:center;">0.05 g/L</td></tr>
-</table>
-Si &lt; 6 mois post-op : seuil × 0.5<br><br>
-<span style="opacity:.6;">── Délai d'absorption appliqué ──────</span><br>
-L'heure saisie = début de consommation. Le pic est décalé :<br>
-<table style="font-size:.7rem;border-collapse:collapse;width:100%;margin:6px 0;">
-  <tr style="opacity:.7;"><th style="text-align:left;padding:2px 6px 2px 0;">Chirurgie</th><th style="padding:2px 4px;">Délai pic</th><th style="padding:2px 4px;">Détail</th></tr>
-  <tr><td style="padding:2px 6px 2px 0;">DBP</td><td style="padding:2px 4px;text-align:center;">+15 min</td><td style="padding:2px 4px;font-size:.65rem;">Absorption ultra-rapide</td></tr>
-  <tr><td style="padding:2px 6px 2px 0;">Bypass / Conversion</td><td style="padding:2px 4px;text-align:center;">+25 min</td><td style="padding:2px 4px;font-size:.65rem;">~10 min boisson + 15 min absorption</td></tr>
-  <tr><td style="padding:2px 6px 2px 0;">Sleeve</td><td style="padding:2px 4px;text-align:center;">+40 min</td><td style="padding:2px 4px;font-size:.65rem;">~10 min boisson + 30 min absorption</td></tr>
-  <tr><td style="padding:2px 6px 2px 0;">Anneau</td><td style="padding:2px 4px;text-align:center;">+50 min</td><td style="padding:2px 4px;font-size:.65rem;">~10 min boisson + 40 min absorption</td></tr>
-</table>
-<span style="opacity:.6;">── Variables utilisées ───────────────</span><br>
-Vos valeurs s'affichent ici lors du calcul :<br>
-→ Poids · Genre · Masse musc. · Degré · Vol. · Nb verres<br>
-→ Temps écoulé · Contexte alim. · Chirurgie · Temps post-op
-        </div>
-        <p style="font-size:.75rem;color:var(--muted);margin-top:8px;">Les valeurs réelles s'affichent dans le panneau <strong>Votre consommation</strong> après chaque calcul.</p>
+      <div style="padding:10px 20px 4px;">
+        <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
       </div>
+    </div><!-- /content-config -->
+
+    <div class="guide-tab-content" id="content-apropos">
+      <div class="guide-section">
       <div class="guide-step">
         <h4>📋 Versions</h4>
         <ul style="font-size:.78rem;line-height:1.8;color:var(--text);">
@@ -740,6 +742,7 @@ Vos valeurs s'affichent ici lors du calcul :<br>
           <li><strong>V2</strong> — Application mobile (PWA) · 24/05/2026</li>
           <li><strong>V3</strong> — Multi-boissons &amp; délai d'absorption · 29/05/2026</li>
         </ul>
+      </div>
       </div>
       <div class="guide-step" style="background:var(--cream);">
         <h4>📤 Partagez</h4>
@@ -757,9 +760,9 @@ Vos valeurs s'affichent ici lors du calcul :<br>
       <div style="padding:16px 0 8px;">
         <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
       </div>
-      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 3.1 — Build 106 — MàJ 30/05/2026</div>
-    </div>
-    <!-- Onglet Risques -->
+      <div style="text-align:center;padding:4px 0 10px;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;">Version 3.1 — Build 128 — MàJ 31/05/2026</div>
+    </div><!-- /content-apropos -->
+
     <div class="guide-tab-content" id="content-risques">
       <div class="guide-step" style="background:var(--danger-bari); border-left:4px solid #c0392b;">
         <h4 style="color:var(--danger-bari-text);">🚨 Risques spécifiques post-bariatrique à connaître</h4>
@@ -1085,6 +1088,8 @@ function toggleCard(cardId) {
     var cc=document.getElementById('cardConso');
     if(cc){cc.style.opacity='1';cc.style.pointerEvents='auto';}
   }
+  // Mémoriser l’état de l'accordion
+  try { localStorage.setItem('bari_accordion', JSON.stringify(_cardOpen)); } catch(e) {}
 }
 
 function _applyCard(cardId) {
@@ -1105,11 +1110,22 @@ function _applyCard(cardId) {
 }
 
 function initAccordion() {
+  // Restaurer l’état mémorisé
+  try {
+    var saved = localStorage.getItem('bari_accordion');
+    if (saved) {
+      var parsed = JSON.parse(saved);
+      _cardOpen.cardParams = parsed.cardParams !== undefined ? parsed.cardParams : true;
+      _cardOpen.cardPays   = parsed.cardPays   !== undefined ? parsed.cardPays   : false;
+      // cardConso ne se restaure que si params complets
+      if (parsed.cardConso && paramsComplete()) _cardOpen.cardConso = true;
+    }
+  } catch(e) {}
   _applyCard('cardParams');
   _applyCard('cardConso');
   _applyCard('cardPays');
   var cc=document.getElementById('cardConso');
-  if(cc){cc.style.opacity='0.5';cc.style.pointerEvents='none';}
+  if(cc && !paramsComplete()){cc.style.opacity='0.5';cc.style.pointerEvents='none';}
 }
 
 // ── Variables autothrottle ─────────────────────────────────────────────────
@@ -1201,6 +1217,14 @@ function finaliserAjout() {
   sauverBrouillon(); renderSession(); mettreAJourBandeau(); calcul(); updateProgress();
 }
 
+function appliquerVolMax() {
+  var volMax = autoThrottle(parseFloat(document.getElementById('volume').value) || 0);
+  if (volMax > 0) {
+    document.getElementById('volume').value = Math.floor(volMax/5)*5 || 5;
+    updateVol(); previewTaux();
+  }
+}
+
 function previewTaux() {
   const prev = document.getElementById('tauxPreview');
   if (!prev || boissonIdx === null || !paramsComplete()) { if(prev) prev.style.display='none'; return; }
@@ -1222,10 +1246,23 @@ function previewTaux() {
     prev.textContent = '🚨 Taux légal dépassé à la consommation (' + t0.toFixed(2) + ' g/L)';
   } else if (t0 >= seuil) {
     prev.style.background='var(--danger-bari)'; prev.style.color='var(--danger-bari-text)';
-    prev.textContent = '⚠️ Seuil bariatrique dépassé (' + t0.toFixed(2) + ' g/L > ' + seuil + ' g/L)';
+    var volMaxAT = autoThrottle(vol);
+    if (volMaxAT > 0) {
+      var volMaxArrondi = Math.floor(volMaxAT/5)*5 || 5;
+      prev.textContent = '⚠️ Seuil dépassé (' + t0.toFixed(2) + ' g/L) — max ~' + volMaxArrondi + ' mL. Cliquez 🙅 pour ajuster.';
+      var btnVM = document.getElementById('btnVolMax');
+      if (btnVM) {
+        btnVM.style.display = 'block';
+        var we = document.getElementById('wandEmoji');
+        if (we) we.textContent = genre==='homme' ? '🙅‍♂️' : '🙅‍♀️';
+      }
+    } else {
+      prev.textContent = '⚠️ Seuil bariatrique dépassé (' + t0.toFixed(2) + ' g/L > ' + seuil + ' g/L)';
+    }
   } else {
     prev.style.background='var(--safe-green)'; prev.style.color='var(--safe-text)';
     prev.textContent = '✅ Sous le seuil bariatrique (' + t0.toFixed(2) + ' g/L ≤ ' + seuil + ' g/L)';
+    var btnVM2 = document.getElementById('btnVolMax'); if (btnVM2) btnVM2.style.display='none';
   }
 }
 
@@ -1356,6 +1393,10 @@ function savePrefs() {
   try {
     const prefs = {
       poids: document.getElementById('poids').value,
+    taille: document.getElementById('taille').value,
+    taillePi: (document.getElementById('taillePi') || {}).value || '',
+    taillePo: (document.getElementById('taillePo') || {}).value || '',
+    tailleMode: tailleMode,
       unitMode: unitMode,
       genre: genre,
       chir: chir,
@@ -1385,6 +1426,16 @@ function loadPrefs() {
         const mib = document.getElementById('muscleInfoBox');
         if (mib) mib.classList.add('hidden');
       }
+    }
+    if (p.taille) {
+      document.getElementById('taille').value = p.taille;
+      tailleCm = parseFloat(p.taille) || null;
+    }
+    if (p.tailleMode === 'ft') {
+      toggleTailleUnit();
+      if (p.taillePi) document.getElementById('taillePi').value = p.taillePi;
+      if (p.taillePo) document.getElementById('taillePo').value = p.taillePo;
+      tailleCm = getTailleCm();
     }
     if (p.genre)  setGenre(p.genre, true);
     if (p.chir)   setChir(p.chir, true);
@@ -1530,6 +1581,8 @@ function updateVol() {
 function changeVerres(d) { nbVerres = 1; } // v3.0 : 1 verre par consommation
 
 function setGenre(g, silent) {
+  var sl = document.getElementById('muscle');
+  if (sl) { sl.disabled = false; sl.style.opacity = ''; sl.style.cursor = ''; }
   genre = g;
   document.getElementById('btn-homme').classList.toggle('active', g==='homme');
   document.getElementById('btn-femme').classList.toggle('active', g==='femme');
@@ -1603,6 +1656,97 @@ function toggleUnit() {
   updateMuscle();
   onParamChange();
   savePrefs();
+  // Synchroniser taille avec l'unité
+  if (tailleMode === 'ft' && unitMode === 'kg') toggleTailleUnit();
+  if (tailleMode === 'cm' && unitMode === 'lb') toggleTailleUnit();
+}
+
+// ── Taille ──────────────────────────────────────────────────────────────────
+var tailleCm = null;
+var tailleMode = 'cm'; // 'cm' ou 'ft'
+
+function getTailleCm() {
+  if (tailleMode === 'ft') {
+    var pi = parseFloat(document.getElementById('taillePi').value) || 0;
+    var po = parseFloat(document.getElementById('taillePo').value) || 0;
+    if (!pi) return null;
+    return pi * 30.48 + po * 2.54;
+  }
+  var v = parseFloat(document.getElementById('taille').value);
+  return (!v || v < 100) ? null : v;
+}
+
+function toggleTailleUnit() {
+  var lbl = document.getElementById('tailleUnit');
+  var divCm = document.getElementById('tailleInputCm');
+  var divFt = document.getElementById('tailleInputFt');
+  var cmVal = parseFloat(document.getElementById('taille').value) || 0;
+  if (tailleMode === 'cm') {
+    tailleMode = 'ft';
+    lbl.textContent = 'Pieds/pouces';
+    if (cmVal) {
+      var totalInch = cmVal / 2.54;
+      document.getElementById('taillePi').value = Math.floor(totalInch / 12);
+      document.getElementById('taillePo').value = Math.round(totalInch % 12);
+    }
+    divCm.style.display = 'none';
+    divFt.style.display = 'flex';
+  } else {
+    tailleMode = 'cm';
+    lbl.textContent = 'cm';
+    var pi = parseFloat(document.getElementById('taillePi').value) || 0;
+    var po = parseFloat(document.getElementById('taillePo').value) || 0;
+    if (pi) document.getElementById('taille').value = Math.round(pi * 30.48 + po * 2.54);
+    divCm.style.display = 'flex';
+    divFt.style.display = 'none';
+  }
+}
+
+function onTailleChangeFt() {
+  var pi = parseFloat(document.getElementById('taillePi').value) || 0;
+  var po = parseFloat(document.getElementById('taillePo').value) || 0;
+  if (!pi) return;
+  tailleCm = pi * 30.48 + po * 2.54;
+  document.getElementById('taille').value = Math.round(tailleCm);
+  if (!muscleSavedByUser) {
+    var poids = getPoidsKg();
+    if (poids) {
+      var maigre = genre === 'homme' ? 0.407*poids + 0.267*tailleCm - 19.2 : 0.252*poids + 0.473*tailleCm - 48.3;
+      var plafond2 = genre === 'homme' ? 28 : 22;
+      var plancher2 = genre === 'homme' ? 12 : 8;
+      document.getElementById('muscle').value = Math.min(plafond2, Math.max(plancher2, Math.round(maigre*0.42)));
+      updateMuscle(); updateProgress();
+    }
+  }
+  onParamChange();
+}
+
+function onTailleChange() {
+  var cm = getTailleCm();
+  if (!cm) return;
+  tailleCm = cm;
+  // Estimer masse musculaire si pas encore modifiée par l’utilisateur
+  if (!muscleSavedByUser) {
+    var poids = getPoidsKg();
+    if (poids) {
+      // Formule masse maigre de Boer
+      var maigre;
+      if (genre === 'homme') {
+        maigre = 0.407 * poids + 0.267 * cm - 19.2;
+      } else {
+        maigre = 0.252 * poids + 0.473 * cm - 48.3;
+      }
+      // Post-bariatrique : plafonner dans zone Faible→Moyenne (indépendant de la taille)
+      var plafond = genre === 'homme' ? 28 : 22; // kg — zone Faible→Moyenne post-op
+      var plancher = genre === 'homme' ? 12 : 8;
+      var musclEst = Math.min(plafond, Math.max(plancher, Math.round(maigre * 0.42)));
+      document.getElementById('muscle').value = musclEst;
+      muscleSavedByUser = true;
+      updateMuscle();
+      updateProgress();
+    }
+  }
+  onParamChange();
 }
 
 function getPoidsKg() {
@@ -1716,8 +1860,8 @@ function onParamChange() {
   if (paramsComplete()) {
     var cc=document.getElementById('cardConso');
     if(cc){cc.style.opacity='1';cc.style.pointerEvents='auto';}
-    if(!localStorage.getItem('bari_params_done_b106')){
-      localStorage.setItem('bari_params_done_b106','1');
+    if(!localStorage.getItem('bari_params_done_b128')){
+      localStorage.setItem('bari_params_done_b128','1');
       var t2=document.getElementById('incompletToast');
       if(t2){
         t2.style.background='#28a745';t2.style.color='#fff';
@@ -1960,7 +2104,7 @@ function toggleGuide(tab) {
 }
 function switchGuideTab(tab) {
   if (tab === 'risques') updateRisquesChir();
-  ['guide','risques'].forEach(t => {
+  ['guide','risques','config','apropos'].forEach(t => {
     document.getElementById('tab-'+t).classList.toggle('active', t===tab);
     document.getElementById('content-'+t).classList.toggle('active', t===tab);
   });
@@ -1987,7 +2131,8 @@ const muscleProfiles = {
 
 function updateMuscle() {
   const val = parseFloat(document.getElementById('muscle').value);
-  document.getElementById('muscleVal').textContent = val % 1 === 0 ? val : val.toFixed(1);
+  var mvEl = document.getElementById('muscleVal');
+  if (mvEl) mvEl.textContent = (!muscleSavedByUser && !tailleCm) ? '—' : (val % 1 === 0 ? val : val.toFixed(1));
   // Toujours comparer en kg pour les zones, quelle que soit l'unité affichée
   const valKg = unitMode === 'lb' ? val / 2.20462 : val;
   const profiles = muscleProfiles[genre] || muscleProfiles['femme'];
@@ -2111,13 +2256,13 @@ function onDisclaimerCheck() {
 function closeDisclaimer() {
   const checked = document.getElementById('disclaimerCheck').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b106', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b128', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b106') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b128') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
@@ -2633,6 +2778,9 @@ function resetParams() {
   currentPaysFilter = null;
   try {
     document.getElementById('poids').value = '';
+    document.getElementById('taille').value = '';
+    var pi = document.getElementById('taillePi'); if(pi) pi.value = '';
+    var po = document.getElementById('taillePo'); if(po) po.value = '';
     document.getElementById('muscle').value = 10;
   } catch(e) {}
   session = [];
