@@ -1,6 +1,6 @@
 // Alcool Barialimites — Service Worker
 // Version cache : à incrémenter à chaque mise à jour du HTML
-const CACHE_NAME = 'barialimites-b48';
+const CACHE_NAME = 'barialimites-v2'; // RC1 Build 445 · 23/06/2026
 
 const ASSETS = [
   './index.html',
