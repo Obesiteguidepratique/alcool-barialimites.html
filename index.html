@@ -998,7 +998,7 @@
           <li><strong>β2</strong> — Application mobile (PWA) · 24/05/2026</li>
           <li><strong>α1</strong> — Maquette fonctionnelle initiale · 22/04/2026</li>
         </ul>
-        <div style="text-align:center;padding:8px 0 0;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:10px;">RC1 Build 448 — MàJ 23/06/2026</div>
+        <div style="text-align:center;padding:8px 0 0;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:10px;">RC1 Build 449 — MàJ 23/06/2026</div>
 
         <!-- Diagnostic alarmes (build 448) -->
         <div style="margin-top:14px;padding:12px;background:var(--cream);border-radius:12px;border:1.5px solid var(--border);">
@@ -1139,7 +1139,7 @@ const pays = {
 function afficherModaleConduite() {
   if (localStorage.getItem('bari_conduite_asked')) return;
   if (!paramsComplete()) return; // params pas encore remplis
-  if (!localStorage.getItem('bari_disclaimer_b448')) return; // disclaimer pas encore accepté
+  if (!localStorage.getItem('bari_disclaimer_b449')) return; // disclaimer pas encore accepté
   localStorage.setItem('bari_conduite_asked', '1');
   var ex = document.getElementById('conduiteModal');
   if (ex) ex.remove();
@@ -2112,7 +2112,7 @@ function initAccordion() {
   // Restaurer l’état mémorisé
   try {
     var saved = localStorage.getItem('bari_accordion');
-    var dejaRempli = !!localStorage.getItem('bari_params_done_b448');
+    var dejaRempli = !!localStorage.getItem('bari_params_done_b449');
     if (saved) {
       var parsed = JSON.parse(saved);
       // Si jamais explicité par l'utilisateur, on respecte son choix.
@@ -4312,8 +4312,8 @@ function onParamChange() {
       var _ap2 = document.getElementById('ajoutPanel');
       if (_ap2) _ap2.style.display = 'none';
     }
-    if(!localStorage.getItem('bari_params_done_b448')){
-      localStorage.setItem('bari_params_done_b448','1');
+    if(!localStorage.getItem('bari_params_done_b449')){
+      localStorage.setItem('bari_params_done_b449','1');
       var t2=document.getElementById('incompletToast');
       if(t2){
         t2.style.background='#28a745';t2.style.color='#fff';
@@ -5130,13 +5130,13 @@ function closeDisclaimer() {
     && document.getElementById('disclaimerCheck2').checked
     && document.getElementById('disclaimerCheck3').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b448', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b449', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b448') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b449') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
@@ -6058,7 +6058,12 @@ function demanderPermissionAlarme(callback) {
 
 function _envoyerAlarme(titre, corps) {
   if ('vibrate' in navigator) navigator.vibrate([400, 150, 400]);
-  if ('Notification' in window && Notification.permission === 'granted') {
+  // build 449 : registration.showNotification plus fiable que new Notification
+  if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+    navigator.serviceWorker.ready.then(function(reg) {
+      reg.showNotification(titre, { body: corps, icon: './icons/icon-192.png', badge: './icons/icon-192.png', requireInteraction: true, vibrate: [400,150,400] });
+    });
+  } else if ('Notification' in window && Notification.permission === 'granted') {
     try { new Notification(titre, { body: corps, icon: './icons/icon-192.png', requireInteraction: true }); } catch(e) {}
   }
 }
@@ -6066,7 +6071,7 @@ function _envoyerAlarme(titre, corps) {
 function _annulerAlarmes() {
   _alarmeTimers.forEach(clearTimeout);
   _alarmeTimers = [];
-  // Annuler aussi dans le SW
+  if (window._alarmeInterval) { clearInterval(window._alarmeInterval); window._alarmeInterval = null; }
   if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
     navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_ALARMS' });
   }
@@ -6074,36 +6079,34 @@ function _annulerAlarmes() {
 
 function _programmerAlarmes() {
   _annulerAlarmes();
-  if (localStorage.getItem('bari_perso_sans_alarme') === '1') return;
+  if (localStorage.getItem('bari_perso_sans_alarme') !== '0') return;
   if (!('Notification' in window) || Notification.permission !== 'granted') return;
-  var now = nowDecimal();
 
-  var alarmes = [];
-  session.forEach(function(c) {
-    if (c.heureDecimal <= now) return;
-    var b = boissons[c.boissonIdx];
-    alarmes.push({ delaiMs: (c.heureDecimal - now) * 3600000, titre: '🕐 Vous pouvez boire', corps: b.nom + ' (' + c.vol + ' mL) — heure prévue.' });
-  });
-  (_repasEnSessions || []).forEach(function(r) {
-    if (r.hDec <= now) return;
-    alarmes.push({ delaiMs: (r.hDec - now) * 3600000, titre: '🕐 Vous pouvez manger', corps: (r.nom || 'Repas') + ' prévu à ' + r.heureStr + '.' });
-  });
-
-  if (!alarmes.length) return;
-
-  // Déléguer au Service Worker (résiste au verrouillage de l'écran)
-  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-    navigator.serviceWorker.controller.postMessage({ type: 'SET_ALARMS', alarmes: alarmes });
-  } else {
-    // Fallback page JS (moins fiable en arrière-plan)
-    alarmes.forEach(function(a) {
-      _alarmeTimers.push(setTimeout(function() {
-        if ('vibrate' in navigator) navigator.vibrate([400,150,400]);
-        try { new Notification(a.titre, { body: a.corps, icon: './icons/icon-192.png', requireInteraction: true }); } catch(e) {}
-      }, a.delaiMs));
+  // build 449 : setInterval 30s — plus fiable que setTimeout long (tué par Android)
+  var alarmesDeclenchees = {};
+  function _verifierAlarmes() {
+    var now = nowDecimal();
+    var TOL = 0.5 / 60; // tolérance 30 secondes
+    session.forEach(function(c) {
+      var key = 'c' + c.id;
+      if (c.heureDecimal >= now - TOL && c.heureDecimal <= now + TOL && !alarmesDeclenchees[key]) {
+        alarmesDeclenchees[key] = true;
+        var b = boissons[c.boissonIdx];
+        _envoyerAlarme('\u{1F550} Vous pouvez boire', b.nom + ' (' + c.vol + ' mL)');
+      }
+    });
+    (_repasEnSessions || []).forEach(function(r) {
+      var key = 'r' + r.hDec;
+      if (r.hDec >= now - TOL && r.hDec <= now + TOL && !alarmesDeclenchees[key]) {
+        alarmesDeclenchees[key] = true;
+        _envoyerAlarme('\u{1F550} Vous pouvez manger', (r.nom || 'Repas') + ' \u00e0 ' + r.heureStr);
+      }
     });
   }
+  window._alarmeInterval = setInterval(_verifierAlarmes, 30000);
+  _verifierAlarmes();
 }
+
 
 // build 446 : bannière d'invitation aux alarmes (visible dès qu'il y a des éléments futurs,
 // et que les alarmes ne sont pas encore activées)
@@ -6168,29 +6171,22 @@ function lancerDiagnostic() {
 function testerAlarmeImmediately() {
   if (!('Notification' in window)) { alert('Notifications non supportées sur ce navigateur.'); return; }
   if (Notification.permission !== 'granted') {
-    demanderPermissionAlarme(function(ok) {
-      if (ok) testerAlarmeImmediately();
-    });
+    demanderPermissionAlarme(function(ok) { if (ok) testerAlarmeImmediately(); });
     return;
   }
-  var delaiMs = 10000; // 10 secondes
   var el = document.getElementById('diagResult');
-  if (el) el.innerHTML += '<br>⏳ Notification programmée dans 10 secondes...';
-  // Essayer via SW d'abord
-  if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-    navigator.serviceWorker.controller.postMessage({
-      type: 'SET_ALARMS',
-      alarmes: [{ delaiMs: delaiMs, titre: '🔔 Test Barialimites', corps: 'Les alarmes fonctionnent correctement !' }]
-    });
-    if (el) el.innerHTML += '<br>✅ Message envoyé au Service Worker';
-  } else {
-    // Fallback page JS
-    setTimeout(function() {
-      try { new Notification('🔔 Test Barialimites', { body: 'Les alarmes fonctionnent (mode fallback page JS).', icon: './icons/icon-192.png' }); }
-      catch(e) { alert('Erreur notification : ' + e.message); }
-    }, delaiMs);
-    if (el) el.innerHTML += '<br>⚠️ SW non disponible, fallback page JS utilisé';
-  }
+  if (el) el.innerHTML += '<br>⏳ Notification dans 10 secondes...';
+  setTimeout(function() {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+      navigator.serviceWorker.ready.then(function(reg) {
+        reg.showNotification('🔔 Test Barialimites', { body: 'Les alarmes fonctionnent !', icon: './icons/icon-192.png', requireInteraction: true });
+        if (el) el.innerHTML += '<br>✅ Notification envoyée via SW registration';
+      });
+    } else {
+      try { new Notification('🔔 Test Barialimites', { body: 'Fonctionnel (fallback).', icon: './icons/icon-192.png' }); }
+      catch(e) { if (el) el.innerHTML += '<br>❌ Erreur : ' + e.message; }
+    }
+  }, 10000);
 }
 
 function ouvrirVisuConsoVerre(consoId) {
