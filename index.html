@@ -998,15 +998,8 @@
           <li><strong>β2</strong> — Application mobile (PWA) · 24/05/2026</li>
           <li><strong>α1</strong> — Maquette fonctionnelle initiale · 22/04/2026</li>
         </ul>
-        <div style="text-align:center;padding:8px 0 0;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:10px;">RC1 Build 449 — MàJ 23/06/2026</div>
+        <div style="text-align:center;padding:8px 0 0;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:10px;">RC1 Build 450 — MàJ 23/06/2026</div>
 
-        <!-- Diagnostic alarmes (build 448) -->
-        <div style="margin-top:14px;padding:12px;background:var(--cream);border-radius:12px;border:1.5px solid var(--border);">
-          <div style="font-size:.78rem;font-weight:800;color:var(--wine);margin-bottom:8px;">🔧 Diagnostic alarmes</div>
-          <div id="diagResult" style="font-size:.75rem;color:var(--text);line-height:1.8;font-family:monospace;"></div>
-          <button onclick="lancerDiagnostic()" style="margin-top:8px;width:100%;padding:8px;background:var(--wine);color:#fff;border:none;border-radius:8px;font-family:Nunito,sans-serif;font-size:.8rem;font-weight:800;cursor:pointer;">▶ Lancer le diagnostic</button>
-          <button onclick="testerAlarmeImmediately()" style="margin-top:6px;width:100%;padding:8px;background:none;border:1.5px solid var(--wine);color:var(--wine);border-radius:8px;font-family:Nunito,sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;">🔔 Tester une notification dans 10 secondes</button>
-        </div>
       </div>
       <div style="padding:16px 0 8px;">
         <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
@@ -1139,7 +1132,7 @@ const pays = {
 function afficherModaleConduite() {
   if (localStorage.getItem('bari_conduite_asked')) return;
   if (!paramsComplete()) return; // params pas encore remplis
-  if (!localStorage.getItem('bari_disclaimer_b449')) return; // disclaimer pas encore accepté
+  if (!localStorage.getItem('bari_disclaimer_b450')) return; // disclaimer pas encore accepté
   localStorage.setItem('bari_conduite_asked', '1');
   var ex = document.getElementById('conduiteModal');
   if (ex) ex.remove();
@@ -2112,7 +2105,7 @@ function initAccordion() {
   // Restaurer l’état mémorisé
   try {
     var saved = localStorage.getItem('bari_accordion');
-    var dejaRempli = !!localStorage.getItem('bari_params_done_b449');
+    var dejaRempli = !!localStorage.getItem('bari_params_done_b450');
     if (saved) {
       var parsed = JSON.parse(saved);
       // Si jamais explicité par l'utilisateur, on respecte son choix.
@@ -4312,8 +4305,8 @@ function onParamChange() {
       var _ap2 = document.getElementById('ajoutPanel');
       if (_ap2) _ap2.style.display = 'none';
     }
-    if(!localStorage.getItem('bari_params_done_b449')){
-      localStorage.setItem('bari_params_done_b449','1');
+    if(!localStorage.getItem('bari_params_done_b450')){
+      localStorage.setItem('bari_params_done_b450','1');
       var t2=document.getElementById('incompletToast');
       if(t2){
         t2.style.background='#28a745';t2.style.color='#fff';
@@ -5130,13 +5123,13 @@ function closeDisclaimer() {
     && document.getElementById('disclaimerCheck2').checked
     && document.getElementById('disclaimerCheck3').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b449', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b450', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b449') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b450') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
