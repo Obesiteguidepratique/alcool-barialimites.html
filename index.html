@@ -998,7 +998,7 @@
           <li><strong>β2</strong> — Application mobile (PWA) · 24/05/2026</li>
           <li><strong>α1</strong> — Maquette fonctionnelle initiale · 22/04/2026</li>
         </ul>
-        <div style="text-align:center;padding:8px 0 0;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:10px;">RC1 Build 445 — MàJ 23/06/2026</div>
+        <div style="text-align:center;padding:8px 0 0;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:10px;">RC1 Build 446 — MàJ 23/06/2026</div>
       </div>
       <div style="padding:16px 0 8px;">
         <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
@@ -1131,7 +1131,7 @@ const pays = {
 function afficherModaleConduite() {
   if (localStorage.getItem('bari_conduite_asked')) return;
   if (!paramsComplete()) return; // params pas encore remplis
-  if (!localStorage.getItem('bari_disclaimer_b445')) return; // disclaimer pas encore accepté
+  if (!localStorage.getItem('bari_disclaimer_b446')) return; // disclaimer pas encore accepté
   localStorage.setItem('bari_conduite_asked', '1');
   var ex = document.getElementById('conduiteModal');
   if (ex) ex.remove();
@@ -2104,7 +2104,7 @@ function initAccordion() {
   // Restaurer l’état mémorisé
   try {
     var saved = localStorage.getItem('bari_accordion');
-    var dejaRempli = !!localStorage.getItem('bari_params_done_b445');
+    var dejaRempli = !!localStorage.getItem('bari_params_done_b446');
     if (saved) {
       var parsed = JSON.parse(saved);
       // Si jamais explicité par l'utilisateur, on respecte son choix.
@@ -3571,6 +3571,7 @@ function renderSession() {
   }
 
   list.innerHTML = html;
+  _afficherBanniereAlarme();
 }
 let degreCustomVal = null;
 let miniPopupShown = false, spiritueuxPopupShown = false;
@@ -4303,8 +4304,8 @@ function onParamChange() {
       var _ap2 = document.getElementById('ajoutPanel');
       if (_ap2) _ap2.style.display = 'none';
     }
-    if(!localStorage.getItem('bari_params_done_b445')){
-      localStorage.setItem('bari_params_done_b445','1');
+    if(!localStorage.getItem('bari_params_done_b446')){
+      localStorage.setItem('bari_params_done_b446','1');
       var t2=document.getElementById('incompletToast');
       if(t2){
         t2.style.background='#28a745';t2.style.color='#fff';
@@ -5121,13 +5122,13 @@ function closeDisclaimer() {
     && document.getElementById('disclaimerCheck2').checked
     && document.getElementById('disclaimerCheck3').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b445', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b446', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b445') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b446') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
@@ -6057,6 +6058,10 @@ function _envoyerAlarme(titre, corps) {
 function _annulerAlarmes() {
   _alarmeTimers.forEach(clearTimeout);
   _alarmeTimers = [];
+  // Annuler aussi dans le SW
+  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_ALARMS' });
+  }
 }
 
 function _programmerAlarmes() {
@@ -6064,23 +6069,51 @@ function _programmerAlarmes() {
   if (localStorage.getItem('bari_perso_sans_alarme') === '1') return;
   if (!('Notification' in window) || Notification.permission !== 'granted') return;
   var now = nowDecimal();
-  // Alarmes sur les boissons futures
+
+  var alarmes = [];
   session.forEach(function(c) {
     if (c.heureDecimal <= now) return;
-    var delaiMs = (c.heureDecimal - now) * 3600000;
     var b = boissons[c.boissonIdx];
-    var t = _alarmeTimers.push(setTimeout(function() {
-      _envoyerAlarme('🕐 Vous pouvez boire', b.nom + ' (' + c.vol + ' mL) — heure prévue.');
-    }, delaiMs));
+    alarmes.push({ delaiMs: (c.heureDecimal - now) * 3600000, titre: '🕐 Vous pouvez boire', corps: b.nom + ' (' + c.vol + ' mL) — heure prévue.' });
   });
-  // Alarmes sur les repas futurs
   (_repasEnSessions || []).forEach(function(r) {
     if (r.hDec <= now) return;
-    var delaiMs = (r.hDec - now) * 3600000;
-    _alarmeTimers.push(setTimeout(function() {
-      _envoyerAlarme('🕐 Vous pouvez manger', 'Heure du repas prévu (' + r.heureStr + ').');
-    }, delaiMs));
+    alarmes.push({ delaiMs: (r.hDec - now) * 3600000, titre: '🕐 Vous pouvez manger', corps: (r.nom || 'Repas') + ' prévu à ' + r.heureStr + '.' });
   });
+
+  if (!alarmes.length) return;
+
+  // Déléguer au Service Worker (résiste au verrouillage de l'écran)
+  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage({ type: 'SET_ALARMS', alarmes: alarmes });
+  } else {
+    // Fallback page JS (moins fiable en arrière-plan)
+    alarmes.forEach(function(a) {
+      _alarmeTimers.push(setTimeout(function() {
+        if ('vibrate' in navigator) navigator.vibrate([400,150,400]);
+        try { new Notification(a.titre, { body: a.corps, icon: './icons/icon-192.png', requireInteraction: true }); } catch(e) {}
+      }, a.delaiMs));
+    });
+  }
+}
+
+// build 446 : bannière d'invitation aux alarmes (visible dès qu'il y a des éléments futurs,
+// et que les alarmes ne sont pas encore activées)
+function _afficherBanniereAlarme() {
+  var ex = document.getElementById('banniereAlarme'); if (ex) ex.remove();
+  if (localStorage.getItem('bari_perso_sans_alarme') !== '1') return; // déjà activé
+  var hasFutur = session.some(function(c){ return c.heureDecimal > nowDecimal(); })
+    || (_repasEnSessions||[]).some(function(r){ return r.hDec > nowDecimal(); });
+  if (!hasFutur) return;
+  var b = document.createElement('div');
+  b.id = 'banniereAlarme';
+  b.style.cssText = 'background:#fff8e1;border:1.5px solid #f9a825;border-radius:12px;padding:10px 14px;margin:8px 0;display:flex;align-items:center;gap:10px;';
+  b.innerHTML = '<span style="font-size:1.2rem;">🔔</span>'
+    + '<div style="flex:1;font-size:.78rem;color:#5c3d00;font-weight:600;">Vous avez des éléments programmés. <strong>Souhaitez-vous être alerté(e) à l\'heure ?</strong></div>'
+    + '<button onclick="activerAlarmes(true); document.getElementById(\'banniereAlarme\').remove();" '
+    + 'style="padding:6px 10px;background:#f9a825;color:#fff;border:none;border-radius:8px;font-family:Nunito,sans-serif;font-size:.76rem;font-weight:800;cursor:pointer;white-space:nowrap;">Activer</button>';
+  var list = document.getElementById('sessionList');
+  if (list && list.parentNode) list.parentNode.insertBefore(b, list);
 }
 
 function activerAlarmes(checked) {
