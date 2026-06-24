@@ -998,7 +998,7 @@
           <li><strong>β2</strong> — Application mobile (PWA) · 24/05/2026</li>
           <li><strong>α1</strong> — Maquette fonctionnelle initiale · 22/04/2026</li>
         </ul>
-        <div style="text-align:center;padding:8px 0 0;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:10px;">RC1 Build 446 — MàJ 23/06/2026</div>
+        <div style="text-align:center;padding:8px 0 0;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:10px;">RC1 Build 447 — MàJ 23/06/2026</div>
       </div>
       <div style="padding:16px 0 8px;">
         <button onclick="toggleGuide()" style="width:100%;padding:12px;background:var(--cream);color:var(--wine);border:1.5px solid var(--wine);border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;">✕ Fermer cette fenêtre</button>
@@ -1131,7 +1131,7 @@ const pays = {
 function afficherModaleConduite() {
   if (localStorage.getItem('bari_conduite_asked')) return;
   if (!paramsComplete()) return; // params pas encore remplis
-  if (!localStorage.getItem('bari_disclaimer_b446')) return; // disclaimer pas encore accepté
+  if (!localStorage.getItem('bari_disclaimer_b447')) return; // disclaimer pas encore accepté
   localStorage.setItem('bari_conduite_asked', '1');
   var ex = document.getElementById('conduiteModal');
   if (ex) ex.remove();
@@ -2104,7 +2104,7 @@ function initAccordion() {
   // Restaurer l’état mémorisé
   try {
     var saved = localStorage.getItem('bari_accordion');
-    var dejaRempli = !!localStorage.getItem('bari_params_done_b446');
+    var dejaRempli = !!localStorage.getItem('bari_params_done_b447');
     if (saved) {
       var parsed = JSON.parse(saved);
       // Si jamais explicité par l'utilisateur, on respecte son choix.
@@ -4304,8 +4304,8 @@ function onParamChange() {
       var _ap2 = document.getElementById('ajoutPanel');
       if (_ap2) _ap2.style.display = 'none';
     }
-    if(!localStorage.getItem('bari_params_done_b446')){
-      localStorage.setItem('bari_params_done_b446','1');
+    if(!localStorage.getItem('bari_params_done_b447')){
+      localStorage.setItem('bari_params_done_b447','1');
       var t2=document.getElementById('incompletToast');
       if(t2){
         t2.style.background='#28a745';t2.style.color='#fff';
@@ -4925,7 +4925,7 @@ function closeGuideIfBg(e) { if(e.target===document.getElementById('guideOverlay
 // ── Personnalisation (build 402) ─────────────────────────────────────────
 function _refreshPersoSection() {
   var cbAlarmes = document.getElementById('persoAlarmes');
-  if (cbAlarmes) { cbAlarmes.checked = localStorage.getItem('bari_perso_sans_alarme') !== '1'; var tA = cbAlarmes.parentElement.querySelector('.bari-toggle-thumb'); if (tA) tA.textContent = cbAlarmes.checked ? 'ON' : 'OFF'; }
+  if (cbAlarmes) { cbAlarmes.checked = localStorage.getItem('bari_perso_sans_alarme') === '0'; var tA = cbAlarmes.parentElement.querySelector('.bari-toggle-thumb'); if (tA) tA.textContent = cbAlarmes.checked ? 'ON' : 'OFF'; }
 
   var cbMasquer = document.getElementById('persoMasquerIncompatibles');
   var masquerOn = localStorage.getItem('bari_perso_masquer_incompatibles') === '1';
@@ -5122,13 +5122,13 @@ function closeDisclaimer() {
     && document.getElementById('disclaimerCheck2').checked
     && document.getElementById('disclaimerCheck3').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b446', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b447', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b446') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b447') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
@@ -6101,7 +6101,8 @@ function _programmerAlarmes() {
 // et que les alarmes ne sont pas encore activées)
 function _afficherBanniereAlarme() {
   var ex = document.getElementById('banniereAlarme'); if (ex) ex.remove();
-  if (localStorage.getItem('bari_perso_sans_alarme') !== '1') return; // déjà activé
+  // Montrer si les alarmes ne sont PAS activées ('0' = activé, null/'1' = pas activé)
+  if (localStorage.getItem('bari_perso_sans_alarme') === '0') return;
   var hasFutur = session.some(function(c){ return c.heureDecimal > nowDecimal(); })
     || (_repasEnSessions||[]).some(function(r){ return r.hDec > nowDecimal(); });
   if (!hasFutur) return;
