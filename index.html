@@ -1004,7 +1004,7 @@
           <li><strong>β2</strong> — Application mobile (PWA) · 24/05/2026</li>
           <li><strong>α1</strong> — Maquette fonctionnelle initiale · 22/04/2026</li>
         </ul>
-        <div style="text-align:center;padding:8px 0 0;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:10px;">RC1 Build 459 — MàJ 25/06/2026</div>
+        <div style="text-align:center;padding:8px 0 0;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:10px;">RC1 Build 460 — MàJ 25/06/2026</div>
 
       </div>
       <div style="padding:16px 0 8px;">
@@ -1138,7 +1138,7 @@ const pays = {
 function afficherModaleConduite() {
   if (localStorage.getItem('bari_conduite_asked')) return;
   if (!paramsComplete()) return; // params pas encore remplis
-  if (!localStorage.getItem('bari_disclaimer_b459')) return; // disclaimer pas encore accepté
+  if (!localStorage.getItem('bari_disclaimer_b460')) return; // disclaimer pas encore accepté
   localStorage.setItem('bari_conduite_asked', '1');
   var ex = document.getElementById('conduiteModal');
   if (ex) ex.remove();
@@ -2111,7 +2111,7 @@ function initAccordion() {
   // Restaurer l’état mémorisé
   try {
     var saved = localStorage.getItem('bari_accordion');
-    var dejaRempli = !!localStorage.getItem('bari_params_done_b459');
+    var dejaRempli = !!localStorage.getItem('bari_params_done_b460');
     if (saved) {
       var parsed = JSON.parse(saved);
       // Si jamais explicité par l'utilisateur, on respecte son choix.
@@ -4314,8 +4314,8 @@ function onParamChange() {
       var _ap2 = document.getElementById('ajoutPanel');
       if (_ap2) _ap2.style.display = 'none';
     }
-    if(!localStorage.getItem('bari_params_done_b459')){
-      localStorage.setItem('bari_params_done_b459','1');
+    if(!localStorage.getItem('bari_params_done_b460')){
+      localStorage.setItem('bari_params_done_b460','1');
       var t2=document.getElementById('incompletToast');
       if(t2){
         t2.style.background='#28a745';t2.style.color='#fff';
@@ -5132,13 +5132,13 @@ function closeDisclaimer() {
     && document.getElementById('disclaimerCheck2').checked
     && document.getElementById('disclaimerCheck3').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b459', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b460', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b459') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b460') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
@@ -6153,12 +6153,10 @@ function activerAlarmes(checked) {
   var cb = document.getElementById('persoAlarmes');
   var thumb = cb && cb.parentElement.querySelector('.bari-toggle-thumb');
   if (thumb) thumb.textContent = checked ? 'ON' : 'OFF';
+  updateLegende(); // build 460 : mise à jour immédiate du 🔔 dans la légende
   if (checked) {
     demanderPermissionAlarme(function(ok) {
       if (!ok) {
-        // Permission refusée ou bloquée (navigation privée, paramètre système)
-        // On garde le toggle sur ON : c'est le navigateur qui bloque, pas l'utilisateur qui veut désactiver.
-        // On informe sans remettre OFF silencieusement.
         showMiniPopupWithRisques('🔔 Notifications bloquées',
           'Votre navigateur n\u2019a pas accordé la permission.\n\nSur Android : vérifiez les paramètres notifications de Chrome.\nEn navigation privée, les notifications sont souvent bloquées automatiquement.');
         return;
