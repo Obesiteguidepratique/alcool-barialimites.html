@@ -998,7 +998,7 @@
           <li><strong>β2</strong> — Application mobile (PWA) · 24/05/2026</li>
           <li><strong>α1</strong> — Maquette fonctionnelle initiale · 22/04/2026</li>
         </ul>
-        <div style="text-align:center;padding:8px 0 0;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:10px;">RC1 Build 450 — MàJ 23/06/2026</div>
+        <div style="text-align:center;padding:8px 0 0;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:10px;">RC1 Build 451 — MàJ 23/06/2026</div>
 
       </div>
       <div style="padding:16px 0 8px;">
@@ -1132,7 +1132,7 @@ const pays = {
 function afficherModaleConduite() {
   if (localStorage.getItem('bari_conduite_asked')) return;
   if (!paramsComplete()) return; // params pas encore remplis
-  if (!localStorage.getItem('bari_disclaimer_b450')) return; // disclaimer pas encore accepté
+  if (!localStorage.getItem('bari_disclaimer_b451')) return; // disclaimer pas encore accepté
   localStorage.setItem('bari_conduite_asked', '1');
   var ex = document.getElementById('conduiteModal');
   if (ex) ex.remove();
@@ -2105,7 +2105,7 @@ function initAccordion() {
   // Restaurer l’état mémorisé
   try {
     var saved = localStorage.getItem('bari_accordion');
-    var dejaRempli = !!localStorage.getItem('bari_params_done_b450');
+    var dejaRempli = !!localStorage.getItem('bari_params_done_b451');
     if (saved) {
       var parsed = JSON.parse(saved);
       // Si jamais explicité par l'utilisateur, on respecte son choix.
@@ -3147,6 +3147,9 @@ function updateLegende() {
     items.push('<span style="color:#b71c1c;">● Fort' + (fortLock ? ' 🔒' : '') + '</span>');
   }
   var html = '<span style="flex:1;">' + items.join(sep) + '</span>';
+  if (localStorage.getItem('bari_perso_sans_alarme') === '0') {
+    html += '<span title="Alarmes activées" style="font-size:.9rem;cursor:pointer;" onclick="switchGuideTab(\'config\');toggleGuide();">🔔</span>';
+  }
   if (_undoStack) {
     html += '<button onclick="undoSuppression()" title="Restaurer la dernière suppression" '
       + 'style="background:none;border:none;cursor:pointer;font-size:1rem;padding:0 2px;color:var(--wine);font-family:Nunito,sans-serif;font-size:.8rem;font-weight:700;">↩️ Restaurer</button>';
@@ -4305,8 +4308,8 @@ function onParamChange() {
       var _ap2 = document.getElementById('ajoutPanel');
       if (_ap2) _ap2.style.display = 'none';
     }
-    if(!localStorage.getItem('bari_params_done_b450')){
-      localStorage.setItem('bari_params_done_b450','1');
+    if(!localStorage.getItem('bari_params_done_b451')){
+      localStorage.setItem('bari_params_done_b451','1');
       var t2=document.getElementById('incompletToast');
       if(t2){
         t2.style.background='#28a745';t2.style.color='#fff';
@@ -5123,13 +5126,13 @@ function closeDisclaimer() {
     && document.getElementById('disclaimerCheck2').checked
     && document.getElementById('disclaimerCheck3').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b450', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b451', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b450') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b451') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
@@ -5785,8 +5788,7 @@ function resetParams() {
     localStorage.removeItem('bari_fav_boisson');
     localStorage.removeItem('bari_boissons_perso');
     localStorage.removeItem('bari_accordion');
-    localStorage.removeItem('bari_boissons_perso');
-    localStorage.removeItem('bari_accordion');
+    localStorage.removeItem(LS_PRESETS); // build 451 : presets inclus dans la réinitialisation
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
       if (k && k.startsWith('bari_disclaimer')) { localStorage.removeItem(k); i--; }
@@ -6105,8 +6107,9 @@ function _programmerAlarmes() {
 // et que les alarmes ne sont pas encore activées)
 function _afficherBanniereAlarme() {
   var ex = document.getElementById('banniereAlarme'); if (ex) ex.remove();
-  // Montrer si les alarmes ne sont PAS activées ('0' = activé, null/'1' = pas activé)
+  // Ne pas afficher si alarmes activées, ou si l'utilisateur a fermé la bannière pour cette session
   if (localStorage.getItem('bari_perso_sans_alarme') === '0') return;
+  if (window._banniereAlarmeFermee) return;
   var hasFutur = session.some(function(c){ return c.heureDecimal > nowDecimal(); })
     || (_repasEnSessions||[]).some(function(r){ return r.hDec > nowDecimal(); });
   if (!hasFutur) return;
@@ -6114,9 +6117,10 @@ function _afficherBanniereAlarme() {
   b.id = 'banniereAlarme';
   b.style.cssText = 'background:#fff8e1;border:1.5px solid #f9a825;border-radius:12px;padding:10px 14px;margin:8px 0;display:flex;align-items:center;gap:10px;';
   b.innerHTML = '<span style="font-size:1.2rem;">🔔</span>'
-    + '<div style="flex:1;font-size:.78rem;color:#5c3d00;font-weight:600;">Vous avez des éléments programmés. <strong>Souhaitez-vous être alerté(e) à l\'heure ?</strong></div>'
-    + '<button onclick="activerAlarmes(true); document.getElementById(\'banniereAlarme\').remove();" '
-    + 'style="padding:6px 10px;background:#f9a825;color:#fff;border:none;border-radius:8px;font-family:Nunito,sans-serif;font-size:.76rem;font-weight:800;cursor:pointer;white-space:nowrap;">Activer</button>';
+    + '<div style="flex:1;font-size:.78rem;color:#5c3d00;font-weight:600;">Vous avez des éléments programmés. Souhaitez-vous être alerté(e) à l\'heure ?<br>'
+    + '<span style="font-size:.72rem;font-weight:400;">→ Guide ⚙️ Configuration → 🎛️ Personnalisation</span></div>'
+    + '<button onclick="window._banniereAlarmeFermee=true; document.getElementById(\'banniereAlarme\').remove();" '
+    + 'style="padding:5px 8px;background:none;border:none;font-size:1rem;cursor:pointer;color:#5c3d00;flex-shrink:0;">✕</button>';
   var list = document.getElementById('sessionList');
   if (list && list.parentNode) list.parentNode.insertBefore(b, list);
 }
