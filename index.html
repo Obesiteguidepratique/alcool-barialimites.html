@@ -1011,7 +1011,7 @@
           <li><strong>β2</strong> — Application mobile (PWA) · 24/05/2026</li>
           <li><strong>α1</strong> — Maquette fonctionnelle initiale · 22/04/2026</li>
         </ul>
-        <div style="text-align:center;padding:8px 0 0;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:10px;">RC1 Build 502 — MàJ 27/06/2026</div>
+        <div style="text-align:center;padding:8px 0 0;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:10px;">RC1 Build 503 — MàJ 27/06/2026</div>
 
       </div>
       <div style="padding:16px 0 8px;">
@@ -1145,7 +1145,7 @@ const pays = {
 function afficherModaleConduite() {
   if (localStorage.getItem('bari_conduite_asked')) return;
   if (!paramsComplete()) return; // params pas encore remplis
-  if (!localStorage.getItem('bari_disclaimer_b502')) return; // disclaimer pas encore accepté
+  if (!localStorage.getItem('bari_disclaimer_b503')) return; // disclaimer pas encore accepté
   localStorage.setItem('bari_conduite_asked', '1');
   var ex = document.getElementById('conduiteModal');
   if (ex) ex.remove();
@@ -2126,7 +2126,7 @@ function initAccordion() {
   // Restaurer l’état mémorisé
   try {
     var saved = localStorage.getItem('bari_accordion');
-    var dejaRempli = !!localStorage.getItem('bari_params_done_b502');
+    var dejaRempli = !!localStorage.getItem('bari_params_done_b503');
     if (saved) {
       var parsed = JSON.parse(saved);
       // Si jamais explicité par l'utilisateur, on respecte son choix.
@@ -2222,9 +2222,10 @@ function getTauxResiduelA(heureH, elim, ef) {
   return Math.max(0, taux);
 }
 
-function afficherModaleThrottle() {
-  var p = window._throttleParams;
-  if (!p) return;
+function afficherModaleThrottle(params) {
+  // build 503 : params passés explicitement; global en fallback uniquement
+  var p = params || window._throttleParams;
+  if (!p) { console.warn('[Barialimites] afficherModaleThrottle : params manquants'); return; }
   var ex = document.getElementById('throttleModal');
   if (ex) ex.remove();
 
@@ -2425,7 +2426,7 @@ function throttleConfirmerRepartition(dose1, dose2, heureH) {
   var modal = document.getElementById('throttleModal');
   if (modal) modal.remove();
   var p = window._throttleParams;
-  if (!p) return;
+  if (!p) { console.warn('[Barialimites] throttleConfirmerRepartition : _throttleParams absent'); return; }
 
   var hRepas = heureH + 0.5;
   var hB2    = heureH + 1.5;
@@ -2630,12 +2631,13 @@ function validerAjout() {
         var _volMaxArrondi2 = Math.floor(_volMax/5)*5 || 5;
         var _throttleMaxOk2 = localStorage.getItem('bari_perso_throttle_max') === '1';
         var _volMaxEthique2 = _throttleMaxOk2 ? _volMaxArrondi2 : Math.max(5, Math.floor(_volMaxArrondi2 * 0.5 / 5) * 5);
-        window._throttleParams = { volTotal: _consoRef.vol,
+        var _tpLocal2 = { volTotal: _consoRef.vol,
           volMaxArrondi: _volMaxEthique2,
           heureBase: _consoRef.heure, boissonIdxLocal: _consoRef.boissonIdx,
           alimentaireLocal: _consoRef.alimentaire, degreCustomLocal: _consoRef.degreCustom };
+        window._throttleParams = _tpLocal2; // gardé pour throttleConfirmerRepartition
         _animerReductionVolume(_volMaxEthique2, function() {
-          afficherModaleThrottle();
+          afficherModaleThrottle(_tpLocal2); // build 503 : passage explicite
         });
       } else {
         // Fermer le panneau ajout avant finaliserAjout
@@ -2662,12 +2664,13 @@ function validerAjout() {
     // build 501 — frein éthique : 50% du max par défaut, 100% si toggle activé
     var _throttleMaxOk = localStorage.getItem('bari_perso_throttle_max') === '1';
     var volMaxEthique = _throttleMaxOk ? volMaxArrondi : Math.max(5, Math.floor(volMaxArrondi * 0.5 / 5) * 5);
-    window._throttleParams = { volTotal:vol, volMaxArrondi:volMaxEthique,
+    var _tpLocal = { volTotal:vol, volMaxArrondi:volMaxEthique,
       heureBase:heure, boissonIdxLocal:boissonIdx,
       alimentaireLocal:alimentaire, degreCustomLocal:degreCustomVal };
+    window._throttleParams = _tpLocal; // gardé pour throttleConfirmerRepartition (onclick HTML)
     _animerReductionVolume(volMaxEthique, function() {
       annulerAjout();
-      afficherModaleThrottle();
+      afficherModaleThrottle(_tpLocal); // build 503 : passage explicite, plus de lecture globale
     });
     return;
   }
@@ -4356,8 +4359,8 @@ function onParamChange() {
       var _ap2 = document.getElementById('ajoutPanel');
       if (_ap2) _ap2.style.display = 'none';
     }
-    if(!localStorage.getItem('bari_params_done_b502')){
-      localStorage.setItem('bari_params_done_b502','1');
+    if(!localStorage.getItem('bari_params_done_b503')){
+      localStorage.setItem('bari_params_done_b503','1');
       var t2=document.getElementById('incompletToast');
       if(t2){
         t2.style.background='#28a745';t2.style.color='#fff';
@@ -5185,13 +5188,13 @@ function closeDisclaimer() {
     && document.getElementById('disclaimerCheck2').checked
     && document.getElementById('disclaimerCheck3').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b502', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b503', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b502') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b503') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
