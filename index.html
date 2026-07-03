@@ -780,7 +780,7 @@
         <p>Elle est <strong>gratuite</strong> et aucune information n'est envoyée à un serveur.</p>
         <p>Chaque personne réagit différemment à l'alcool. Les résultats de cette application sont <strong>indicatifs</strong>.</p>
         <p style="text-align:center;color:#FF0000;font-weight:700;font-size:.85rem;margin-top:8px;line-height:1.6;">
-          Version de test RC1 Build 530<br>
+          Version de test RC1 Build 531<br>
           Diffusion restreinte — Ne pas partager
         </p>
       </div>
@@ -806,6 +806,55 @@
     </div>
   </div>
 </div>
+
+<script>
+// build 531 : auto-scroll vers les checkboxes disclaimer après 4s d'inactivité
+(function() {
+  var _userActed = false;
+  var _scrollDone = false;
+  var _timer = null;
+
+  function _stopAuto() {
+    _userActed = true;
+    if (_timer) { clearTimeout(_timer); _timer = null; }
+  }
+
+  function _scrollToChecks() {
+    if (_userActed || _scrollDone) return;
+    var wrap = document.getElementById('disclaimerCheckWrap');
+    if (!wrap) return;
+    _scrollDone = true;
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Pulse bordeaux discret pour signaler les cases à cocher
+    wrap.style.transition = 'box-shadow .4s ease';
+    wrap.style.boxShadow = '0 0 0 3px rgba(139,26,26,0.4)';
+    setTimeout(function() {
+      wrap.style.boxShadow = '';
+    }, 1800);
+  }
+
+  // L'auto-scroll se déclenche seulement si le disclaimer est visible
+  function _init() {
+    var overlay = document.getElementById('disclaimerOverlay');
+    if (!overlay || overlay.classList.contains('hidden')) return;
+
+    // Annuler dès que l'utilisateur interagit
+    ['touchstart', 'mousedown', 'wheel', 'keydown', 'scroll'].forEach(function(ev) {
+      overlay.addEventListener(ev, _stopAuto, { passive: true });
+    });
+
+    // Lancer le timer — 4 secondes
+    _timer = setTimeout(_scrollToChecks, 4000);
+  }
+
+  // Attendre que le DOM soit prêt
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _init);
+  } else {
+    _init();
+  }
+})();
+</script>
 
 <!-- GUIDE OVERLAY -->
 <div class="guide-overlay" id="guideOverlay" onclick="closeGuideIfBg(event)">
@@ -1021,7 +1070,7 @@
           <li><strong>β2</strong> — Application mobile (PWA) · 24/05/2026</li>
           <li><strong>α1</strong> — Maquette fonctionnelle initiale · 22/04/2026</li>
         </ul>
-        <div style="text-align:center;padding:8px 0 0;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:10px;">RC1 Build 530 — MàJ 02/07/2026</div>
+        <div style="text-align:center;padding:8px 0 0;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.5px;border-top:1px solid var(--border);margin-top:10px;">RC1 Build 531 — MàJ 02/07/2026</div>
 
       </div>
       <div style="padding:16px 0 8px;">
@@ -1155,7 +1204,7 @@ const pays = {
 function afficherModaleConduite() {
   if (localStorage.getItem('bari_conduite_asked')) return;
   if (!paramsComplete()) return; // params pas encore remplis
-  if (!localStorage.getItem('bari_disclaimer_b530')) return; // disclaimer pas encore accepté
+  if (!localStorage.getItem('bari_disclaimer_b531')) return; // disclaimer pas encore accepté
   localStorage.setItem('bari_conduite_asked', '1');
   var ex = document.getElementById('conduiteModal');
   if (ex) ex.remove();
@@ -2379,7 +2428,7 @@ function initAccordion() {
   // Restaurer l’état mémorisé
   try {
     var saved = localStorage.getItem('bari_accordion');
-    var dejaRempli = !!localStorage.getItem('bari_params_done_b530');
+    var dejaRempli = !!localStorage.getItem('bari_params_done_b531');
     if (saved) {
       var parsed = JSON.parse(saved);
       // Si jamais explicité par l'utilisateur, on respecte son choix.
@@ -4760,8 +4809,8 @@ function onParamChange() {
       var _ap2 = document.getElementById('ajoutPanel');
       if (_ap2) _ap2.style.display = 'none';
     }
-    if(!localStorage.getItem('bari_params_done_b530')){
-      localStorage.setItem('bari_params_done_b530','1');
+    if(!localStorage.getItem('bari_params_done_b531')){
+      localStorage.setItem('bari_params_done_b531','1');
       var t2=document.getElementById('incompletToast');
       if(t2){
         t2.style.background='#28a745';t2.style.color='#fff';
@@ -5617,13 +5666,13 @@ function closeDisclaimer() {
     && document.getElementById('disclaimerCheck2').checked
     && document.getElementById('disclaimerCheck3').checked;
   if (!checked) return;
-  try { localStorage.setItem('bari_disclaimer_b530', '1'); } catch(e) {}
+  try { localStorage.setItem('bari_disclaimer_b531', '1'); } catch(e) {}
   document.getElementById('disclaimerOverlay').classList.add('hidden');
 }
 
 // Vérifier si l'utilisateur a déjà accepté
 try {
-  if (localStorage.getItem('bari_disclaimer_b530') === '1') {
+  if (localStorage.getItem('bari_disclaimer_b531') === '1') {
     document.getElementById('disclaimerOverlay').classList.add('hidden');
   }
 } catch(e) {}
